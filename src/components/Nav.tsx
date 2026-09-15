@@ -9,6 +9,7 @@ import { mainNav, site } from "@/lib/site";
 export default function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [float, setFloat] = useState(false);
 
   const toggleRef = useRef<HTMLButtonElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
@@ -65,55 +66,29 @@ export default function Nav() {
   }
 
   /*
-   * Die Form folgt der Scrollposition, laeuft dem Ziel aber gedaempft
-   * hinterher. Ein einzelner Radtick bewegt sie damit nur ein Stueck weit,
-   * und Andocken und Loesen sind derselbe Vorgang in beide Richtungen.
+   * Sobald der Nutzer das erste Stueck nach unten scrollt, loest sich die
+   * Leiste und schwebt. Ganz oben dockt sie wieder an. Die Bewegung selbst
+   * macht der Browser ueber eine Uebergangszeit, nicht der Scrollwert.
    */
   useEffect(() => {
-    const ziel = () => Math.min(1, Math.max(0, window.scrollY / 260));
-    const schreibe = (v: number) => barRef.current?.style.setProperty("--nav-t", String(v));
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      const simple = () => schreibe(ziel());
-      simple();
-      window.addEventListener("scroll", simple, { passive: true });
-      return () => window.removeEventListener("scroll", simple);
-    }
-
     let frame = 0;
-    let current = ziel();
-    let last = 0;
-    schreibe(current);
 
-    const loop = (now: number) => {
-      const dt = last ? Math.min(64, now - last) : 16;
-      last = now;
-      const target = ziel();
-      // Exponentielle Daempfung, unabhaengig von der Bildrate
-      current += (target - current) * (1 - Math.exp(-dt / 190));
-      if (Math.abs(target - current) < 0.0015) {
-        current = target;
-        schreibe(current);
-        frame = 0;
-        last = 0;
-        return;
-      }
-      schreibe(current);
-      frame = requestAnimationFrame(loop);
+    const messen = () => {
+      frame = 0;
+      // Kleine Hysterese, damit die Leiste am Umschaltpunkt nicht flattert
+      setFloat((prev) => (prev ? window.scrollY > 4 : window.scrollY > 10));
     };
 
     const onScroll = () => {
       if (frame) return;
-      last = 0;
-      frame = requestAnimationFrame(loop);
+      frame = requestAnimationFrame(messen);
     };
 
+    messen();
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
     return () => {
       if (frame) cancelAnimationFrame(frame);
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
     };
   }, []);
 
@@ -192,6 +167,7 @@ export default function Nav() {
         <div
           ref={barRef}
           className="nav-bar"
+          data-float={float}
           onMouseMove={onMove}
         >
           <div className="nav-inner">

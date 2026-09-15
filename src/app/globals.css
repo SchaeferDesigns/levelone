@@ -983,17 +983,17 @@ textarea.field-input {
   }
 
   /*
-   * Die Leiste wandelt ihre Form stufenlos mit der Scrollposition.
-   * --nav-t laeuft von 0 (durchgehende Leiste oben) bis 1 (schwebende Pille).
-   * Dadurch sind Andocken und Loesen exakt derselbe Vorgang, nur rueckwaerts.
+   * Zwei Zustaende: oben eine durchgehende Leiste, nach dem ersten
+   * Runterscrollen eine schwebende Pille. Der Wechsel laeuft als eine
+   * zusammenhaengende Bewegung, in beide Richtungen gleich lang.
    */
   .nav-bar {
-    --nav-t: 0;
+    --nav-move: 0.68s cubic-bezier(0.45, 0, 0.25, 1);
     pointer-events: auto;
     position: relative;
-    margin: calc(12px * var(--nav-t)) calc(max(20px, (100% - 980px) / 2) * var(--nav-t)) 0;
-    border-radius: calc(999px * var(--nav-t));
-    border: 1px solid rgba(255, 255, 255, calc(0.13 * var(--nav-t)));
+    margin: 0;
+    border-radius: 0;
+    border: 1px solid transparent;
     background: linear-gradient(
         150deg,
         rgba(255, 255, 255, 0.075) 0%,
@@ -1003,9 +1003,21 @@ textarea.field-input {
       rgba(9, 12, 17, 0.58);
     -webkit-backdrop-filter: blur(26px) saturate(180%);
     backdrop-filter: blur(26px) saturate(180%);
+    box-shadow: 0 18px 40px -34px rgba(0, 0, 0, 0.9);
+    transition:
+      margin var(--nav-move),
+      border-radius var(--nav-move),
+      border-color var(--nav-move),
+      box-shadow var(--nav-move);
+  }
+
+  .nav-bar[data-float="true"] {
+    margin: 12px max(20px, calc((100% - 980px) / 2)) 0;
+    border-radius: var(--radius-pill);
+    border-color: rgba(255, 255, 255, 0.13);
     box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, calc(0.2 * var(--nav-t))),
-      0 24px 56px -26px rgba(0, 0, 0, calc(0.95 * var(--nav-t)));
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
+      0 24px 56px -26px rgba(0, 0, 0, 0.95);
   }
 
   /* Feine Unterkante, nur solange die Leiste oben andockt */
@@ -1016,18 +1028,26 @@ textarea.field-input {
     bottom: -1px;
     height: 1px;
     background: rgba(255, 255, 255, 0.1);
-    opacity: calc(1 - var(--nav-t));
+    opacity: 1;
     pointer-events: none;
+    transition: opacity 0.3s var(--ease-out-soft);
   }
+
+  .nav-bar[data-float="true"]::after { opacity: 0; }
 
   .nav-inner {
     display: flex;
     align-items: center;
-    gap: calc(14px - 4px * var(--nav-t));
+    gap: 14px;
     max-width: 1200px;
     margin-inline: auto;
-    padding: calc(13px - 6px * var(--nav-t)) calc(20px - 13px * var(--nav-t))
-      calc(13px - 6px * var(--nav-t)) calc(20px - 6px * var(--nav-t));
+    padding: 13px 20px;
+    transition: padding var(--nav-move), gap var(--nav-move);
+  }
+
+  .nav-bar[data-float="true"] .nav-inner {
+    gap: 10px;
+    padding: 7px 7px 7px 14px;
   }
 
   /* Lichtreflex, der dem Mauszeiger folgt */
@@ -1052,13 +1072,23 @@ textarea.field-input {
   .nav-mark {
     display: grid;
     place-items: center;
-    width: calc(40px - 6px * var(--nav-t));
-    height: calc(40px - 6px * var(--nav-t));
-    border-radius: calc(13px - 2px * var(--nav-t));
+    width: 40px;
+    height: 40px;
+    border-radius: 13px;
     background: linear-gradient(135deg, var(--color-flame-400), var(--color-flame-500));
     color: #160702;
     box-shadow: 0 10px 24px -10px rgba(255, 90, 31, 0.95);
-    transition: transform 0.5s var(--ease-out-soft);
+    transition:
+      width var(--nav-move),
+      height var(--nav-move),
+      border-radius var(--nav-move),
+      transform 0.5s var(--ease-out-soft);
+  }
+
+  .nav-bar[data-float="true"] .nav-mark {
+    width: 34px;
+    height: 34px;
+    border-radius: 11px;
   }
 
   .nav-brand:hover .nav-mark { transform: rotate(-8deg) scale(1.04); }
@@ -1071,9 +1101,29 @@ textarea.field-input {
     letter-spacing: 0.24em;
     text-transform: uppercase;
     color: var(--color-mute);
-    max-height: calc(16px * (1 - var(--nav-t)));
-    opacity: calc(1 - var(--nav-t) * 1.6);
-    margin-top: calc(3px * (1 - var(--nav-t)));
+    max-height: 16px;
+    opacity: 1;
+    margin-top: 3px;
+    transition:
+      max-height var(--nav-move),
+      opacity 0.35s var(--ease-out-soft),
+      margin-top var(--nav-move);
+  }
+
+  .nav-bar[data-float="true"] .nav-sub {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-bar,
+    .nav-inner,
+    .nav-mark,
+    .nav-sub,
+    .nav-bar::after {
+      transition: none;
+    }
   }
 
   /* Gleitende Markierung hinter dem aktiven Punkt */
