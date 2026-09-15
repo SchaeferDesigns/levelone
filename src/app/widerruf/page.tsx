@@ -6,7 +6,7 @@ import Section from "@/components/Section";
 
 export const metadata: Metadata = {
   title: "Widerrufsbelehrung",
-  description: "Widerrufsbelehrung der Level One Göggingen GmbH.",
+  description: "Widerrufsbelehrung der Level One Göggingen GmbH. Informationen zum vierzehntägigen Widerrufsrecht bei einem online abgeschlossenen Mitgliedsvertrag.",
   alternates: { canonical: "/widerruf/" },
   openGraph: {
     type: "website",

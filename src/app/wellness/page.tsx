@@ -54,8 +54,8 @@ export default function WellnessPage() {
           </>
         }
         text="Fortschritt entsteht nicht während der Einheit, sondern danach. Deshalb findest du bei uns alles für die Regeneration direkt im Haus."
-        primary={{ href: "/probetraining/", label: "Kostenloses Probetraining" }}
-        secondary={{ href: "/mitgliedschaft/", label: "Mitgliedschaft ansehen" }}
+        primary={{ href: "/mitglied-werden/", label: "Mitglied werden" }}
+        secondary={{ href: "/probetraining/", label: "Erst kostenlos testen" }}
       />
 
       <Section className="glow glow-right">

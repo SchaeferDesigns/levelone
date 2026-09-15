@@ -132,8 +132,8 @@ export default function FaqPage() {
           </>
         }
         text="Die Themen, die vor dem ersten Training am häufigsten aufkommen. Ist deine Frage nicht dabei, melde dich einfach."
-        primary={{ href: "/probetraining/", label: "Probetraining anfragen" }}
-        secondary={{ href: "/kontakt/", label: "Frage stellen" }}
+        primary={{ href: "/mitglied-werden/", label: "Mitglied werden" }}
+        secondary={{ href: "/probetraining/", label: "Erst kostenlos testen" }}
       />
 
       {groups.map((g, i) => (

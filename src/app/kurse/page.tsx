@@ -33,8 +33,8 @@ export default function KursePage() {
           </>
         }
         text="Ein fester Termin im Kalender wirkt stärker als jeder gute Vorsatz. In der Gruppe ziehst du mit, auch an den Tagen, an denen du allein nicht angefangen hättest."
-        primary={{ href: "/probetraining/", label: "Kostenloses Probetraining" }}
-        secondary={{ href: "/kontakt/", label: "Nach Terminen fragen" }}
+        primary={{ href: "/mitglied-werden/", label: "Mitglied werden" }}
+        secondary={{ href: "/probetraining/", label: "Erst kostenlos testen" }}
       />
 
       <Section className="glow glow-right">

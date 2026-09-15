@@ -78,9 +78,9 @@ export default function TrainingPage() {
               deinen Tag passt.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Cta href="/probetraining/">Kostenloses Probetraining</Cta>
-              <Cta href="/kurse/" variant="ghost">
-                Zu den Kursen
+              <Cta href="/mitglied-werden/">Mitglied werden</Cta>
+              <Cta href="/probetraining/" variant="ghost">
+                Erst kostenlos testen
               </Cta>
             </div>
           </Reveal>
@@ -164,7 +164,7 @@ export default function TrainingPage() {
           />
         </div>
         <Reveal delay={420} className="mt-9 flex flex-wrap justify-center gap-3">
-          <Cta href="/probetraining/">Kostenloses Probetraining</Cta>
+          <Cta href="/mitglied-werden/">Mitglied werden</Cta>
           <Cta href="/kurse/" variant="ghost">
             Zu den Kursen
           </Cta>

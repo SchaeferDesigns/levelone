@@ -6,7 +6,7 @@ import Section from "@/components/Section";
 
 export const metadata: Metadata = {
   title: "Allgemeine Geschäftsbedingungen",
-  description: "Allgemeine Geschäftsbedingungen der Level One Göggingen GmbH.",
+  description: "Allgemeine Geschäftsbedingungen der Level One Göggingen GmbH für die Mitgliedschaft im Fitnessstudio in Göggingen, inklusive Laufzeit und Kündigung.",
   alternates: { canonical: "/agb/" },
   openGraph: {
     type: "website",

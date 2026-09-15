@@ -5,7 +5,7 @@ import Section from "@/components/Section";
 
 export const metadata: Metadata = {
   title: "Datenschutzerklärung",
-  description: "Informationen zum Datenschutz auf der Website von Level One Göggingen.",
+  description: "Informationen zum Datenschutz auf der Website von Level One Göggingen. Welche Daten erhoben werden, wozu sie dienen und welche Rechte du hast.",
   alternates: { canonical: "/datenschutz/" },
   openGraph: {
     type: "website",

@@ -178,7 +178,7 @@
 }
 
 @utility section-y {
-  padding-block: clamp(56px, 7.4vw, 108px);
+  padding-block: clamp(52px, 6.2vw, 92px);
 }
 
 @utility eyebrow {

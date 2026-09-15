@@ -35,8 +35,8 @@ export default function StudioPage() {
           </>
         }
         text="Vom ersten Trainingstag bis zum erfahrenen Kraftsportler. Bei uns trainieren Menschen mit ganz unterschiedlichen Zielen nebeneinander, und genau das macht die Stimmung aus."
-        primary={{ href: "/probetraining/", label: "Kostenloses Probetraining" }}
-        secondary={{ href: "/kontakt/", label: "Anfahrt ansehen" }}
+        primary={{ href: "/mitglied-werden/", label: "Mitglied werden" }}
+        secondary={{ href: "/probetraining/", label: "Erst kostenlos testen" }}
       />
 
       <Section>

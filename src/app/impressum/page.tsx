@@ -6,7 +6,7 @@ import Section from "@/components/Section";
 
 export const metadata: Metadata = {
   title: "Impressum",
-  description: "Impressum der Level One Göggingen GmbH.",
+  description: "Impressum der Level One Göggingen GmbH, Am Brunnenäcker 13 in 73571 Göggingen. Anbieterkennzeichnung, Kontaktdaten und Verantwortliche des Fitnessstudios.",
   alternates: { canonical: "/impressum/" },
   openGraph: {
     type: "website",
