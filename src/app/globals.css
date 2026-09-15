@@ -982,12 +982,18 @@ textarea.field-input {
     pointer-events: none;
   }
 
-  /* Die Leiste selbst wandelt ihre Form, sie verschwindet nie */
+  /*
+   * Die Leiste wandelt ihre Form stufenlos mit der Scrollposition.
+   * --nav-t laeuft von 0 (durchgehende Leiste oben) bis 1 (schwebende Pille).
+   * Dadurch sind Andocken und Loesen exakt derselbe Vorgang, nur rueckwaerts.
+   */
   .nav-bar {
+    --nav-t: 0;
     pointer-events: auto;
     position: relative;
-    border-style: solid;
-    border-width: 1px;
+    margin: calc(12px * var(--nav-t)) calc(max(20px, (100% - 980px) / 2) * var(--nav-t)) 0;
+    border-radius: calc(999px * var(--nav-t));
+    border: 1px solid rgba(255, 255, 255, calc(0.13 * var(--nav-t)));
     background: linear-gradient(
         150deg,
         rgba(255, 255, 255, 0.075) 0%,
@@ -997,43 +1003,32 @@ textarea.field-input {
       rgba(9, 12, 17, 0.58);
     -webkit-backdrop-filter: blur(26px) saturate(180%);
     backdrop-filter: blur(26px) saturate(180%);
-    transition:
-      margin 0.7s var(--ease-out-soft),
-      border-radius 0.7s var(--ease-out-soft),
-      border-color 0.7s var(--ease-out-soft),
-      box-shadow 0.7s var(--ease-out-soft),
-      background-color 0.7s var(--ease-out-soft);
-  }
-
-  /* Ganz oben: durchgehende Leiste von Kante zu Kante */
-  .nav-bar[data-state="top"] {
-    margin: 0;
-    border-radius: 0;
-    border-color: transparent transparent rgba(255, 255, 255, 0.1) transparent;
-    box-shadow: 0 18px 40px -34px rgba(0, 0, 0, 0.9);
-  }
-
-  /* Gescrollt: schwebende Pille */
-  .nav-bar[data-state="sticky"] {
-    margin: 12px max(20px, calc((100% - 980px) / 2)) 0;
-    border-radius: var(--radius-pill);
-    border-color: rgba(255, 255, 255, 0.13);
     box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
-      0 24px 56px -26px rgba(0, 0, 0, 0.95);
+      inset 0 1px 0 0 rgba(255, 255, 255, calc(0.2 * var(--nav-t))),
+      0 24px 56px -26px rgba(0, 0, 0, calc(0.95 * var(--nav-t)));
+  }
+
+  /* Feine Unterkante, nur solange die Leiste oben andockt */
+  .nav-bar::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: -1px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    opacity: calc(1 - var(--nav-t));
+    pointer-events: none;
   }
 
   .nav-inner {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: calc(14px - 4px * var(--nav-t));
     max-width: 1200px;
     margin-inline: auto;
-    transition: padding 0.7s var(--ease-out-soft);
+    padding: calc(13px - 6px * var(--nav-t)) calc(20px - 13px * var(--nav-t))
+      calc(13px - 6px * var(--nav-t)) calc(20px - 6px * var(--nav-t));
   }
-
-  .nav-bar[data-state="top"] .nav-inner { padding: 14px 20px; }
-  .nav-bar[data-state="sticky"] .nav-inner { padding: 7px 7px 7px 14px; gap: 10px; }
 
   /* Lichtreflex, der dem Mauszeiger folgt */
   .nav-bar::before {
@@ -1053,23 +1048,18 @@ textarea.field-input {
 
   .nav-bar:hover::before { opacity: 1; }
 
-  /* Markenzeichen */
+  /* Markenzeichen schrumpft mit */
   .nav-mark {
     display: grid;
     place-items: center;
-    border-radius: 14px;
+    width: calc(40px - 6px * var(--nav-t));
+    height: calc(40px - 6px * var(--nav-t));
+    border-radius: calc(13px - 2px * var(--nav-t));
     background: linear-gradient(135deg, var(--color-flame-400), var(--color-flame-500));
     color: #160702;
     box-shadow: 0 10px 24px -10px rgba(255, 90, 31, 0.95);
-    transition:
-      width 0.55s var(--ease-out-soft),
-      height 0.55s var(--ease-out-soft),
-      border-radius 0.55s var(--ease-out-soft),
-      transform 0.5s var(--ease-out-soft);
+    transition: transform 0.5s var(--ease-out-soft);
   }
-
-  .nav-bar[data-state="top"] .nav-mark { width: 42px; height: 42px; }
-  .nav-bar[data-state="sticky"] .nav-mark { width: 34px; height: 34px; border-radius: 11px; }
 
   .nav-brand:hover .nav-mark { transform: rotate(-8deg) scale(1.04); }
 
@@ -1081,14 +1071,10 @@ textarea.field-input {
     letter-spacing: 0.24em;
     text-transform: uppercase;
     color: var(--color-mute);
-    transition:
-      max-height 0.5s var(--ease-out-soft),
-      opacity 0.4s var(--ease-out-soft),
-      margin-top 0.5s var(--ease-out-soft);
+    max-height: calc(16px * (1 - var(--nav-t)));
+    opacity: calc(1 - var(--nav-t) * 1.6);
+    margin-top: calc(3px * (1 - var(--nav-t)));
   }
-
-  .nav-bar[data-state="top"] .nav-sub { max-height: 16px; opacity: 1; margin-top: 3px; }
-  .nav-bar[data-state="sticky"] .nav-sub { max-height: 0; opacity: 0; margin-top: 0; }
 
   /* Gleitende Markierung hinter dem aktiven Punkt */
   .nav-list {
@@ -1425,23 +1411,22 @@ textarea.field-input {
 @layer components {
   /* Auslastungsraster faehrt versetzt ein */
   .busy-cell {
-    opacity: 0;
     transform: scale(0.72);
     transition:
-      opacity 0.45s var(--ease-out-soft),
-      transform 0.45s var(--ease-out-soft),
-      filter 0.25s var(--ease-out-soft);
+      opacity 0.4s var(--ease-out-soft),
+      transform 0.4s var(--ease-out-soft),
+      filter 0.18s linear,
+      box-shadow 0.18s linear;
   }
 
   .busy-cell[data-shown="true"] {
-    opacity: 1;
     transform: none;
   }
 
-  .busy-cell:hover {
-    filter: brightness(1.45);
-    transform: scale(1.18);
-    transition-delay: 0ms !important;
+  .busy-exact {
+    box-shadow:
+      inset 0 0 0 2px rgba(244, 247, 251, 0.95),
+      0 0 22px -4px rgba(255, 138, 61, 0.9);
   }
 
   .busy-now {

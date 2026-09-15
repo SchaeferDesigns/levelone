@@ -9,7 +9,7 @@ export default function TarifCards({ compact = false }: { compact?: boolean }) {
       {tarife.map((t, i) => (
         <Reveal key={t.key} delay={i * 80} className="h-full">
           <div
-            className={`glass sweep card card-hover relative flex h-full flex-col ${
+            className={`glass card card-hover relative flex h-full flex-col ${
               t.highlight ? "ring-1 ring-flame-500/45" : ""
             }`}
           >

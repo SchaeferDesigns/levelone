@@ -23,7 +23,7 @@ export const tarife: Tarif[] = [
     laufzeit: "Ohne Mindestlaufzeit",
     kuendigung: "Monatlich kündbar",
     aufnahme: 0,
-    extras: ["Volle Freiheit", "Ideal zum Reinschnuppern"],
+    extras: ["Volle Freiheit beim Ausstieg", "Ideal zum Reinschnuppern"],
   },
   {
     key: "classic",
@@ -34,7 +34,7 @@ export const tarife: Tarif[] = [
     aufnahme: 0,
     highlight: true,
     badge: "Am häufigsten gewählt",
-    extras: ["Bester Preis für Regelmäßige", "Keine Aufnahmegebühr"],
+    extras: ["Bester Preis für Regelmäßige", "Freie Kurswahl"],
   },
   {
     key: "duo",
@@ -43,7 +43,7 @@ export const tarife: Tarif[] = [
     laufzeit: "12 Monate",
     kuendigung: "Danach monatlich kündbar",
     aufnahme: 0,
-    extras: ["Preis pro Person", "Zu zweit anmelden"],
+    extras: ["Preis pro Person", "Nur gemeinsam zu zweit"],
   },
 ];
 

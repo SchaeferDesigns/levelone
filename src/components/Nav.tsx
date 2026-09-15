@@ -9,7 +9,7 @@ import { mainNav, site } from "@/lib/site";
 export default function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const [sticky, setSticky] = useState(false);
+  const [t, setT] = useState(0);
 
   const toggleRef = useRef<HTMLButtonElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
@@ -71,8 +71,8 @@ export default function Nav() {
 
     const measure = () => {
       frame = 0;
-      // Kleine Hysterese, damit die Form am Umschaltpunkt nicht flattert
-      setSticky((prev) => (prev ? window.scrollY > 12 : window.scrollY > 40));
+      const next = Math.min(1, Math.max(0, window.scrollY / 120));
+      setT((prev) => (Math.abs(prev - next) > 0.004 ? next : prev));
     };
 
     const onScroll = () => {
@@ -163,7 +163,7 @@ export default function Nav() {
         <div
           ref={barRef}
           className="nav-bar"
-          data-state={sticky ? "sticky" : "top"}
+          style={{ "--nav-t": t } as React.CSSProperties}
           onMouseMove={onMove}
         >
           <div className="nav-inner">
