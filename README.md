@@ -97,3 +97,26 @@ NEXT_PUBLIC_FORM_ENDPOINT=https://www.levelonegoeggingen.de/formular.php
 Die Bildflächen sind als gestaltete Platzhalter umgesetzt (`MediaFrame`). Sobald echte Fotos
 vorliegen, werden sie unter `public/media` abgelegt und die Komponente durch ein `Image`
 Element ersetzt. Das Vorschaubild für soziale Netzwerke liegt unter `public/og.png`.
+
+## Veröffentlichung über GitHub Pages
+
+Bei jedem Push auf `main` baut die Aktion in `.github/workflows/deploy.yml` die
+Website und veröffentlicht den Ordner `out` auf GitHub Pages.
+
+Einmalig nötig: In den Repository-Einstellungen unter Pages als Quelle
+`GitHub Actions` auswählen.
+
+Optionale Repository-Variablen unter Settings, Secrets and variables, Actions,
+Reiter Variables:
+
+| Variable | Zweck |
+| --- | --- |
+| `SITE_URL` | Adresse für Canonical, Sitemap und Vorschaubild. Standard ist `https://www.levelonegoeggingen.de` |
+| `FORM_ENDPOINT` | Adresse, an die das Kontaktformular sendet. Ohne Eintrag greift der E-Mail-Fallback |
+
+Der Basispfad wird automatisch gesetzt. Läuft die Seite unter der
+Projektadresse `schaeferdesigns.github.io/levelone`, ergänzt die Aktion den
+Unterordner. Bei eigener Domain bleibt der Pfad leer.
+
+Für die eigene Domain zusätzlich eine Datei `public/CNAME` mit dem Domainnamen
+anlegen und die DNS-Einträge beim Anbieter auf GitHub Pages zeigen lassen.
