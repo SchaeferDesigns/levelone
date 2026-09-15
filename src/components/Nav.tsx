@@ -2,23 +2,109 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import Icon from "./Icon";
 import { mainNav, site } from "@/lib/site";
 
 export default function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const [compact, setCompact] = useState(false);
+  const [sticky, setSticky] = useState(false);
+  const [hidden, setHidden] = useState(false);
+
   const toggleRef = useRef<HTMLButtonElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
+  const barRef = useRef<HTMLDivElement | null>(null);
+  const listRef = useRef<HTMLUListElement | null>(null);
+  const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+
+  const [pill, setPill] = useState({ x: 0, w: 0, visible: false, hovered: false });
+
+  const isActive = useCallback(
+    (href: string) =>
+      href === "/" ? pathname === "/" : pathname.startsWith(href.replace(/\/$/, "")),
+    [pathname],
+  );
+
+  /* Markierung auf den aktiven Eintrag setzen */
+  const moveToActive = useCallback(() => {
+    const list = listRef.current;
+    if (!list) return;
+    const idx = mainNav.findIndex((i) => isActive(i.href));
+    const el = idx >= 0 ? itemRefs.current[idx] : null;
+    if (!el) {
+      setPill((p) => ({ ...p, visible: false, hovered: false }));
+      return;
+    }
+    const a = el.getBoundingClientRect();
+    const b = list.getBoundingClientRect();
+    setPill({ x: a.left - b.left, w: a.width, visible: true, hovered: false });
+  }, [isActive]);
+
+  useLayoutEffect(() => {
+    moveToActive();
+  }, [moveToActive]);
 
   useEffect(() => {
-    const onScroll = () => setCompact(window.scrollY > 24);
-    onScroll();
+    const onResize = () => moveToActive();
+    window.addEventListener("resize", onResize);
+    const list = listRef.current;
+    const ro = list ? new ResizeObserver(onResize) : null;
+    if (list && ro) ro.observe(list);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      ro?.disconnect();
+    };
+  }, [moveToActive]);
+
+  function hoverItem(i: number) {
+    const list = listRef.current;
+    const el = itemRefs.current[i];
+    if (!list || !el) return;
+    const a = el.getBoundingClientRect();
+    const b = list.getBoundingClientRect();
+    setPill({ x: a.left - b.left, w: a.width, visible: true, hovered: !isActive(mainNav[i].href) });
+  }
+
+  /* Zustand beim Scrollen: zusammenziehen, beim Abwärtsscrollen ausblenden */
+  useEffect(() => {
+    let frame = 0;
+    let last = window.scrollY;
+
+    const measure = () => {
+      frame = 0;
+      const y = window.scrollY;
+      setSticky(y > 18);
+      const down = y > last && y - last > 4;
+      const up = last - y > 4;
+      if (!open) {
+        if (down && y > 420) setHidden(true);
+        else if (up || y < 220) setHidden(false);
+      }
+      last = y;
+    };
+
+    const onScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(measure);
+    };
+
+    measure();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, [open]);
+
+  /* Lichtreflex folgt dem Zeiger */
+  function onMove(e: React.MouseEvent<HTMLDivElement>) {
+    const bar = barRef.current;
+    if (!bar) return;
+    const r = bar.getBoundingClientRect();
+    bar.style.setProperty("--sheen-x", `${e.clientX - r.left}px`);
+    bar.style.setProperty("--sheen-y", `${e.clientY - r.top}px`);
+  }
 
   useEffect(() => {
     setOpen(false);
@@ -29,16 +115,14 @@ export default function Nav() {
     toggleRef.current?.focus();
   }, []);
 
-  // Fokus im Menue halten, Escape schliesst und gibt den Fokus zurueck
+  /* Fokus im Menü halten */
   useEffect(() => {
     if (!open) return;
-
     const panel = panelRef.current;
     const focusables = () =>
-      Array.from(
-        panel?.querySelectorAll<HTMLElement>('a[href], button:not([disabled])') ?? [],
-      ).filter((el) => el.offsetParent !== null);
-
+      Array.from(panel?.querySelectorAll<HTMLElement>("a[href], button:not([disabled])") ?? []).filter(
+        (el) => el.offsetParent !== null,
+      );
     focusables()[0]?.focus();
 
     const onKey = (e: KeyboardEvent) => {
@@ -49,24 +133,23 @@ export default function Nav() {
       }
       if (e.key !== "Tab") return;
       const items = focusables();
-      if (items.length === 0) return;
+      if (!items.length) return;
       const first = items[0];
-      const last = items[items.length - 1];
-      const active = document.activeElement as HTMLElement | null;
-      if (e.shiftKey && (active === first || !panel?.contains(active))) {
+      const lastEl = items[items.length - 1];
+      const activeEl = document.activeElement as HTMLElement | null;
+      if (e.shiftKey && (activeEl === first || !panel?.contains(activeEl))) {
         e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && active === last) {
+        lastEl.focus();
+      } else if (!e.shiftKey && activeEl === lastEl) {
         e.preventDefault();
         first.focus();
       }
     };
-
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [open, close]);
 
-  // Hintergrund sperren und fuer Hilfsmittel ausblenden
+  /* Hintergrund sperren und ausblenden */
   useEffect(() => {
     const main = document.getElementById("inhalt");
     const footer = document.querySelector("footer");
@@ -83,47 +166,59 @@ export default function Nav() {
     };
   }, [open]);
 
-  const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href.replace(/\/$/, ""));
-
   return (
     <>
-      <div className="nav-scrim" aria-hidden="true" />
-      <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
-        <div className="shell relative z-50">
+      <div className="nav-scrim" aria-hidden="true" data-sticky={sticky} />
+
+      <header className="nav-wrap" data-hidden={hidden && !open}>
+        <div className="shell">
           <div
-            className={`glass nav-glass pointer-events-auto mx-auto mt-3 flex items-center gap-3 rounded-[999px] pl-4 pr-3 transition-all duration-500 ${
-              compact ? "py-2 shadow-2xl" : "py-2.5"
-            }`}
+            ref={barRef}
+            className="nav-bar"
+            data-state={sticky ? "sticky" : "top"}
+            onMouseMove={onMove}
           >
             <Link
               href="/"
-              className="flex shrink-0 items-center gap-2.5 py-1"
+              className="nav-brand flex shrink-0 items-center gap-3"
               aria-label={`${site.name}, zur Startseite`}
             >
-              <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-flame-400 to-flame-500 text-[#160702] shadow-[0_8px_20px_-8px_rgba(255,90,31,0.9)]">
-                <Icon name="dumbbell" size={19} strokeWidth={2.2} />
+              <span className="nav-mark">
+                <Icon name="dumbbell" size={20} strokeWidth={2.2} />
               </span>
               <span className="flex flex-col leading-none">
-                <span className="text-[15px] font-black tracking-tight">LEVEL ONE</span>
-                <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-mute">
-                  Göggingen
-                </span>
+                <span className="text-[16px] font-black tracking-tight">LEVEL ONE</span>
+                <span className="nav-sub">Göggingen</span>
               </span>
             </Link>
 
             <nav aria-label="Hauptnavigation" className="ml-auto hidden lg:block">
-              <ul className="flex items-center gap-1">
-                {mainNav.map((item) => (
+              <ul
+                ref={listRef}
+                className="nav-list"
+                onMouseLeave={moveToActive}
+                onBlur={(e) => {
+                  if (!e.currentTarget.contains(e.relatedTarget as Node)) moveToActive();
+                }}
+              >
+                <li
+                  aria-hidden="true"
+                  className="nav-pill"
+                  data-visible={pill.visible}
+                  data-hovered={pill.hovered}
+                  style={{ transform: `translate3d(${pill.x}px, -50%, 0)`, width: pill.w }}
+                />
+                {mainNav.map((item, i) => (
                   <li key={item.href}>
                     <Link
                       href={item.href}
+                      ref={(el) => {
+                        itemRefs.current[i] = el;
+                      }}
                       aria-current={isActive(item.href) ? "page" : undefined}
-                      className={`relative inline-flex items-center rounded-[999px] px-3.5 py-2 text-[14.5px] font-semibold transition-colors duration-300 ${
-                        isActive(item.href)
-                          ? "bg-white/12 text-chalk"
-                          : "text-mute hover:bg-white/8 hover:text-chalk"
-                      }`}
+                      className="nav-link"
+                      onMouseEnter={() => hoverItem(i)}
+                      onFocus={() => hoverItem(i)}
                     >
                       {item.label}
                     </Link>
@@ -132,19 +227,17 @@ export default function Nav() {
               </ul>
             </nav>
 
-            <div className="ml-auto flex items-center gap-2 lg:ml-0">
+            <div className="ml-auto flex items-center gap-2 lg:ml-3">
               <a
                 href={`tel:${site.contact.phone}`}
-                className="hidden h-11 w-11 place-items-center rounded-full border border-white/16 bg-white/6 text-chalk transition-colors hover:bg-white/12 sm:grid"
+                className="nav-round hidden sm:grid"
                 aria-label={`Anrufen unter ${site.contact.phoneDisplay}`}
               >
                 <Icon name="phone" size={18} />
               </a>
-              <Link
-                href="/probetraining/"
-                className="hidden rounded-[999px] bg-gradient-to-br from-flame-400 to-flame-500 px-5 py-3 text-[14.5px] font-extrabold text-[#160702] shadow-[0_12px_28px_-12px_rgba(255,90,31,0.95)] transition-transform duration-300 hover:-translate-y-0.5 md:inline-flex"
-              >
+              <Link href="/probetraining/" className="nav-cta hidden md:inline-flex">
                 Probetraining
+                <Icon name="arrowRight" size={17} strokeWidth={2.2} />
               </Link>
               <button
                 ref={toggleRef}
@@ -152,38 +245,43 @@ export default function Nav() {
                 onClick={() => setOpen((v) => !v)}
                 aria-expanded={open}
                 aria-controls="mobile-menu"
-                className="grid h-11 w-11 place-items-center rounded-full border border-white/16 bg-white/6 text-chalk transition-colors hover:bg-white/12 lg:hidden"
+                className="nav-round lg:hidden"
               >
-                <Icon name={open ? "close" : "menu"} size={20} strokeWidth={2.1} />
+                <span className="burger" data-open={open} aria-hidden="true">
+                  <span />
+                  <span />
+                  <span />
+                </span>
                 <span className="sr-only">{open ? "Menü schließen" : "Menü öffnen"}</span>
               </button>
             </div>
           </div>
         </div>
 
-        {/* Mobiles Menue */}
-        <div
-          id="mobile-menu"
-          hidden={!open}
-          className="pointer-events-auto fixed inset-0 top-0 z-40 lg:hidden"
-        >
+        {/* Mobiles Menü */}
+        <div id="mobile-menu" hidden={!open} className="pointer-events-auto fixed inset-0 z-40 lg:hidden">
           <button
             type="button"
             aria-label="Menü schließen"
             onClick={close}
-            className="absolute inset-0 h-full w-full bg-ink-950/70 backdrop-blur-xl"
+            className="absolute inset-0 h-full w-full bg-ink-950/72 backdrop-blur-2xl"
           />
           <div
             ref={panelRef}
             role="dialog"
             aria-modal="true"
             aria-label="Menü"
-            className="glass-strong absolute inset-x-5 top-[84px] rounded-[26px] p-5"
+            data-open={open}
+            className="menu-sheet glass-strong absolute inset-x-5 top-[92px] rounded-[26px] p-5"
           >
             <nav aria-label="Mobile Navigation">
               <ul className="flex flex-col gap-1">
-                {mainNav.map((item) => (
-                  <li key={item.href}>
+                {[...mainNav, { href: "/faq/", label: "Häufige Fragen" }].map((item, i) => (
+                  <li
+                    key={item.href}
+                    className="menu-item"
+                    style={{ "--menu-delay": `${60 + i * 45}ms` } as React.CSSProperties}
+                  >
                     <Link
                       href={item.href}
                       aria-current={isActive(item.href) ? "page" : undefined}
@@ -196,18 +294,12 @@ export default function Nav() {
                     </Link>
                   </li>
                 ))}
-                <li>
-                  <Link
-                    href="/faq/"
-                    className="flex items-center justify-between rounded-2xl px-4 py-3.5 text-[17px] font-bold text-mute"
-                  >
-                    Häufige Fragen
-                    <Icon name="arrowRight" size={18} />
-                  </Link>
-                </li>
               </ul>
             </nav>
-            <div className="mt-4 grid gap-2.5">
+            <div
+              className="menu-item mt-4 grid gap-2.5"
+              style={{ "--menu-delay": "420ms" } as React.CSSProperties}
+            >
               <Link href="/probetraining/" className="btn btn-primary w-full">
                 Kostenloses Probetraining
                 <Icon name="arrowRight" size={18} strokeWidth={2.1} />

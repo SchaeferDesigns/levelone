@@ -92,6 +92,41 @@ NEXT_PUBLIC_FORM_ENDPOINT=https://www.levelonegoeggingen.de/formular.php
 * Die Zustimmung lässt sich auf der Datenschutzseite jederzeit widerrufen.
 * Es wird kein Tracking und keine Analyse eingesetzt.
 
+## Bildsequenz am Scrollen
+
+Der Abschnitt "So sieht es bei uns aus" auf der Startseite spielt eine Bildfolge
+ab, die an das Scrollen gekoppelt ist. Solange keine Bilder vorliegen, zeigt der
+Abschnitt drei gestaltete Karten mit demselben Inhalt. Es geht also nichts kaputt,
+wenn die Sequenz fehlt.
+
+So wird sie eingebunden:
+
+1. Einzelbilder nach `public/sequenz` legen, fortlaufend nummeriert:
+   `frame-0001.webp`, `frame-0002.webp`, und so weiter.
+2. Die Datei `public/sequenz/manifest.json` anlegen. Eine Vorlage liegt als
+   `BEISPIEL-manifest.json` daneben.
+3. Einmal `npm run build` laufen lassen.
+
+Empfehlung für die Bilder:
+
+| Angabe | Wert |
+| --- | --- |
+| Anzahl | 90 bis 150 Bilder, mehr bringt kaum sichtbaren Gewinn |
+| Format | WebP, Qualität etwa 70 |
+| Größe | 1600 mal 900 Pixel, quer |
+| Dateigröße | höchstens 45 KB pro Bild, sonst wird die Sequenz zu schwer |
+| Inhalt | eine durchgehende Bewegung, etwa eine Kamerafahrt durch das Studio |
+
+Beispiel zum Umwandeln eines Videos in Einzelbilder:
+
+```bash
+ffmpeg -i studio.mp4 -vf "fps=24,scale=1600:-2" -q:v 80 public/sequenz/frame-%04d.webp
+```
+
+Auf Mobilgeräten, bei aktivem Datensparmodus und bei ruhiger Darstellung wird
+statt der Sequenz nur das erste Bild gezeigt. Die Bilder werden erst geladen,
+wenn der Abschnitt in die Nähe des Bildschirms kommt.
+
 ## Bilder
 
 Die Bildflächen sind als gestaltete Platzhalter umgesetzt (`MediaFrame`). Sobald echte Fotos

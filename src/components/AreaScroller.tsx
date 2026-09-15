@@ -55,12 +55,14 @@ export default function AreaScroller() {
   const { ref, progress } = useScrollProgress<HTMLDivElement>();
   const rowRef = useRef<HTMLDivElement | null>(null);
   const [travel, setTravel] = useState(0);
+  const [stageH, setStageH] = useState(900);
 
   useEffect(() => {
     const measure = () => {
       const row = rowRef.current;
       if (!row) return;
       setTravel(Math.max(0, row.scrollWidth - window.innerWidth + 40));
+      setStageH(window.innerHeight);
     };
     measure();
     window.addEventListener("resize", measure);
@@ -72,7 +74,7 @@ export default function AreaScroller() {
       <div
         ref={ref}
         className="hscroll-track"
-        style={{ height: `${areas.length * 62 + 100}svh` }}
+        style={{ height: `${Math.round(stageH + travel)}px` }}
       >
         <div className="hscroll-stage">
           <div className="w-full">
@@ -81,7 +83,7 @@ export default function AreaScroller() {
               <h2 id="bereiche-titel" className="display-huge mt-3">
                 Fünf Bereiche,
                 <br />
-                <span className="flame-text">ein Beitrag</span>
+                <span className="flame-text">eine Mitgliedschaft</span>
               </h2>
             </div>
 
@@ -114,6 +116,22 @@ export default function AreaScroller() {
                   </ul>
                 </article>
               ))}
+            </div>
+
+            <div className="shell mt-10">
+              <div
+                className="h-1 w-full overflow-hidden rounded-full bg-white/10"
+                role="presentation"
+              >
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-flame-400 to-flame-500 transition-[width] duration-150"
+                  style={{ width: `${Math.max(6, progress * 100)}%` }}
+                />
+              </div>
+              <p className="mt-3 text-[13px] font-semibold uppercase tracking-[0.16em] text-faint">
+                Bereich {Math.min(areas.length, Math.floor(progress * areas.length) + 1)} von{" "}
+                {areas.length}
+              </p>
             </div>
           </div>
         </div>

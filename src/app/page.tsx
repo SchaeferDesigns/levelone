@@ -9,7 +9,8 @@ import MapConsent from "@/components/MapConsent";
 import Hero from "@/components/Hero";
 import Ticker from "@/components/Ticker";
 import Counter from "@/components/Counter";
-import DayCycle from "@/components/DayCycle";
+import DayStrip from "@/components/DayStrip";
+import StudioShowcase from "@/components/StudioShowcase";
 import AreaScroller from "@/components/AreaScroller";
 import GoalPicker from "@/components/GoalPicker";
 import { CtaBand, Steps } from "@/components/blocks";
@@ -70,8 +71,25 @@ export default function Home() {
         ]}
       />
 
-      {/* Der Tagesverlauf, an das Scrollen gekoppelt */}
-      <DayCycle />
+      {/* Das Studio, als Bildsequenz am Scrollen */}
+      <StudioShowcase />
+
+      {/* Rund um die Uhr, kompakt und zum Durchklicken */}
+      <Section id="rund-um-die-uhr" className="glow glow-left">
+        <SectionHeader
+          eyebrow="24 Stunden geöffnet"
+          title={
+            <>
+              Wann passt es <span className="flame-text">dir</span>?
+            </>
+          }
+          text="Such dir eine Uhrzeit aus, dann siehst du, wie das Studio zu dieser Stunde aussieht."
+          align="center"
+        />
+        <Reveal delay={80} className="mt-11">
+          <DayStrip />
+        </Reveal>
+      </Section>
 
       {/* Kennzahlen */}
       <Section className="pt-16">
