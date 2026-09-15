@@ -18,35 +18,35 @@ const areas: Area[] = [
     icon: "dumbbell",
     kicker: "Bereich 01",
     title: "Geräte",
-    text: "Maschinen für jede Muskelgruppe. Die Bewegung ist geführt, der Einstieg dadurch leicht und sicher.",
+    text: "Maschinen für jede Muskelgruppe. Geführte Bewegung, sicherer Einstieg.",
     points: ["Rücken, Brust, Schulter, Beine", "Gewichte in feinen Stufen", "Einweisung inklusive"],
   },
   {
     icon: "target",
     kicker: "Bereich 02",
     title: "Freihantel",
-    text: "Kurzhanteln, Langhanteln, Bänke und Racks. Genug Platz, damit niemand auf ein Gerät wartet.",
+    text: "Kurzhanteln, Langhanteln, Bänke, Racks. Platz für die Grundübungen.",
     points: ["Grundübungen mit Platz", "Breite Hantelabstufung", "Rund um die Uhr zugänglich"],
   },
   {
     icon: "bike",
     kicker: "Bereich 03",
     title: "Cardio",
-    text: "Laufband, Stepper und Bikes. Fürs Aufwärmen, für den Fettstoffwechsel oder als eigene Einheit.",
+    text: "Laufband, Stepper, Bikes. Zum Aufwärmen oder als eigene Einheit.",
     points: ["Belastung frei steuerbar", "Gut kombinierbar mit Kraft", "Auch für den Wiedereinstieg"],
   },
   {
     icon: "music",
     kicker: "Bereich 04",
     title: "Kurse",
-    text: "Rückenfit, Zumba und Pole Dance im eigenen Kursbereich. Feste Termine, klare Anleitung.",
+    text: "Rückenfit, Zumba, Pole Dance. Feste Termine, klare Anleitung.",
     points: ["Mehrere Schwierigkeitsstufen", "Kleine Gruppen", "Ohne Vorkenntnisse"],
   },
   {
     icon: "sauna",
     kicker: "Bereich 05",
     title: "Wellness",
-    text: "Sauna und Solarium direkt im Haus. Regeneration gehört zum Training, nicht als teures Extra.",
+    text: "Sauna und Solarium im Haus. Erholung gehört dazu, nicht ins Zusatzpaket.",
     points: ["Sauna nach dem Training", "Solarium im Studio", "Bar mit Kaffee und Shakes"],
   },
 ];
@@ -74,7 +74,7 @@ export default function AreaScroller() {
       <div
         ref={ref}
         className="hscroll-track"
-        style={{ height: `${Math.round(stageH + travel)}px` }}
+        style={{ height: `${Math.round(stageH + travel * 0.9)}px` }}
       >
         <div className="hscroll-stage">
           <div className="w-full">
@@ -93,23 +93,24 @@ export default function AreaScroller() {
               style={{ transform: `translate3d(${-progress * travel}px, 0, 0)` }}
             >
               {areas.map((a) => (
-                <article key={a.title} className="hscroll-card glass sweep card">
-                  <div className="flex items-center justify-between gap-4">
-                    <span className="grid h-12 w-12 place-items-center rounded-2xl border border-white/14 bg-white/6 text-flame-400">
-                      <Icon name={a.icon} size={23} />
+                <article key={a.title} className="hscroll-card glass sweep card card-hover">
+                  <div className="flex items-start justify-between gap-6">
+                    <span className="grid h-14 w-14 place-items-center rounded-2xl border border-white/14 bg-white/6 text-flame-400">
+                      <Icon name={a.icon} size={26} />
                     </span>
-                    <span className="text-[12px] font-bold uppercase tracking-[0.18em] text-faint">
-                      {a.kicker}
+                    <span className="text-[clamp(3rem,7vw,5.2rem)] font-black leading-none tracking-tight text-white/8">
+                      {a.kicker.replace("Bereich ", "")}
                     </span>
                   </div>
-                  <h3 className="display-md mt-6">{a.title}</h3>
-                  <p className="mt-3 text-[15px] leading-relaxed text-mute">{a.text}</p>
-                  <ul className="mt-6 flex flex-col gap-2.5">
+                  <h3 className="display-huge mt-5">{a.title}</h3>
+                  <p className="mt-4 text-[17px] leading-relaxed text-mute">{a.text}</p>
+                  <ul className="mt-7 flex flex-wrap gap-2.5">
                     {a.points.map((pt) => (
-                      <li key={pt} className="flex items-start gap-3 text-[14.5px]">
-                        <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-flame-500/18 text-flame-400">
-                          <Icon name="check" size={12} strokeWidth={3} />
-                        </span>
+                      <li
+                        key={pt}
+                        className="inline-flex items-center gap-2 rounded-[999px] border border-white/12 bg-white/5 px-4 py-2 text-[14px] font-semibold"
+                      >
+                        <Icon name="check" size={13} strokeWidth={3} className="text-flame-400" />
                         {pt}
                       </li>
                     ))}

@@ -122,11 +122,6 @@ export default function Footer() {
                 </Link>
               </li>
             ))}
-            <li>
-              <Link href="/datenschutz/#externe-inhalte" className="inline-block py-1 transition-colors hover:text-chalk">
-                Einwilligung verwalten
-              </Link>
-            </li>
           </ul>
         </div>
       </div>

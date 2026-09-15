@@ -3,7 +3,6 @@ import Icon from "@/components/Icon";
 import Reveal from "@/components/Reveal";
 import Section, { SectionHeader } from "@/components/Section";
 import ContactForm from "@/components/ContactForm";
-import MapConsent from "@/components/MapConsent";
 import Cta from "@/components/Cta";
 import { CtaBand } from "@/components/blocks";
 import { site } from "@/lib/site";
@@ -185,17 +184,6 @@ export default function KontaktPage() {
             </Reveal>
           </div>
         </div>
-      </Section>
-
-      <Section id="anfahrt">
-        <SectionHeader
-          eyebrow="Standort"
-          title="So findest du uns"
-          text="Am Brunnenäcker 13, 73571 Göggingen. Die Karte wird erst nach deiner Zustimmung geladen."
-        />
-        <Reveal delay={100} className="mt-8">
-          <MapConsent />
-        </Reveal>
       </Section>
 
       <CtaBand

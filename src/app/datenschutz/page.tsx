@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import LegalText from "@/components/LegalText";
 import Reveal from "@/components/Reveal";
 import Section from "@/components/Section";
-import ConsentSettings from "@/components/ConsentSettings";
 
 export const metadata: Metadata = {
   title: "Datenschutzerklärung",
@@ -33,9 +32,6 @@ export default function Page() {
       <Section>
         <Reveal>
           <LegalText file="datenschutz" title="Datenschutzerklärung" />
-        </Reveal>
-        <Reveal delay={100} id="externe-inhalte">
-          <ConsentSettings />
         </Reveal>
       </Section>
     </>

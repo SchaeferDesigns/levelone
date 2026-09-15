@@ -5,11 +5,12 @@ import Reveal from "@/components/Reveal";
 import Cta from "@/components/Cta";
 import Section, { SectionHeader } from "@/components/Section";
 import Accordion from "@/components/Accordion";
-import MapConsent from "@/components/MapConsent";
 import Hero from "@/components/Hero";
 import Ticker from "@/components/Ticker";
 import QuickAnswers from "@/components/QuickAnswers";
 import StudioShowcase from "@/components/StudioShowcase";
+import PlateLab from "@/components/PlateLab";
+import BusyChart from "@/components/BusyChart";
 import AreaScroller from "@/components/AreaScroller";
 import GoalPicker from "@/components/GoalPicker";
 import { CtaBand, Steps } from "@/components/blocks";
@@ -81,9 +82,8 @@ export default function Home() {
               <div className="p-8 sm:p-12">
                 <span className="eyebrow">Mitgliedschaft</span>
                 <h2 className="display-huge mt-4">Was drin ist</h2>
-                <p className="lead mt-5 max-w-[52ch]">
-                  Kein Baukasten mit Kleingedrucktem. Diese Leistungen bekommst du in jeder
-                  Mitgliedschaft, unabhängig vom Tarif.
+                <p className="lead mt-5 max-w-[46ch]">
+                  In jeder Mitgliedschaft enthalten, unabhängig vom Tarif.
                 </p>
                 <ul className="mt-8 grid gap-3.5 sm:grid-cols-2">
                   {[
@@ -120,9 +120,8 @@ export default function Home() {
                   <div>
                     <h3 className="display-md">Und der Preis?</h3>
                     <p className="mt-3 text-[15.5px] leading-relaxed text-mute">
-                      Der hängt davon ab, wie lange du planst und wie oft du kommst. Ein kurzes
-                      Gespräch reicht, dann weißt du es genau. Ohne Verkaufsdruck, ohne
-                      Aufnahmegebühr im Kleingedruckten.
+                      Hängt von Laufzeit und Trainingshäufigkeit ab. Ein kurzes Gespräch reicht,
+                      dann weißt du es genau.
                     </p>
                   </div>
                   <div className="flex flex-wrap gap-2.5">
@@ -153,6 +152,13 @@ export default function Home() {
         </Reveal>
       </Section>
 
+      {/* Auslastung als Bild statt als Text */}
+      <Section id="auslastung">
+        <Reveal>
+          <BusyChart />
+        </Reveal>
+      </Section>
+
       {/* Passt das zu meinem Ziel */}
       <Section id="ziel" className="glow glow-right">
         <SectionHeader
@@ -170,15 +176,22 @@ export default function Home() {
         </Reveal>
       </Section>
 
-      {/* Fortschrittsgeschichte am Scrollen */}
+      {/* Bildsequenz, sobald Material vorliegt */}
       <StudioShowcase />
+
+      {/* Zum Anfassen */}
+      <Section id="hantel" className="glow glow-left">
+        <Reveal>
+          <PlateLab />
+        </Reveal>
+      </Section>
 
       {/* Ablauf */}
       <Section className="glow glow-left">
         <SectionHeader
           eyebrow="So startest du"
           title="In drei Schritten im Training"
-          text="Kein langes Vorgespräch, keine Hürden. Melde dich, komm vorbei, leg los."
+          text="Melde dich, komm vorbei, leg los."
           align="center"
         />
         <div className="mt-12">
@@ -218,8 +231,7 @@ export default function Home() {
               <div>
                 <h2 className="text-[20px] font-extrabold tracking-tight">Hör nicht nur auf uns</h2>
                 <p className="mt-2 max-w-[62ch] text-[15px] leading-relaxed text-mute">
-                  Was Mitglieder über das Studio schreiben, liest du direkt bei Google. Auf
-                  Instagram siehst du, was gerade im Studio passiert.
+                  Was Mitglieder schreiben, liest du bei Google. Auf Instagram siehst du den Alltag.
                 </p>
               </div>
             </div>
@@ -250,7 +262,7 @@ export default function Home() {
             <SectionHeader
               eyebrow="Gut zu wissen"
               title="Häufige Fragen"
-              text="Die Antworten auf das, was neue Mitglieder am häufigsten fragen."
+              text="Was neue Mitglieder am häufigsten fragen."
             />
           </div>
           <div>
@@ -275,7 +287,7 @@ export default function Home() {
             <SectionHeader
               eyebrow="Standort"
               title="Mitten in Göggingen"
-              text="Zentral im Ostalbkreis, gut erreichbar aus Schwäbisch Gmünd, Leinzell, Iggingen und der Umgebung."
+              text="Zentral im Ostalbkreis, gut erreichbar aus Schwäbisch Gmünd und Umgebung."
             />
             <Reveal delay={100} className="mt-8">
               <div className="glass sweep card">
@@ -315,7 +327,28 @@ export default function Home() {
             </Reveal>
           </div>
           <Reveal delay={140}>
-            <MapConsent />
+            <div className="glass sweep card">
+              <p className="text-[13px] font-bold uppercase tracking-[0.14em] text-faint">
+                Anfahrt
+              </p>
+              <ul className="mt-5 flex flex-col gap-4">
+                {[
+                  { icon: "car" as const, t: "Mit dem Auto", d: "Parkplätze direkt am Studio, keine Parkgebühr" },
+                  { icon: "accessibility" as const, t: "Barrierefrei", d: "Ebenerdiger Zugang ohne Stufen" },
+                  { icon: "key" as const, t: "Nachts", d: "Zutritt mit dem eigenen Zutrittsmedium" },
+                ].map((x) => (
+                  <li key={x.t} className="flex items-start gap-4">
+                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-white/12 bg-white/6 text-flame-400">
+                      <Icon name={x.icon} size={21} />
+                    </span>
+                    <span>
+                      <span className="block text-[16px] font-bold">{x.t}</span>
+                      <span className="block text-[14.5px] text-mute">{x.d}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </Reveal>
         </div>
       </Section>

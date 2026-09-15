@@ -38,8 +38,6 @@ export const site = {
     facebook: "https://www.facebook.com/LevelOneGoeggingen/",
   },
   maps: "https://www.google.com/maps/search/?api=1&query=Am+Brunnen%C3%A4cker+13%2C+73571+G%C3%B6ggingen",
-  osmEmbed:
-    "https://www.openstreetmap.org/export/embed.html?bbox=9.8965%2C48.8000%2C9.9365%2C48.8250&layer=mapnik",
 } as const;
 
 export const mainNav = [

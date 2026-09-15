@@ -1,28 +1,27 @@
 import fs from "node:fs";
 import path from "node:path";
 import ScrollSequence from "./ScrollSequence";
-import BarbellStory from "./BarbellStory";
 import type { Caption, SequenceManifest } from "./ScrollSequence";
 
 const captions: Caption[] = [
   {
     title: "Komm rein",
-    text: "Empfang, Umkleide, Trainingsfläche. Kurze Wege, keine Schleusen, kein Suchen. Du bist in zwei Minuten umgezogen und stehst am ersten Gerät.",
+    text: "Empfang, Umkleide, Trainingsfläche. Kurze Wege, kein Suchen. In zwei Minuten stehst du am ersten Gerät.",
   },
   {
     title: "Nimm dir Platz",
-    text: "Freihantelbereich mit Racks und Bänken, dazu Maschinen für jede Muskelgruppe. Genug Fläche, damit niemand auf ein Gewicht wartet.",
+    text: "Freihantelbereich mit Racks und Bänken, dazu Maschinen für jede Muskelgruppe. Genug Fläche für alle.",
   },
   {
     title: "Und danach",
-    text: "Kursbereich, Sauna und Solarium sind Teil des Studios. Regeneration gehört zum Training, nicht in ein Zusatzpaket.",
+    text: "Kursbereich, Sauna und Solarium gehören dazu. Erholung ist Teil des Trainings.",
   },
 ];
 
 /**
- * Zeigt das Studio. Liegt eine Bildsequenz unter public/sequenz, wird sie
- * am Scrollen abgespielt. Fehlt sie, erscheint eine gestaltete Vorschau,
- * damit die Seite trotzdem vollständig ist.
+ * Spielt eine Bildsequenz am Scrollen ab, sobald eine unter public/sequenz
+ * hinterlegt ist. Ohne Sequenz erscheint nichts, damit keine leere Fläche
+ * entsteht.
  */
 function readManifest(): SequenceManifest | null {
   try {
@@ -44,10 +43,6 @@ function readManifest(): SequenceManifest | null {
 
 export default function StudioShowcase() {
   const manifest = readManifest();
-
-  if (manifest) {
-    return <ScrollSequence manifest={manifest} captions={captions} />;
-  }
-
-  return <BarbellStory />;
+  if (!manifest) return null;
+  return <ScrollSequence manifest={manifest} captions={captions} />;
 }

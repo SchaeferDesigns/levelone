@@ -28,7 +28,7 @@ const answers: Answer[] = [
         <Counter to={0} /> €
       </>
     ),
-    text: "Das Probetraining ist kostenlos und unverbindlich. Den passenden Tarif klären wir danach in zwei Minuten, weil er von Laufzeit und Trainingshäufigkeit abhängt.",
+    text: "Probetraining kostenlos. Den Tarif klären wir danach in zwei Minuten.",
     href: "/mitgliedschaft/",
     cta: "Zur Mitgliedschaft",
   },
@@ -36,7 +36,7 @@ const answers: Answer[] = [
     icon: "clock",
     question: "Wann kann ich trainieren?",
     value: "24/7",
-    text: "An sieben Tagen die Woche rund um die Uhr, auch nachts und an Feiertagen. Beratung gibt es Mo bis Fr 9 bis 22 Uhr, Sa und So 10 bis 14 Uhr.",
+    text: "Rund um die Uhr, auch nachts und an Feiertagen. Beratung Mo bis Fr 9 bis 22 Uhr.",
     href: "/studio/",
     cta: "Öffnungszeiten",
   },
@@ -44,7 +44,7 @@ const answers: Answer[] = [
     icon: "pin",
     question: "Wo ist das Studio?",
     value: "Göggingen",
-    text: `${site.contact.street}, ${site.contact.zip} ${site.contact.city}. Parkplätze direkt am Studio, barrierefreier Zugang, zentral im Ostalbkreis.`,
+    text: `${site.contact.street}, ${site.contact.zip} ${site.contact.city}. Parkplätze direkt vor der Tür.`,
     href: site.maps,
     cta: "Route planen",
     external: true,
@@ -57,7 +57,7 @@ const answers: Answer[] = [
         <Counter to={1} /> Termin
       </>
     ),
-    text: "Anrufen oder das Formular ausfüllen. Wir zeigen dir alles, klären dein Ziel und du trainierst direkt mit. Ohne Vertrag, ohne Verpflichtung.",
+    text: "Anrufen oder Formular. Rundgang, Zielgespräch, erstes Training. Ohne Vertrag.",
     href: "/probetraining/",
     cta: "Termin anfragen",
   },
@@ -72,9 +72,7 @@ export default function QuickAnswers() {
           <h2 id="antworten-titel" className="display-huge mt-4">
             Die vier Fragen <span className="flame-text">vorab</span>
           </h2>
-          <p className="lead mt-5">
-            Damit du nicht suchen musst. Alles Weitere steht auf den jeweiligen Seiten.
-          </p>
+          <p className="lead mt-5">Damit du nicht suchen musst.</p>
         </Reveal>
 
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">

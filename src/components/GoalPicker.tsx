@@ -21,7 +21,7 @@ const goals: Goal[] = [
     label: "Muskeln aufbauen",
     icon: "dumbbell",
     headline: "Schwerer werden, sichtbar werden",
-    text: "Der Reiz muss steigen, sonst passiert nichts. Wir setzen auf wenige große Übungen, saubere Technik und eine Steigerung, die du im Heft nachlesen kannst.",
+    text: "Wenige große Übungen, saubere Technik, eine Steigerung, die nachvollziehbar bleibt.",
     plan: [
       "Drei feste Einheiten pro Woche",
       "Grundübungen an Gerät und Hantel",
@@ -34,7 +34,7 @@ const goals: Goal[] = [
     label: "Abnehmen",
     icon: "flame",
     headline: "Weniger wiegen, mehr aushalten",
-    text: "Krafttraining hält die Muskulatur, Cardio erhöht den Verbrauch, die Ernährung entscheidet. Wir kümmern uns um alle drei Teile statt nur um einen.",
+    text: "Kraft hält die Muskulatur, Cardio erhöht den Verbrauch, die Ernährung entscheidet.",
     plan: [
       "Kraft plus Cardio kombiniert",
       "Realistische Ernährungsschritte",
@@ -47,7 +47,7 @@ const goals: Goal[] = [
     label: "Rücken stärken",
     icon: "pulse",
     headline: "Sitzen und Schichtarbeit ausgleichen",
-    text: "Der Rücken meldet sich meistens dort, wo die Kraft fehlt. Wir kräftigen gezielt Rumpf und oberen Rücken und arbeiten an der Beweglichkeit der Hüfte.",
+    text: "Der Rücken meldet sich dort, wo Kraft fehlt. Wir kräftigen Rumpf und oberen Rücken.",
     plan: [
       "Rückenfit im Kursbereich",
       "Gezielte Kräftigung an Geräten",
@@ -60,7 +60,7 @@ const goals: Goal[] = [
     label: "Fitter werden",
     icon: "bike",
     headline: "Treppen ohne Pause",
-    text: "Kondition ist die Grundlage für alles andere. Wir starten in einem Tempo, das du durchhältst, und steigern in kleinen Schritten statt in großen Sprüngen.",
+    text: "Wir starten in einem Tempo, das du durchhältst, und steigern in kleinen Schritten.",
     plan: [
       "Zwei bis drei lockere Einheiten",
       "Belastung nach Gefühl und Puls",
@@ -73,7 +73,7 @@ const goals: Goal[] = [
     label: "Wiedereinstieg",
     icon: "sparkles",
     headline: "Nach langer Pause zurück",
-    text: "Der häufigste Fehler ist ein zu harter Start. Wir beginnen bewusst ruhig, bauen die Gewohnheit auf und steigern erst, wenn die ersten Wochen sitzen.",
+    text: "Der häufigste Fehler ist ein zu harter Start. Erst die Gewohnheit, dann die Last.",
     plan: [
       "Zwei kurze Einheiten pro Woche",
       "Geführte Geräte für den Start",
