@@ -4,11 +4,22 @@ import Reveal from "@/components/Reveal";
 import Section, { SectionHeader } from "@/components/Section";
 import { CtaBand, FeatureCard, NoticeCard, PageHero } from "@/components/blocks";
 
+const metaTitle = "Kurse";
+const metaDescription =
+  "Gruppenkurse im Level One Göggingen: Rückenfit, Zumba, Pole Dance und weitere Formate. Feste Termine, klare Anleitung und Training in der Gruppe.";
+
 export const metadata: Metadata = {
-  title: "Kurse",
-  description:
-    "Gruppenkurse im Level One Göggingen: Rückenfit, Zumba, Pole Dance und weitere Formate. Feste Termine, klare Anleitung und Training in der Gruppe.",
+  title: metaTitle,
+  description: metaDescription,
   alternates: { canonical: "/kurse/" },
+  openGraph: {
+    type: "website",
+    locale: "de_DE",
+    url: "/kurse/",
+    title: `${metaTitle} | Level One Göggingen`,
+    description: metaDescription,
+    images: ["/og.png"],
+  },
 };
 
 export default function KursePage() {
@@ -22,7 +33,7 @@ export default function KursePage() {
           </>
         }
         text="Ein fester Termin im Kalender wirkt stärker als jeder gute Vorsatz. In der Gruppe ziehst du mit, auch an den Tagen, an denen du allein nicht angefangen hättest."
-        primary={{ href: "/probetraining/", label: "Kurs zur Probe besuchen" }}
+        primary={{ href: "/probetraining/", label: "Kostenloses Probetraining" }}
         secondary={{ href: "/kontakt/", label: "Nach Terminen fragen" }}
       />
 
@@ -57,9 +68,9 @@ export default function KursePage() {
         <Reveal delay={180} className="mt-10">
           <NoticeCard
             icon="calendar"
-            title="Aktueller Kursplan folgt an dieser Stelle"
-            text="Sobald der Plan für die laufende Saison feststeht, findest du hier alle Kurse mit Wochentag, Uhrzeit und Trainerin oder Trainer. Bis dahin nennen wir dir die Termine gern am Telefon."
-            action={{ href: "/kontakt/", label: "Termine erfragen" }}
+            title="Kursplan direkt von uns"
+            text="Die Termine der laufenden Saison sagen wir dir am Telefon oder im Studio und schicken dir den Plan auf Wunsch zu. So bekommst du immer den aktuellen Stand statt einer veralteten Tabelle."
+            action={{ href: "/kontakt/", label: "Kursplan anfordern" }}
           />
         </Reveal>
       </Section>

@@ -5,13 +5,25 @@ import Section, { SectionHeader } from "@/components/Section";
 import ContactForm from "@/components/ContactForm";
 import MapConsent from "@/components/MapConsent";
 import Cta from "@/components/Cta";
+import { CtaBand } from "@/components/blocks";
 import { site } from "@/lib/site";
 
+const metaTitle = "Kontakt und Anfahrt";
+const metaDescription =
+  "Level One Göggingen, Am Brunnenäcker 13, 73571 Göggingen. Telefon 07175 2618200. Öffnungszeiten, Anfahrt und Kontaktformular.";
+
 export const metadata: Metadata = {
-  title: "Kontakt und Anfahrt",
-  description:
-    "Level One Göggingen, Am Brunnenäcker 13, 73571 Göggingen. Telefon 07175 2618200. Öffnungszeiten, Anfahrt und Kontaktformular.",
+  title: metaTitle,
+  description: metaDescription,
   alternates: { canonical: "/kontakt/" },
+  openGraph: {
+    type: "website",
+    locale: "de_DE",
+    url: "/kontakt/",
+    title: `${metaTitle} | Level One Göggingen`,
+    description: metaDescription,
+    images: ["/og.png"],
+  },
 };
 
 export default function KontaktPage() {
@@ -33,6 +45,7 @@ export default function KontaktPage() {
       </section>
 
       <Section className="glow glow-right">
+        <h2 className="sr-only">Kontaktmöglichkeiten</h2>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {[
             {
@@ -73,7 +86,7 @@ export default function KontaktPage() {
                 <span className="grid h-12 w-12 place-items-center rounded-2xl border border-white/12 bg-white/6 text-flame-400">
                   <Icon name={c.icon} size={23} />
                 </span>
-                <h2 className="mt-5 text-[18px] font-extrabold tracking-tight">{c.t}</h2>
+                <h3 className="mt-5 text-[18px] font-extrabold tracking-tight">{c.t}</h3>
                 <div className="mt-2.5 flex-1 text-[15px] leading-relaxed break-words text-mute">
                   {c.lines.map((l) => (
                     <p key={l}>{l}</p>
@@ -107,7 +120,7 @@ export default function KontaktPage() {
             <Reveal delay={100}>
               <div className="glass-strong rounded-[26px] p-8">
                 <span className="eyebrow">Öffnungszeiten</span>
-                <h2 className="display-md mt-3">Wann wir für dich da sind</h2>
+                <h3 className="display-md mt-3">Wann wir für dich da sind</h3>
                 <div className="mt-7 flex flex-col gap-6">
                   <div>
                     <p className="text-[13px] font-bold uppercase tracking-[0.14em] text-faint">
@@ -153,7 +166,7 @@ export default function KontaktPage() {
                 <span className="grid h-12 w-12 place-items-center rounded-2xl border border-white/12 bg-white/6 text-flame-400">
                   <Icon name="car" size={23} />
                 </span>
-                <h2 className="display-md mt-5">Anfahrt und Parken</h2>
+                <h3 className="display-md mt-5">Anfahrt und Parken</h3>
                 <ul className="mt-5 flex flex-col gap-3 text-[15.5px] text-mute">
                   {[
                     "Parkplätze stehen direkt am Studio zur Verfügung.",
@@ -184,6 +197,11 @@ export default function KontaktPage() {
           <MapConsent />
         </Reveal>
       </Section>
+
+      <CtaBand
+        title="Lieber gleich ausprobieren?"
+        text="Ein kostenloses Probetraining sagt mehr als jede Antwort per Mail."
+      />
     </>
   );
 }

@@ -99,9 +99,9 @@ export default function Footer() {
               <li className="flex gap-3">
                 <Icon name="clock" size={18} className="mt-0.5 shrink-0 text-flame-400" />
                 <span>
-                  Training: 24 Stunden, täglich
+                  Training rund um die Uhr, täglich
                   <br />
-                  Service: Mo bis Fr 09:00 bis 22:00 Uhr
+                  Service Mo bis Fr 9 bis 22&nbsp;Uhr
                 </span>
               </li>
             </ul>

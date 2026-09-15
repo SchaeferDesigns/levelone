@@ -4,11 +4,22 @@ import Reveal from "@/components/Reveal";
 import Section, { SectionHeader } from "@/components/Section";
 import { CtaBand, PageHero } from "@/components/blocks";
 
+const metaTitle = "Häufige Fragen";
+const metaDescription =
+  "Antworten rund um Training, Mitgliedschaft, Kurse und Zutritt im Level One Göggingen. Von den Öffnungszeiten bis zum ersten Trainingstag.";
+
 export const metadata: Metadata = {
-  title: "Häufige Fragen",
-  description:
-    "Antworten rund um Training, Mitgliedschaft, Kurse und Zutritt im Level One Göggingen. Von den Öffnungszeiten bis zum ersten Trainingstag.",
+  title: metaTitle,
+  description: metaDescription,
   alternates: { canonical: "/faq/" },
+  openGraph: {
+    type: "website",
+    locale: "de_DE",
+    url: "/faq/",
+    title: `${metaTitle} | Level One Göggingen`,
+    description: metaDescription,
+    images: ["/og.png"],
+  },
 };
 
 const groups = [
@@ -43,6 +54,10 @@ const groups = [
       {
         q: "Ist zu jeder Zeit Personal vor Ort?",
         a: "Während der Servicezeiten von Montag bis Freitag zwischen 09:00 und 22:00 Uhr sowie am Wochenende zwischen 10:00 und 14:00 Uhr ist jemand für dich da. Außerhalb dieser Zeiten trainierst du eigenständig mit deinem Zutrittsmedium.",
+      },
+      {
+        q: "Wie komme ich außerhalb der Servicezeiten ins Studio?",
+        a: "Als Mitglied erhältst du ein persönliches Zutrittsmedium. Damit öffnest du die Tür zu jeder Uhrzeit, auch nachts und an Feiertagen. Wie die Ausgabe genau abläuft, zeigen wir dir beim Start.",
       },
       {
         q: "Wie voll ist es im Studio?",
@@ -90,9 +105,25 @@ const groups = [
   },
 ];
 
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: groups.flatMap((g) =>
+    g.items.map((i) => ({
+      "@type": "Question",
+      name: i.q,
+      acceptedAnswer: { "@type": "Answer", text: i.a },
+    })),
+  ),
+};
+
 export default function FaqPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <PageHero
         eyebrow="Häufige Fragen"
         title={

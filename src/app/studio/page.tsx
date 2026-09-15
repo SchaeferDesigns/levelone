@@ -6,11 +6,22 @@ import Cta from "@/components/Cta";
 import { CtaBand, MediaFrame, NoticeCard, PageHero, StatStrip, TileList } from "@/components/blocks";
 import { site } from "@/lib/site";
 
+const metaTitle = "Über das Studio";
+const metaDescription =
+  "Das Level One Göggingen stellt sich vor: Ausstattung, Trainingsbereiche, Öffnungszeiten und das Team am Standort Am Brunnenäcker 13 in Göggingen.";
+
 export const metadata: Metadata = {
-  title: "Über das Studio",
-  description:
-    "Das Level One Göggingen stellt sich vor: Ausstattung, Trainingsbereiche, Öffnungszeiten und das Team am Standort Am Brunnenäcker 13 in Göggingen.",
+  title: metaTitle,
+  description: metaDescription,
   alternates: { canonical: "/studio/" },
+  openGraph: {
+    type: "website",
+    locale: "de_DE",
+    url: "/studio/",
+    title: `${metaTitle} | Level One Göggingen`,
+    description: metaDescription,
+    images: ["/og.png"],
+  },
 };
 
 export default function StudioPage() {
@@ -24,7 +35,7 @@ export default function StudioPage() {
           </>
         }
         text="Vom ersten Trainingstag bis zum erfahrenen Kraftsportler. Bei uns trainieren Menschen mit ganz unterschiedlichen Zielen nebeneinander, und genau das macht die Stimmung aus."
-        primary={{ href: "/probetraining/", label: "Studio kennenlernen" }}
+        primary={{ href: "/probetraining/", label: "Kostenloses Probetraining" }}
         secondary={{ href: "/kontakt/", label: "Anfahrt ansehen" }}
       />
 
@@ -128,9 +139,9 @@ export default function StudioPage() {
             <Reveal delay={100} className="mt-8">
               <NoticeCard
                 icon="users"
-                title="Teamvorstellung folgt in Kürze"
-                text="Hier stellen wir dir demnächst die Trainerinnen und Trainer mit Foto, Schwerpunkt und Qualifikation vor. Bis dahin lernst du uns am besten direkt im Studio kennen."
-                action={{ href: "/probetraining/", label: "Vorbeikommen" }}
+                title="Lerne das Team persönlich kennen"
+                text="Die Trainerinnen und Trainer stellen wir hier in Kürze mit Schwerpunkt und Qualifikation vor. Am schnellsten lernst du uns beim Probetraining kennen, dort bekommst du direkt die Person, die dich später betreut."
+                action={{ href: "/probetraining/", label: "Probetraining anfragen" }}
               />
             </Reveal>
           </div>

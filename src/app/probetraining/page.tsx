@@ -7,11 +7,22 @@ import Accordion from "@/components/Accordion";
 import { Steps } from "@/components/blocks";
 import { site } from "@/lib/site";
 
+const metaTitle = "Kostenloses Probetraining";
+const metaDescription =
+  "Trainiere kostenlos und unverbindlich zur Probe im Level One Göggingen. Rundgang, Zielgespräch und erstes Training inklusive. Jetzt Termin anfragen.";
+
 export const metadata: Metadata = {
-  title: "Kostenloses Probetraining",
-  description:
-    "Trainiere kostenlos und unverbindlich zur Probe im Level One Göggingen. Rundgang, Zielgespräch und erstes Training inklusive. Jetzt Termin anfragen.",
+  title: metaTitle,
+  description: metaDescription,
   alternates: { canonical: "/probetraining/" },
+  openGraph: {
+    type: "website",
+    locale: "de_DE",
+    url: "/probetraining/",
+    title: `${metaTitle} | Level One Göggingen`,
+    description: metaDescription,
+    images: ["/og.png"],
+  },
 };
 
 const faq = [
@@ -40,7 +51,7 @@ export default function ProbetrainingPage() {
         <div className="shell">
           <div className="grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
             <div className="lg:sticky lg:top-[110px]">
-              <Reveal>
+              <Reveal immediate>
                 <span className="eyebrow">Probetraining</span>
                 <h1 className="display-lg mt-5">
                   Kostenlos testen, <span className="flame-text">ohne Haken</span>
@@ -83,13 +94,13 @@ export default function ProbetrainingPage() {
                     {site.contact.phoneDisplay}
                   </a>
                   <p className="mt-3 text-[14.5px] text-mute">
-                    Erreichbar Mo bis Fr 09:00 bis 22:00 Uhr sowie Sa und So 10:00 bis 14:00 Uhr.
+                    Erreichbar Mo bis Fr 9 bis 22 Uhr sowie Sa und So 10 bis 14 Uhr.
                   </p>
                 </div>
               </Reveal>
             </div>
 
-            <Reveal delay={140}>
+            <Reveal delay={140} id="anfrage" className="scroll-mt-28">
               <h2 className="sr-only">Formular für die Anfrage zum Probetraining</h2>
               <ContactForm variant="probetraining" />
             </Reveal>

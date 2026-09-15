@@ -7,11 +7,22 @@ import Accordion from "@/components/Accordion";
 import { CtaBand, NoticeCard, PageHero, Steps } from "@/components/blocks";
 import { site } from "@/lib/site";
 
+const metaTitle = "Mitgliedschaft";
+const metaDescription =
+  "Mitglied werden im Level One Göggingen. Zutritt rund um die Uhr, alle Trainingsbereiche, Einweisung und Trainingsplan inklusive. Tarife im persönlichen Gespräch.";
+
 export const metadata: Metadata = {
-  title: "Mitgliedschaft",
-  description:
-    "Mitglied werden im Level One Göggingen. Zutritt rund um die Uhr, alle Trainingsbereiche, Einweisung und Trainingsplan inklusive. Tarife im persönlichen Gespräch.",
+  title: metaTitle,
+  description: metaDescription,
   alternates: { canonical: "/mitgliedschaft/" },
+  openGraph: {
+    type: "website",
+    locale: "de_DE",
+    url: "/mitgliedschaft/",
+    title: `${metaTitle} | Level One Göggingen`,
+    description: metaDescription,
+    images: ["/og.png"],
+  },
 };
 
 const included = [
@@ -57,7 +68,7 @@ export default function MitgliedschaftPage() {
           </>
         }
         text="Kein Baukasten mit versteckten Zusatzpaketen. Als Mitglied nutzt du das Studio rund um die Uhr und alle Bereiche, die dazugehören."
-        primary={{ href: "/probetraining/", label: "Erst kostenlos testen" }}
+        primary={{ href: "/probetraining/", label: "Kostenloses Probetraining" }}
         secondary={{ href: "/kontakt/", label: "Tarife erfragen" }}
       />
 
@@ -99,7 +110,7 @@ export default function MitgliedschaftPage() {
                   und sagen dir, was für dich wirklich sinnvoll ist.
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3">
-                  <Cta href="/probetraining/">Probetraining und Beratung</Cta>
+                  <Cta href="/probetraining/">Kostenloses Probetraining</Cta>
                   <Cta href={`tel:${site.contact.phone}`} variant="ghost" icon="phone" external>
                     {site.contact.phoneDisplay}
                   </Cta>

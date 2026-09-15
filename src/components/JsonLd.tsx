@@ -12,7 +12,7 @@ export default function JsonLd() {
     url: site.url,
     telephone: site.contact.phone,
     email: site.contact.email,
-    image: `${site.url}/media/og.svg`,
+    image: `${site.url}/og.png`,
     priceRange: "€€",
     currenciesAccepted: "EUR",
     address: {

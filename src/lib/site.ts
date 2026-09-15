@@ -29,8 +29,8 @@ export const site = {
       { days: "Feiertage", time: "24 Stunden geöffnet" },
     ],
     service: [
-      { days: "Montag bis Freitag", time: "09:00 bis 22:00 Uhr" },
-      { days: "Samstag und Sonntag", time: "10:00 bis 14:00 Uhr" },
+      { days: "Montag bis Freitag", time: "9 bis 22 Uhr" },
+      { days: "Samstag und Sonntag", time: "10 bis 14 Uhr" },
     ],
   },
   social: {

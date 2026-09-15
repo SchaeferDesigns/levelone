@@ -5,11 +5,22 @@ import Section, { SectionHeader } from "@/components/Section";
 import Cta from "@/components/Cta";
 import { CtaBand, FeatureCard, MediaFrame, TileList } from "@/components/blocks";
 
+const metaTitle = "Training und Angebote";
+const metaDescription =
+  "Krafttraining an Geräten, großer Freihantelbereich, Cardio, Vibrationstraining, Personal Training und Ernährungsbegleitung im Level One Göggingen. Rund um die Uhr trainierbar.";
+
 export const metadata: Metadata = {
-  title: "Training und Angebote",
-  description:
-    "Krafttraining an Geräten, großer Freihantelbereich, Cardio, Vibrationstraining, Personal Training und Ernährungsbegleitung im Level One Göggingen. Rund um die Uhr trainierbar.",
+  title: metaTitle,
+  description: metaDescription,
   alternates: { canonical: "/training/" },
+  openGraph: {
+    type: "website",
+    locale: "de_DE",
+    url: "/training/",
+    title: `${metaTitle} | Level One Göggingen`,
+    description: metaDescription,
+    images: ["/og.png"],
+  },
 };
 
 const areas = [
@@ -56,7 +67,7 @@ export default function TrainingPage() {
     <>
       <section className="relative pt-[124px] pb-4 sm:pt-[146px]">
         <div className="shell">
-          <Reveal className="max-w-[820px]">
+          <Reveal immediate className="max-w-[820px]">
             <span className="eyebrow">Training</span>
             <h1 className="display-lg mt-5">
               Dein Training. Deine Zeit. <span className="flame-text">Dein Ziel.</span>
@@ -149,10 +160,15 @@ export default function TrainingPage() {
             icon="music"
             title="Kurse in der Gruppe"
             text="Feste Termine, klare Anleitung und Menschen, die mitziehen. Alle Formate findest du auf der Kursseite."
-            href="/kurse/"
             delay={350}
           />
         </div>
+        <Reveal delay={420} className="mt-9 flex flex-wrap justify-center gap-3">
+          <Cta href="/kurse/" variant="ghost">
+            Zu den Kursen
+          </Cta>
+          <Cta href="/probetraining/">Kostenloses Probetraining</Cta>
+        </Reveal>
       </Section>
 
       <Section>

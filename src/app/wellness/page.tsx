@@ -4,11 +4,22 @@ import Reveal from "@/components/Reveal";
 import Section, { SectionHeader } from "@/components/Section";
 import { CtaBand, MediaFrame, PageHero, TileList } from "@/components/blocks";
 
+const metaTitle = "Sauna, Solarium und Regeneration";
+const metaDescription =
+  "Sauna, Solarium und Bar im Level One Göggingen. Regeneration nach dem Training gehört bei uns dazu, nicht als teures Extra.";
+
 export const metadata: Metadata = {
-  title: "Sauna, Solarium und Regeneration",
-  description:
-    "Sauna, Solarium und Bar im Level One Göggingen. Regeneration nach dem Training gehört bei uns dazu, nicht als teures Extra.",
+  title: metaTitle,
+  description: metaDescription,
   alternates: { canonical: "/wellness/" },
+  openGraph: {
+    type: "website",
+    locale: "de_DE",
+    url: "/wellness/",
+    title: `${metaTitle} | Level One Göggingen`,
+    description: metaDescription,
+    images: ["/og.png"],
+  },
 };
 
 const blocks = [
@@ -43,7 +54,7 @@ export default function WellnessPage() {
           </>
         }
         text="Fortschritt entsteht nicht während der Einheit, sondern danach. Deshalb findest du bei uns alles für die Regeneration direkt im Haus."
-        primary={{ href: "/probetraining/", label: "Studio kennenlernen" }}
+        primary={{ href: "/probetraining/", label: "Kostenloses Probetraining" }}
         secondary={{ href: "/mitgliedschaft/", label: "Mitgliedschaft ansehen" }}
       />
 
@@ -68,18 +79,18 @@ export default function WellnessPage() {
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <SectionHeader
             eyebrow="Gut zu wissen"
-            title="Was du mitbringen solltest"
-            text="Damit dein Besuch entspannt bleibt, hier die wichtigsten Punkte auf einen Blick."
+            title="Regeneration richtig nutzen"
+            text="Wer nach dem Training bewusst herunterfährt, erholt sich schneller und bleibt länger verletzungsfrei."
           />
           <Reveal delay={100}>
             <TileList
               items={[
-                { icon: "check", label: "Zwei Handtücher für Training und Sauna" },
-                { icon: "check", label: "Badeschuhe für den Nassbereich" },
-                { icon: "check", label: "Saubere Hallenschuhe für die Trainingsfläche" },
-                { icon: "check", label: "Trinkflasche, Wasser gibt es im Studio" },
-                { icon: "lock", label: "Schloss für den Spind" },
-                { icon: "key", label: "Zutrittsmedium für die Zeiten ohne Personal" },
+                { icon: "check", label: "Sauna nach dem Training, nicht davor" },
+                { icon: "check", label: "Zwischen den Gängen ausreichend trinken" },
+                { icon: "check", label: "Solarium in Maßen und mit Schutzbrille" },
+                { icon: "check", label: "Nach der Sauna Zeit zum Abkühlen einplanen" },
+                { icon: "sauna", label: "Handtuch und Badeschuhe mitbringen" },
+                { icon: "coffee", label: "Eiweiß und Wasser direkt an der Bar" },
               ]}
             />
           </Reveal>

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Icon from "./Icon";
 import { formEndpoint, site } from "@/lib/site";
 
@@ -55,18 +55,40 @@ export default function ContactForm({ variant = "kontakt" }: { variant?: Variant
     setErrors((e) => ({ ...e, [key]: undefined }));
   }
 
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const [summary, setSummary] = useState("");
+
+  function focusFirstError(next: Partial<Record<keyof Values, string>>) {
+    const order: (keyof Values)[] = ["name", "email", "phone", "message", "consent"];
+    const first = order.find((k) => next[k]);
+    if (!first) return;
+    const selector = first === "consent" ? 'input[type="checkbox"]' : `#f-${first}`;
+    const el = formRef.current?.querySelector<HTMLElement>(selector);
+    el?.focus();
+    el?.scrollIntoView({ block: "center", behavior: "smooth" });
+  }
+
   function validate() {
     const next: Partial<Record<keyof Values, string>> = {};
     if (values.name.trim().length < 2) next.name = "Bitte gib deinen Namen an.";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(values.email.trim()))
       next.email = "Bitte gib eine gültige E-Mail-Adresse an.";
-    if (isTrial && values.phone.trim().length < 6)
-      next.phone = "Für die Terminabsprache brauchen wir eine Telefonnummer.";
     if (!isTrial && values.message.trim().length < 10)
       next.message = "Bitte beschreibe dein Anliegen in ein paar Worten.";
     if (!values.consent) next.consent = "Ohne Einwilligung dürfen wir die Anfrage nicht bearbeiten.";
     setErrors(next);
-    return Object.keys(next).length === 0;
+    const count = Object.keys(next).length;
+    if (count > 0) {
+      setSummary(
+        count === 1
+          ? "Eine Angabe fehlt oder ist nicht gültig. Das Feld ist markiert."
+          : `${count} Angaben fehlen oder sind nicht gültig. Die Felder sind markiert.`,
+      );
+      focusFirstError(next);
+    } else {
+      setSummary("");
+    }
+    return count === 0;
   }
 
   function buildPlainText() {
@@ -118,29 +140,29 @@ export default function ContactForm({ variant = "kontakt" }: { variant?: Variant
           <Icon name="check" size={30} strokeWidth={2.6} />
         </span>
         <h3 className="display-md mt-6">
-          {formEndpoint ? "Anfrage ist raus" : "E-Mail ist vorbereitet"}
+          {formEndpoint ? "Anfrage ist raus" : "Fast geschafft"}
         </h3>
-        <p className="lead mx-auto mt-3 max-w-[46ch]">
+        <p className="lead mx-auto mt-3 max-w-[52ch]">
           {formEndpoint
             ? "Wir melden uns innerhalb der Servicezeiten bei dir. In der Regel noch am selben Tag."
-            : "Deine E-Mail wurde im Mailprogramm geöffnet. Sende sie einfach ab, dann melden wir uns zügig zurück."}
+            : "Wir haben dein E-Mail-Programm mit der fertigen Nachricht geöffnet. Bitte schick sie ab, dann melden wir uns zügig zurück. Falls sich nichts geöffnet hat, erreichst du uns direkt über die Wege unten."}
         </p>
         <div className="mt-7 flex flex-wrap justify-center gap-3">
           <a className="btn btn-ghost" href={`tel:${site.contact.phone}`}>
             <Icon name="phone" size={18} />
             Lieber direkt anrufen
           </a>
-          <Link className="btn btn-ghost" href="/studio/">
-            Studio ansehen
-            <Icon name="arrowRight" size={18} />
-          </Link>
+          <a className="btn btn-ghost" href={`mailto:${site.contact.email}`}>
+            <Icon name="mail" size={18} />
+            {site.contact.email}
+          </a>
         </div>
       </div>
     );
   }
 
   return (
-    <form className="glass card" onSubmit={onSubmit} noValidate>
+    <form ref={formRef} className="glass card" onSubmit={onSubmit} noValidate>
       <div className="grid gap-5 sm:grid-cols-2">
         <div className="sm:col-span-1">
           <label className="field-label" htmlFor="f-name">
@@ -192,7 +214,7 @@ export default function ContactForm({ variant = "kontakt" }: { variant?: Variant
 
         <div className="sm:col-span-1">
           <label className="field-label" htmlFor="f-phone">
-            Telefon {isTrial ? <span className="text-flame-400">*</span> : <span className="text-faint">(optional)</span>}
+            Telefon <span className="text-faint">(optional)</span>
           </label>
           <input
             id="f-phone"
@@ -205,7 +227,7 @@ export default function ContactForm({ variant = "kontakt" }: { variant?: Variant
             onChange={(e) => update("phone", e.target.value)}
             aria-invalid={errors.phone ? "true" : undefined}
             aria-describedby={errors.phone ? "err-phone" : undefined}
-            placeholder="Für die schnelle Rückmeldung"
+            placeholder="Für die Rückmeldung"
           />
           {errors.phone ? (
             <span className="field-error" id="err-phone">
@@ -245,7 +267,7 @@ export default function ContactForm({ variant = "kontakt" }: { variant?: Variant
                 className="field-input"
                 value={values.wunschtermin}
                 onChange={(e) => update("wunschtermin", e.target.value)}
-                placeholder="Zum Beispiel Dienstag ab 18 Uhr"
+                placeholder="z. B. Dienstag ab 18 Uhr"
               />
             </div>
           </>
@@ -293,7 +315,7 @@ export default function ContactForm({ variant = "kontakt" }: { variant?: Variant
           <label className="flex cursor-pointer items-start gap-3 text-[14.5px] leading-relaxed text-mute">
             <input
               type="checkbox"
-              className="mt-1 h-5 w-5 shrink-0 accent-[#ff5a1f]"
+              className="check mt-0.5"
               checked={values.consent}
               onChange={(e) => update("consent", e.target.checked)}
               aria-invalid={errors.consent ? "true" : undefined}
@@ -303,7 +325,7 @@ export default function ContactForm({ variant = "kontakt" }: { variant?: Variant
             <span>
               Ich bin damit einverstanden, dass meine Angaben zur Bearbeitung meiner Anfrage
               verwendet werden. Weitere Informationen in der{" "}
-              <Link href="/datenschutz/" className="font-semibold text-chalk underline underline-offset-4">
+              <Link href="/datenschutz/" className="font-semibold text-flame-400 underline underline-offset-4">
                 Datenschutzerklärung
               </Link>
               .
@@ -327,8 +349,8 @@ export default function ContactForm({ variant = "kontakt" }: { variant?: Variant
         </p>
       </div>
 
-      <p aria-live="polite" className="sr-only">
-        {state === "error" ? "Das Senden hat nicht funktioniert." : ""}
+      <p aria-live="polite" className={summary ? "field-error mt-4" : "sr-only"}>
+        {summary || (state === "error" ? "Das Senden hat nicht funktioniert." : "")}
       </p>
 
       {state === "error" ? (

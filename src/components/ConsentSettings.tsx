@@ -44,7 +44,7 @@ export default function ConsentSettings() {
           </div>
         </div>
         <button type="button" className="btn btn-ghost" onClick={revoke} disabled={!granted}>
-          Einwilligung widerrufen
+          {granted ? "Einwilligung widerrufen" : "Keine Einwilligung gespeichert"}
         </button>
       </div>
     </div>

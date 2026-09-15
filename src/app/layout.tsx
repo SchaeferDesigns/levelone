@@ -26,7 +26,6 @@ export const metadata: Metadata = {
   authors: [{ name: site.legalName }],
   creator: site.legalName,
   publisher: site.legalName,
-  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "de_DE",
@@ -68,6 +67,11 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="de">
+      <head>
+        <noscript>
+          <style>{".reveal{opacity:1!important;transform:none!important}"}</style>
+        </noscript>
+      </head>
       <body>
         <a className="skip-link" href="#inhalt">
           Zum Inhalt springen

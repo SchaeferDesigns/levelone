@@ -54,9 +54,9 @@ export function TileList({ items }: { items: { icon: IconName; label: string }[]
   return (
     <ul className="grid gap-3 sm:grid-cols-2">
       {items.map((it, i) => (
-        <li key={it.label}>
-          <Reveal delay={i * 45}>
-            <div className="glass flex items-center gap-3.5 rounded-2xl px-5 py-4">
+        <li key={it.label} className="flex">
+          <Reveal delay={i * 45} className="w-full">
+            <div className="glass flex h-full items-center gap-3.5 rounded-2xl px-5 py-4">
               <Icon name={it.icon} size={20} className="shrink-0 text-flame-400" />
               <span className="text-[15px] font-semibold">{it.label}</span>
             </div>
@@ -109,7 +109,7 @@ export function PageHero({
   return (
     <section className="relative pt-[124px] pb-4 sm:pt-[146px]">
       <div className="shell">
-        <Reveal className="max-w-[820px]">
+        <Reveal immediate className="max-w-[820px]">
           <span className="eyebrow">{eyebrow}</span>
           <h1 className="display-lg mt-5">{title}</h1>
           <p className="lead mt-6 max-w-[62ch]">{text}</p>
@@ -137,7 +137,7 @@ export function Steps({
   items: { title: string; text: string; icon: IconName }[];
 }) {
   return (
-    <ol className="grid gap-5 md:grid-cols-3">
+    <ol className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {items.map((s, i) => (
         <li key={s.title}>
           <Reveal delay={i * 90} className="h-full">
@@ -216,8 +216,8 @@ export function MediaFrame({
 }) {
   return (
     <div
-      className={`glass relative overflow-hidden rounded-[24px] ${className}`}
-      style={{ aspectRatio: ratio }}
+      className={`glass media-frame relative overflow-hidden rounded-[24px] ${className}`}
+      style={{ "--frame-ratio": ratio } as React.CSSProperties}
       role="img"
       aria-label={label}
     >
@@ -260,18 +260,18 @@ export function NoticeCard({
 }) {
   return (
     <div className="glass card">
-      <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-6">
         <div className="flex items-start gap-4">
           <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-white/12 bg-white/6 text-flame-400">
             <Icon name={icon} size={22} />
           </span>
           <div>
             <h3 className="text-[18px] font-extrabold tracking-tight">{title}</h3>
-            <p className="mt-2 max-w-[60ch] text-[15px] leading-relaxed text-mute">{text}</p>
+            <p className="mt-2 text-[15px] leading-relaxed text-mute">{text}</p>
           </div>
         </div>
         {action ? (
-          <Cta href={action.href} variant="ghost" className="shrink-0">
+          <Cta href={action.href} variant="ghost" className="self-start">
             {action.label}
           </Cta>
         ) : null}

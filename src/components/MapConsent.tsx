@@ -67,7 +67,7 @@ export default function MapConsent() {
             <label className="flex cursor-pointer items-center gap-2.5 text-[13.5px] text-mute">
               <input
                 type="checkbox"
-                className="h-4.5 w-4.5 accent-[#ff5a1f]"
+                className="check"
                 checked={remember}
                 onChange={(e) => setRemember(e.target.checked)}
               />

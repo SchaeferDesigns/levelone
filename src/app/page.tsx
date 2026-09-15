@@ -16,11 +16,22 @@ import {
 } from "@/components/blocks";
 import { site } from "@/lib/site";
 
+const metaTitle = "Fitnessstudio in Göggingen | 24 Stunden trainieren";
+const metaDescription =
+  "Level One Göggingen ist dein Fitnessstudio im Ostalbkreis. Rund um die Uhr trainieren, moderne Geräte, großer Freihantelbereich, Kurse, Sauna und Solarium. Jetzt kostenlos zur Probe trainieren.";
+
 export const metadata: Metadata = {
-  title: "Fitnessstudio in Göggingen | 24 Stunden trainieren",
-  description:
-    "Level One Göggingen ist dein Fitnessstudio im Ostalbkreis. Rund um die Uhr trainieren, moderne Geräte, großer Freihantelbereich, Kurse, Sauna und Solarium. Jetzt kostenlos zur Probe trainieren.",
+  title: metaTitle,
+  description: metaDescription,
   alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "de_DE",
+    url: "/",
+    title: "Level One Göggingen | Fitnessstudio mit 24 Stunden Training",
+    description: metaDescription,
+    images: ["/og.png"],
+  },
 };
 
 const faq = [
@@ -50,7 +61,7 @@ export default function Home() {
         <div className="shell">
           <div className="grid items-center gap-12 lg:grid-cols-[1.08fr_0.92fr]">
             <div>
-              <Reveal>
+              <Reveal immediate>
                 <span className="glass inline-flex items-center gap-2.5 rounded-[999px] px-4 py-2 text-[13px] font-bold">
                   <span
                     aria-hidden="true"
@@ -61,7 +72,7 @@ export default function Home() {
                 </span>
               </Reveal>
 
-              <Reveal delay={80}>
+              <Reveal immediate delay={80}>
                 <h1 className="display-xl mt-6">
                   Trainieren,
                   <br />
@@ -69,7 +80,7 @@ export default function Home() {
                 </h1>
               </Reveal>
 
-              <Reveal delay={150}>
+              <Reveal immediate delay={150}>
                 <p className="lead mt-7 max-w-[54ch]">
                   Level One Göggingen ist dein Fitnessstudio im Ostalbkreis. 24 Stunden geöffnet, an
                   sieben Tagen die Woche. Mit moderner Ausstattung, großem Freihantelbereich und
@@ -77,7 +88,7 @@ export default function Home() {
                 </p>
               </Reveal>
 
-              <Reveal delay={220}>
+              <Reveal immediate delay={220}>
                 <div className="mt-9 flex flex-wrap gap-3">
                   <Cta href="/probetraining/">Kostenloses Probetraining</Cta>
                   <Cta href="/studio/" variant="ghost">
@@ -86,7 +97,7 @@ export default function Home() {
                 </div>
               </Reveal>
 
-              <Reveal delay={290}>
+              <Reveal immediate delay={290}>
                 <ul className="mt-9 flex flex-wrap gap-x-7 gap-y-3.5 text-[14.5px] text-mute">
                   {[
                     { icon: "check" as const, text: "Ohne Vertrag testen" },
@@ -105,7 +116,7 @@ export default function Home() {
             </div>
 
             {/* Glaskarte mit den wichtigsten Fakten */}
-            <Reveal delay={200}>
+            <Reveal immediate delay={200}>
               <div className="relative">
                 <div
                   aria-hidden="true"
@@ -121,48 +132,52 @@ export default function Home() {
                       </p>
                     </div>
                     <span
-                      className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-flame-400 to-flame-500 text-center text-[15px] font-black leading-none text-ink-950"
+                      className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-flame-400 to-flame-500 text-center text-[17px] font-black leading-none text-[#160702]"
                       aria-hidden="true"
                       style={{ animation: "float-soft 6s ease-in-out infinite" }}
                     >
-                      24
-                      <br />
-                      /7
+                      24/7
                     </span>
                   </div>
 
                   <dl className="mt-7 flex flex-col gap-4 border-t border-white/10 pt-6">
-                    <div className="flex items-start gap-3.5">
-                      <Icon name="clock" size={20} className="mt-0.5 shrink-0 text-flame-400" />
-                      <div>
-                        <dt className="text-[14px] font-bold">Trainingszeiten</dt>
-                        <dd className="text-[14.5px] text-mute">
-                          Täglich 24 Stunden, auch an Feiertagen
-                        </dd>
-                      </div>
+                    <div className="grid grid-cols-[auto_1fr] items-start gap-x-3.5">
+                      <Icon
+                        name="clock"
+                        size={20}
+                        className="row-span-2 mt-0.5 shrink-0 text-flame-400"
+                      />
+                      <dt className="text-[14px] font-bold">Trainingszeiten</dt>
+                      <dd className="col-start-2 text-[14.5px] text-mute">
+                        Täglich 24 Stunden, auch an Feiertagen
+                      </dd>
                     </div>
-                    <div className="flex items-start gap-3.5">
-                      <Icon name="users" size={20} className="mt-0.5 shrink-0 text-flame-400" />
-                      <div>
-                        <dt className="text-[14px] font-bold">Servicezeiten</dt>
-                        <dd className="text-[14.5px] text-mute">
-                          Mo bis Fr 09:00 bis 22:00 Uhr, Sa und So 10:00 bis 14:00 Uhr
-                        </dd>
-                      </div>
+                    <div className="grid grid-cols-[auto_1fr] items-start gap-x-3.5">
+                      <Icon
+                        name="users"
+                        size={20}
+                        className="row-span-2 mt-0.5 shrink-0 text-flame-400"
+                      />
+                      <dt className="text-[14px] font-bold">Servicezeiten</dt>
+                      <dd className="col-start-2 text-[14.5px] text-mute">
+                        Mo bis Fr 9 bis 22&nbsp;Uhr, Sa und So 10 bis 14&nbsp;Uhr
+                      </dd>
                     </div>
-                    <div className="flex items-start gap-3.5">
-                      <Icon name="phone" size={20} className="mt-0.5 shrink-0 text-flame-400" />
-                      <div>
-                        <dt className="text-[14px] font-bold">Direkter Draht</dt>
-                        <dd className="text-[14.5px]">
-                          <a
-                            className="font-semibold underline decoration-flame-400/60 underline-offset-4"
-                            href={`tel:${site.contact.phone}`}
-                          >
-                            {site.contact.phoneDisplay}
-                          </a>
-                        </dd>
-                      </div>
+                    <div className="grid grid-cols-[auto_1fr] items-start gap-x-3.5">
+                      <Icon
+                        name="phone"
+                        size={20}
+                        className="row-span-2 mt-0.5 shrink-0 text-flame-400"
+                      />
+                      <dt className="text-[14px] font-bold">Direkter Draht</dt>
+                      <dd className="col-start-2 text-[14.5px]">
+                        <a
+                          className="font-semibold underline decoration-flame-400/60 underline-offset-4"
+                          href={`tel:${site.contact.phone}`}
+                        >
+                          {site.contact.phoneDisplay}
+                        </a>
+                      </dd>
                     </div>
                   </dl>
 
@@ -316,7 +331,7 @@ export default function Home() {
           />
         </div>
         <Reveal delay={200} className="mt-10 flex justify-center">
-          <Cta href="/probetraining/">Probetraining sichern</Cta>
+          <Cta href="/probetraining/">Kostenloses Probetraining</Cta>
         </Reveal>
       </Section>
 
@@ -347,9 +362,9 @@ export default function Home() {
                 ))}
               </ul>
               <div className="mt-9 flex flex-wrap gap-3">
-                <Cta href="/mitgliedschaft/">Mitgliedschaft ansehen</Cta>
-                <Cta href="/probetraining/" variant="ghost">
-                  Erst testen
+                <Cta href="/probetraining/">Kostenloses Probetraining</Cta>
+                <Cta href="/mitgliedschaft/" variant="ghost">
+                  Mitgliedschaft ansehen
                 </Cta>
               </div>
             </div>
@@ -359,14 +374,35 @@ export default function Home() {
                 className="absolute inset-0 bg-[radial-gradient(120%_100%_at_80%_0%,rgba(255,138,61,0.3),transparent_62%),radial-gradient(90%_90%_at_10%_100%,rgba(56,120,255,0.24),transparent_60%)]"
               />
               <div className="relative flex h-full flex-col justify-center gap-6 p-8 sm:p-12">
-                <Icon name="quote" size={34} className="text-flame-400" />
-                <p className="text-[21px] font-bold leading-snug sm:text-[24px]">
-                  Ein Studio, in dem du nicht nur eine Nummer bist. Wer sein Ziel kennt, bekommt
-                  hier den passenden Weg dorthin.
-                </p>
-                <p className="text-[14.5px] text-mute">
-                  Team Level One Göggingen
-                </p>
+                <Icon name="star" size={32} className="text-flame-400" />
+                <div>
+                  <h3 className="display-md">Hör nicht nur auf uns</h3>
+                  <p className="mt-3 text-[15.5px] leading-relaxed text-mute">
+                    Was Mitglieder über das Studio schreiben, liest du direkt bei Google und in
+                    unseren Kanälen. Dort siehst du auch, was gerade im Studio passiert.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2.5">
+                  <a
+                    className="btn btn-ghost"
+                    href={site.maps}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Icon name="star" size={17} />
+                    Bewertungen lesen
+                  </a>
+                  <a
+                    className="btn btn-ghost"
+                    href={site.social.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Level One Göggingen auf Instagram, öffnet in neuem Tab"
+                  >
+                    <Icon name="instagram" size={17} />
+                    Instagram
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -376,11 +412,13 @@ export default function Home() {
       {/* -------------------------------------------------------------- FAQ */}
       <Section>
         <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
+          <div className="lg:sticky lg:top-[112px]">
           <SectionHeader
             eyebrow="Gut zu wissen"
             title="Häufige Fragen"
             text="Die Antworten auf das, was neue Mitglieder am häufigsten fragen."
           />
+          </div>
           <div>
             <Accordion items={faq} />
             <Reveal delay={120} className="mt-6">
