@@ -39,10 +39,17 @@ export default function Accordion({ items }: { items: QA[] }) {
               id={`${uid}-panel-${i}`}
               role="region"
               aria-labelledby={`${uid}-btn-${i}`}
-              hidden={!isOpen}
-              className="px-6 pb-6 text-[15.5px] leading-relaxed text-mute"
+              data-open={isOpen}
+              className="acc-panel"
             >
-              {item.a}
+              <div className="acc-inner">
+                <div
+                  className="px-6 pb-6 text-[15.5px] leading-relaxed text-mute"
+                  inert={!isOpen}
+                >
+                  {item.a}
+                </div>
+              </div>
             </div>
           </div>
         );

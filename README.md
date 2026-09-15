@@ -92,6 +92,21 @@ NEXT_PUBLIC_FORM_ENDPOINT=https://www.levelonegoeggingen.de/formular.php
 * Die Zustimmung lässt sich auf der Datenschutzseite jederzeit widerrufen.
 * Es wird kein Tracking und keine Analyse eingesetzt.
 
+## Tarife und Onlineabschluss
+
+Die Tarife stehen in `src/lib/tarife.ts`. Eine Änderung dort wirkt auf der
+Startseite, auf der Mitgliedschaftsseite und im Abschluss.
+
+Die Beträge sind derzeit **Beispielwerte für die Vorschau**. Unter den
+Tarifkarten steht ein entsprechender Hinweis, der in `TarifCards.tsx` in einer
+Zeile entfernt werden kann, sobald die echten Konditionen eingetragen sind.
+
+Die Seite `/mitglied-werden/` zeigt den vollständigen Abschluss in fünf
+Schritten. Der Ablauf ist bedienbar, sendet aber nichts und schließt keinen
+Vertrag. Bankdaten werden bewusst nicht abgefragt. Für den scharfen Betrieb
+kommt an dieser Stelle die Anbindung an die Studioverwaltung oder an einen
+Zahlungsdienstleister dazu.
+
 ## Bildsequenz am Scrollen
 
 Der Abschnitt "So sieht es bei uns aus" auf der Startseite spielt eine Bildfolge

@@ -9,6 +9,7 @@ const routes: { path: string; priority: number; changeFrequency: "weekly" | "mon
   { path: "/kurse/", priority: 0.9, changeFrequency: "weekly" },
   { path: "/wellness/", priority: 0.7, changeFrequency: "monthly" },
   { path: "/mitgliedschaft/", priority: 0.9, changeFrequency: "monthly" },
+  { path: "/mitglied-werden/", priority: 1, changeFrequency: "monthly" },
   { path: "/studio/", priority: 0.8, changeFrequency: "monthly" },
   { path: "/probetraining/", priority: 1, changeFrequency: "monthly" },
   { path: "/kontakt/", priority: 0.8, changeFrequency: "monthly" },

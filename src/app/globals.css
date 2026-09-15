@@ -1015,7 +1015,7 @@ textarea.field-input {
 
   /* Gescrollt: schwebende Pille */
   .nav-bar[data-state="sticky"] {
-    margin: 12px max(20px, calc((100% - 1180px) / 2)) 0;
+    margin: 12px max(20px, calc((100% - 980px) / 2)) 0;
     border-radius: var(--radius-pill);
     border-color: rgba(255, 255, 255, 0.13);
     box-shadow:
@@ -1033,7 +1033,7 @@ textarea.field-input {
   }
 
   .nav-bar[data-state="top"] .nav-inner { padding: 14px 20px; }
-  .nav-bar[data-state="sticky"] .nav-inner { padding: 8px 8px 8px 16px; }
+  .nav-bar[data-state="sticky"] .nav-inner { padding: 7px 7px 7px 14px; gap: 10px; }
 
   /* Lichtreflex, der dem Mauszeiger folgt */
   .nav-bar::before {
@@ -1069,7 +1069,7 @@ textarea.field-input {
   }
 
   .nav-bar[data-state="top"] .nav-mark { width: 42px; height: 42px; }
-  .nav-bar[data-state="sticky"] .nav-mark { width: 38px; height: 38px; border-radius: 12px; }
+  .nav-bar[data-state="sticky"] .nav-mark { width: 34px; height: 34px; border-radius: 11px; }
 
   .nav-brand:hover .nav-mark { transform: rotate(-8deg) scale(1.04); }
 
@@ -1393,5 +1393,106 @@ textarea.field-input {
     .plate-in {
       animation: none;
     }
+  }
+}
+
+@layer components {
+  /* Akkordeon faehrt weich auf und zu */
+  .acc-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition:
+      grid-template-rows 0.45s var(--ease-out-soft),
+      opacity 0.35s var(--ease-out-soft);
+  }
+
+  .acc-panel[data-open="true"] {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  .acc-inner {
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .acc-panel { transition: none; }
+  }
+}
+
+@layer components {
+  /* Auslastungsraster faehrt versetzt ein */
+  .busy-cell {
+    opacity: 0;
+    transform: scale(0.72);
+    transition:
+      opacity 0.45s var(--ease-out-soft),
+      transform 0.45s var(--ease-out-soft),
+      filter 0.25s var(--ease-out-soft);
+  }
+
+  .busy-cell[data-shown="true"] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .busy-cell:hover {
+    filter: brightness(1.45);
+    transform: scale(1.18);
+    transition-delay: 0ms !important;
+  }
+
+  .busy-now {
+    box-shadow:
+      0 0 0 2px rgba(244, 247, 251, 0.9),
+      0 0 18px -2px rgba(255, 90, 31, 0.9);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .busy-cell {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+}
+
+@layer components {
+  /* Plan-Karten laufen versetzt ein */
+  .plan-card {
+    animation: plan-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes plan-in {
+    from { opacity: 0; transform: translateY(16px) scale(0.98); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .goal-tab[aria-pressed="true"] {
+    background: linear-gradient(135deg, var(--color-flame-400), var(--color-flame-500));
+    border-color: transparent;
+    color: #160702;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .plan-card { animation: none; }
+  }
+}
+
+@layer components {
+  /* Auf kleinen Displays bleibt Platz fuer die Aktionsleiste */
+  @media (max-width: 767px) {
+    .hscroll-stage,
+    .seq-stage {
+      padding-bottom: 92px;
+    }
+  }
+}
+
+@layer components {
+  .nav-cta {
+    white-space: nowrap;
   }
 }

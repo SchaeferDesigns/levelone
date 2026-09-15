@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Icon from "./Icon";
 import { site } from "@/lib/site";
+import { guenstigster, preis } from "@/lib/tarife";
 
 const lines = ["Trainieren", "wann du", "willst"];
 
@@ -173,20 +174,19 @@ export default function Hero() {
             >
               <Link
                 ref={ctaRef}
-                href="/probetraining/"
+                href="/mitglied-werden/"
                 className="btn btn-primary w-full sm:w-auto"
                 style={{
                   transform: `translate3d(${magnet.x}px, ${magnet.y}px, 0)`,
                   transition: "transform 0.35s cubic-bezier(0.22,1,0.36,1)",
                 }}
               >
-                Kostenloses Probetraining
+                Mitglied werden ab {preis(guenstigster)} €
                 <Icon name="arrowRight" size={18} strokeWidth={2.1} />
               </Link>
-              <a href={`tel:${site.contact.phone}`} className="btn btn-ghost w-full sm:w-auto">
-                <Icon name="phone" size={18} />
-                {site.contact.phoneDisplay}
-              </a>
+              <Link href="/probetraining/" className="btn btn-ghost w-full sm:w-auto">
+                Erst kostenlos testen
+              </Link>
             </div>
 
             <ul

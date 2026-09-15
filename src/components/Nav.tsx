@@ -224,8 +224,8 @@ export default function Nav() {
               >
                 <Icon name="phone" size={18} />
               </a>
-              <Link href="/probetraining/" className="nav-cta hidden md:inline-flex">
-                Probetraining
+              <Link href="/mitglied-werden/" className="nav-cta hidden md:inline-flex">
+                Mitglied werden
                 <Icon name="arrowRight" size={17} strokeWidth={2.2} />
               </Link>
               <button
@@ -289,9 +289,12 @@ export default function Nav() {
               className="menu-item mt-4 grid gap-2.5"
               style={{ "--menu-delay": "420ms" } as React.CSSProperties}
             >
-              <Link href="/probetraining/" className="btn btn-primary w-full">
-                Kostenloses Probetraining
+              <Link href="/mitglied-werden/" className="btn btn-primary w-full">
+                Mitglied werden
                 <Icon name="arrowRight" size={18} strokeWidth={2.1} />
+              </Link>
+              <Link href="/probetraining/" className="btn btn-ghost w-full">
+                Kostenloses Probetraining
               </Link>
               <a href={`tel:${site.contact.phone}`} className="btn btn-ghost w-full">
                 <Icon name="phone" size={18} />

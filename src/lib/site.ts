@@ -57,6 +57,7 @@ export const footerNav = {
     { href: "/mitgliedschaft/", label: "Mitgliedschaft" },
   ],
   studio: [
+    { href: "/mitglied-werden/", label: "Mitglied werden" },
     { href: "/studio/", label: "Über das Studio" },
     { href: "/faq/", label: "Häufige Fragen" },
     { href: "/probetraining/", label: "Probetraining" },

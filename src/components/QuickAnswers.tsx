@@ -4,6 +4,7 @@ import type { IconName } from "./Icon";
 import Reveal from "./Reveal";
 import Counter from "./Counter";
 import { site } from "@/lib/site";
+import { guenstigster, preis } from "@/lib/tarife";
 
 type Answer = {
   icon: IconName;
@@ -22,15 +23,15 @@ type Answer = {
 const answers: Answer[] = [
   {
     icon: "euro",
-    question: "Was kostet der Einstieg?",
+    question: "Was kostet das?",
     value: (
       <>
-        <Counter to={0} /> €
+        ab {preis(guenstigster)} €
       </>
     ),
-    text: "Probetraining kostenlos. Den Tarif klären wir danach in zwei Minuten.",
+    text: "Pro Monat, keine Aufnahmegebühr. Probetraining vorher kostenlos.",
     href: "/mitgliedschaft/",
-    cta: "Zur Mitgliedschaft",
+    cta: "Alle Tarife",
   },
   {
     icon: "clock",
@@ -54,12 +55,12 @@ const answers: Answer[] = [
     question: "Wie fange ich an?",
     value: (
       <>
-        <Counter to={1} /> Termin
+        <Counter to={5} /> Schritte
       </>
     ),
-    text: "Anrufen oder Formular. Rundgang, Zielgespräch, erstes Training. Ohne Vertrag.",
-    href: "/probetraining/",
-    cta: "Termin anfragen",
+    text: "Online Mitglied werden, oder erst kostenlos zur Probe trainieren.",
+    href: "/mitglied-werden/",
+    cta: "Mitglied werden",
   },
 ];
 

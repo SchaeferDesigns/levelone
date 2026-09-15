@@ -9,10 +9,10 @@ import Hero from "@/components/Hero";
 import Ticker from "@/components/Ticker";
 import QuickAnswers from "@/components/QuickAnswers";
 import StudioShowcase from "@/components/StudioShowcase";
-import PlateLab from "@/components/PlateLab";
 import BusyChart from "@/components/BusyChart";
 import AreaScroller from "@/components/AreaScroller";
-import GoalPicker from "@/components/GoalPicker";
+import PlanBuilder from "@/components/PlanBuilder";
+import TarifCards from "@/components/TarifCards";
 import { CtaBand, Steps } from "@/components/blocks";
 import { site } from "@/lib/site";
 
@@ -103,9 +103,9 @@ export default function Home() {
                   ))}
                 </ul>
                 <div className="mt-9 flex flex-wrap gap-3">
-                  <Cta href="/probetraining/">Kostenloses Probetraining</Cta>
-                  <Cta href="/mitgliedschaft/" variant="ghost">
-                    Alle Details
+                  <Cta href="/mitglied-werden/">Mitglied werden</Cta>
+                  <Cta href="/probetraining/" variant="ghost">
+                    Erst kostenlos testen
                   </Cta>
                 </div>
               </div>
@@ -116,22 +116,30 @@ export default function Home() {
                   className="absolute inset-0 bg-[radial-gradient(120%_100%_at_80%_0%,rgba(255,138,61,0.28),transparent_62%),radial-gradient(90%_90%_at_10%_100%,rgba(56,120,255,0.22),transparent_60%)]"
                 />
                 <div className="relative flex h-full flex-col justify-center gap-6 p-8 sm:p-12">
-                  <Icon name="euro" size={32} className="text-flame-400" />
+                  <Icon name="shield" size={32} className="text-flame-400" />
                   <div>
-                    <h3 className="display-md">Und der Preis?</h3>
-                    <p className="mt-3 text-[15.5px] leading-relaxed text-mute">
-                      Hängt von Laufzeit und Trainingshäufigkeit ab. Ein kurzes Gespräch reicht,
-                      dann weißt du es genau.
-                    </p>
+                    <h3 className="display-md">Kein Risiko</h3>
+                    <ul className="mt-4 flex flex-col gap-3 text-[15.5px]">
+                      {[
+                        "Keine Aufnahmegebühr",
+                        "Probetraining vorher kostenlos",
+                        "Vierzehn Tage Widerrufsrecht beim Onlineabschluss",
+                        "Pause bei längerer Verletzung möglich",
+                      ].map((t) => (
+                        <li key={t} className="flex items-start gap-3">
+                          <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-flame-500/18 text-flame-400">
+                            <Icon name="check" size={14} strokeWidth={3} />
+                          </span>
+                          {t}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                   <div className="flex flex-wrap gap-2.5">
-                    <a className="btn btn-primary" href={`tel:${site.contact.phone}`}>
+                    <a className="btn btn-ghost" href={`tel:${site.contact.phone}`}>
                       <Icon name="phone" size={17} />
                       {site.contact.phoneDisplay}
                     </a>
-                    <Link className="btn btn-ghost" href="/kontakt/">
-                      Schreiben
-                    </Link>
                   </div>
                 </div>
               </div>
@@ -143,15 +151,6 @@ export default function Home() {
       {/* Was es im Studio gibt */}
       <AreaScroller />
 
-      <Section className="pt-0">
-        <Reveal className="flex flex-wrap justify-center gap-3">
-          <Cta href="/training/">Alle Trainingsangebote</Cta>
-          <Cta href="/kurse/" variant="ghost">
-            Kurse und Termine
-          </Cta>
-        </Reveal>
-      </Section>
-
       {/* Auslastung als Bild statt als Text */}
       <Section id="auslastung">
         <Reveal>
@@ -162,28 +161,38 @@ export default function Home() {
       {/* Passt das zu meinem Ziel */}
       <Section id="ziel" className="glow glow-right">
         <SectionHeader
-          eyebrow="Für wen"
+          eyebrow="Plan in 20 Sekunden"
           title={
             <>
               Was willst du <span className="flame-text">erreichen</span>?
             </>
           }
-          text="Wähle dein Ziel, dann siehst du, wie der Einstieg bei uns konkret aussieht."
+          text="Drei Angaben, dann steht dein Wochenplan mit konkreten Übungen."
           align="center"
         />
         <Reveal delay={80} className="mt-11">
-          <GoalPicker />
+          <PlanBuilder />
         </Reveal>
       </Section>
 
       {/* Bildsequenz, sobald Material vorliegt */}
       <StudioShowcase />
 
-      {/* Zum Anfassen */}
-      <Section id="hantel" className="glow glow-left">
-        <Reveal>
-          <PlateLab />
-        </Reveal>
+      {/* Tarife */}
+      <Section id="tarife" className="glow glow-left">
+        <SectionHeader
+          eyebrow="Tarife"
+          title={
+            <>
+              Such dir deinen <span className="flame-text">Tarif</span>
+            </>
+          }
+          text="Alle Leistungen sind überall gleich. Du entscheidest nur über Laufzeit und Preis."
+          align="center"
+        />
+        <div className="mt-12">
+          <TarifCards />
+        </div>
       </Section>
 
       {/* Ablauf */}

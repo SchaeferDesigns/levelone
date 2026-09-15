@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import Icon from "./Icon";
 import type { IconName } from "./Icon";
 import { useScrollProgress } from "@/lib/useScrollProgress";
@@ -53,6 +54,7 @@ const areas: Area[] = [
 
 export default function AreaScroller() {
   const { ref, progress } = useScrollProgress<HTMLDivElement>();
+  const active = progress * (areas.length - 1);
   const rowRef = useRef<HTMLDivElement | null>(null);
   const [travel, setTravel] = useState(0);
   const [stageH, setStageH] = useState(900);
@@ -90,10 +92,22 @@ export default function AreaScroller() {
             <div
               ref={rowRef}
               className="hscroll-row mt-10"
-              style={{ transform: `translate3d(${-progress * travel}px, 0, 0)` }}
+              style={{
+                transform: `translate3d(${-progress * travel}px, 0, 0)`,
+                transition: "transform 0.42s cubic-bezier(0.22, 1, 0.36, 1)",
+              }}
             >
-              {areas.map((a) => (
-                <article key={a.title} className="hscroll-card glass sweep card card-hover">
+              {areas.map((a, i) => (
+                <article
+                  key={a.title}
+                  className="hscroll-card glass sweep card card-hover"
+                  style={{
+                    opacity: Math.abs(i - active) <= 0.7 ? 1 : 0.45,
+                    transform: `scale(${Math.abs(i - active) <= 0.7 ? 1 : 0.955})`,
+                    transition:
+                      "opacity 0.5s cubic-bezier(0.22,1,0.36,1), transform 0.5s cubic-bezier(0.22,1,0.36,1)",
+                  }}
+                >
                   <div className="flex items-start justify-between gap-6">
                     <span className="grid h-14 w-14 place-items-center rounded-2xl border border-white/14 bg-white/6 text-flame-400">
                       <Icon name={a.icon} size={26} />
@@ -129,10 +143,21 @@ export default function AreaScroller() {
                   style={{ width: `${Math.max(6, progress * 100)}%` }}
                 />
               </div>
-              <p className="mt-3 text-[13px] font-semibold uppercase tracking-[0.16em] text-faint">
-                Bereich {Math.min(areas.length, Math.floor(progress * areas.length) + 1)} von{" "}
-                {areas.length}
-              </p>
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
+                <p className="text-[13px] font-semibold uppercase tracking-[0.16em] text-faint">
+                  Bereich {Math.min(areas.length, Math.floor(progress * areas.length) + 1)} von{" "}
+                  {areas.length}
+                </p>
+                <div className="flex flex-wrap gap-2.5">
+                  <Link href="/training/" className="btn btn-ghost">
+                    Alle Trainingsangebote
+                    <Icon name="arrowRight" size={17} />
+                  </Link>
+                  <Link href="/kurse/" className="btn btn-ghost">
+                    Kurse und Termine
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -4,6 +4,7 @@ import Reveal from "@/components/Reveal";
 import Section, { SectionHeader } from "@/components/Section";
 import Cta from "@/components/Cta";
 import Accordion from "@/components/Accordion";
+import TarifCards from "@/components/TarifCards";
 import { CtaBand, NoticeCard, PageHero, Steps } from "@/components/blocks";
 import { site } from "@/lib/site";
 
@@ -68,8 +69,8 @@ export default function MitgliedschaftPage() {
           </>
         }
         text="Kein Baukasten mit versteckten Zusatzpaketen. Als Mitglied nutzt du das Studio rund um die Uhr und alle Bereiche, die dazugehören."
-        primary={{ href: "/probetraining/", label: "Kostenloses Probetraining" }}
-        secondary={{ href: "/kontakt/", label: "Tarife erfragen" }}
+        primary={{ href: "/mitglied-werden/", label: "Mitglied werden" }}
+        secondary={{ href: "/probetraining/", label: "Erst kostenlos testen" }}
       />
 
       <Section className="glow glow-right">
@@ -93,46 +94,21 @@ export default function MitgliedschaftPage() {
         </div>
       </Section>
 
-      <Section>
-        <Reveal>
-          <div className="glass-strong relative overflow-hidden rounded-[30px] p-8 sm:p-12">
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-flame-500/22 blur-3xl"
-            />
-            <div className="relative grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-              <div>
-                <span className="eyebrow">Tarife</span>
-                <h2 className="display-lg mt-4">Preise besprechen wir persönlich</h2>
-                <p className="lead mt-5 max-w-[56ch]">
-                  Der passende Tarif hängt davon ab, wie oft du trainierst und wie lange du planst.
-                  Statt dich durch eine Preistabelle zu schicken, nehmen wir uns zwei Minuten Zeit
-                  und sagen dir, was für dich wirklich sinnvoll ist.
-                </p>
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <Cta href="/probetraining/">Kostenloses Probetraining</Cta>
-                  <Cta href={`tel:${site.contact.phone}`} variant="ghost" icon="phone" external>
-                    {site.contact.phoneDisplay}
-                  </Cta>
-                </div>
-              </div>
-              <ul className="flex flex-col gap-4">
-                {[
-                  "Keine versteckten Kosten",
-                  "Keine Beratung unter Zeitdruck",
-                  "Alle Bereiche im Studio inklusive",
-                  "Entscheidung erst nach dem Probetraining",
-                ].map((t) => (
-                  <li key={t} className="flex items-start gap-3 text-[16px] font-semibold">
-                    <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-flame-500/18 text-flame-400">
-                      <Icon name="check" size={14} strokeWidth={3} />
-                    </span>
-                    {t}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+      <Section id="tarife" className="glow glow-right">
+        <SectionHeader
+          eyebrow="Tarife"
+          title="Drei Wege, gleiche Leistung"
+          text="Alle Leistungen sind in jedem Tarif enthalten. Du entscheidest über Laufzeit und Preis."
+          align="center"
+        />
+        <div className="mt-12">
+          <TarifCards />
+        </div>
+        <Reveal delay={200} className="mt-10 flex flex-wrap justify-center gap-3">
+          <Cta href="/mitglied-werden/">Online abschließen</Cta>
+          <Cta href="/probetraining/" variant="ghost">
+            Erst kostenlos testen
+          </Cta>
         </Reveal>
       </Section>
 

@@ -185,13 +185,16 @@ export function CtaBand({
               <h2 className="display-huge mx-auto mt-4 max-w-[18ch]">{title}</h2>
               <p className="lead mx-auto mt-5 max-w-[56ch]">{text}</p>
               <div className="mt-9 flex flex-wrap justify-center gap-3">
-                <Cta href="/probetraining/">Kostenloses Probetraining</Cta>
+                <Cta href="/mitglied-werden/">Mitglied werden</Cta>
+                <Cta href="/probetraining/" variant="ghost">
+                  Erst kostenlos testen
+                </Cta>
                 <Cta href={`tel:${site.contact.phone}`} variant="ghost" icon="phone" external>
                   {site.contact.phoneDisplay}
                 </Cta>
               </div>
               <p className="mt-6 text-[13.5px] text-faint">
-                Unverbindlich, ohne Vertrag und ohne versteckte Kosten.
+                Keine Aufnahmegebühr. Probetraining kostenlos und ohne Verpflichtung.
               </p>
             </div>
           </div>

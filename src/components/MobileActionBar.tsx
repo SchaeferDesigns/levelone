@@ -40,10 +40,10 @@ export default function MobileActionBar() {
           </a>
         ) : (
           <Link
-            href="/probetraining/"
+            href="/mitglied-werden/"
             className="flex flex-1 items-center justify-center gap-2 rounded-[999px] bg-gradient-to-br from-flame-400 to-flame-500 px-4 py-3 text-[15px] font-extrabold text-[#160702]"
           >
-            Probetraining
+            Mitglied werden
             <Icon name="arrowRight" size={17} strokeWidth={2.2} />
           </Link>
         )}
