@@ -10,7 +10,6 @@ export default function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [sticky, setSticky] = useState(false);
-  const [hidden, setHidden] = useState(false);
 
   const toggleRef = useRef<HTMLButtonElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
@@ -66,22 +65,14 @@ export default function Nav() {
     setPill({ x: a.left - b.left, w: a.width, visible: true, hovered: !isActive(mainNav[i].href) });
   }
 
-  /* Zustand beim Scrollen: zusammenziehen, beim Abwärtsscrollen ausblenden */
+  /* Form wechselt beim Scrollen. Die Leiste bleibt immer sichtbar. */
   useEffect(() => {
     let frame = 0;
-    let last = window.scrollY;
 
     const measure = () => {
       frame = 0;
-      const y = window.scrollY;
-      setSticky(y > 18);
-      const down = y > last && y - last > 4;
-      const up = last - y > 4;
-      if (!open) {
-        if (down && y > 420) setHidden(true);
-        else if (up || y < 220) setHidden(false);
-      }
-      last = y;
+      // Kleine Hysterese, damit die Form am Umschaltpunkt nicht flattert
+      setSticky((prev) => (prev ? window.scrollY > 12 : window.scrollY > 40));
     };
 
     const onScroll = () => {
@@ -95,7 +86,7 @@ export default function Nav() {
       if (frame) cancelAnimationFrame(frame);
       window.removeEventListener("scroll", onScroll);
     };
-  }, [open]);
+  }, []);
 
   /* Lichtreflex folgt dem Zeiger */
   function onMove(e: React.MouseEvent<HTMLDivElement>) {
@@ -168,16 +159,14 @@ export default function Nav() {
 
   return (
     <>
-      <div className="nav-scrim" aria-hidden="true" data-sticky={sticky} />
-
-      <header className="nav-wrap" data-hidden={hidden && !open}>
-        <div className="shell">
-          <div
-            ref={barRef}
-            className="nav-bar"
-            data-state={sticky ? "sticky" : "top"}
-            onMouseMove={onMove}
-          >
+      <header className="nav-wrap">
+        <div
+          ref={barRef}
+          className="nav-bar"
+          data-state={sticky ? "sticky" : "top"}
+          onMouseMove={onMove}
+        >
+          <div className="nav-inner">
             <Link
               href="/"
               className="nav-brand flex shrink-0 items-center gap-3"

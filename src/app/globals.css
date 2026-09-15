@@ -452,6 +452,10 @@
   opacity: 1;
 }
 
+.nav-scrim[data-sticky="false"] {
+  opacity: 0;
+}
+
 /* ============================================================
    Formulare
    ============================================================ */
@@ -972,62 +976,60 @@ textarea.field-input {
     top: 0;
     z-index: 50;
     pointer-events: none;
-    transition:
-      transform 0.55s var(--ease-out-soft),
-      opacity 0.4s var(--ease-out-soft);
   }
 
-  .nav-wrap[data-hidden="true"] {
-    transform: translate3d(0, -140%, 0);
-    opacity: 0;
-  }
-
+  /* Die Leiste selbst wandelt ihre Form, sie verschwindet nie */
   .nav-bar {
     pointer-events: auto;
     position: relative;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-inline: auto;
-    border-radius: var(--radius-pill);
-    border: 1px solid transparent;
-    background: transparent;
-    transition:
-      max-width 0.65s var(--ease-out-soft),
-      padding 0.55s var(--ease-out-soft),
-      background-color 0.55s var(--ease-out-soft),
-      border-color 0.55s var(--ease-out-soft),
-      box-shadow 0.55s var(--ease-out-soft),
-      backdrop-filter 0.55s var(--ease-out-soft),
-      transform 0.55s var(--ease-out-soft);
-  }
-
-  /* Ganz oben: breit und offen */
-  .nav-bar[data-state="top"] {
-    max-width: 1400px;
-    padding: 16px 14px 16px 20px;
-    transform: translateY(14px);
-  }
-
-  /* Gescrollt: zieht sich zu einer schwebenden Pille zusammen */
-  .nav-bar[data-state="sticky"] {
-    max-width: 1180px;
-    padding: 8px 8px 8px 16px;
-    transform: translateY(10px);
+    border-style: solid;
+    border-width: 1px;
     background: linear-gradient(
         150deg,
-        rgba(255, 255, 255, 0.085) 0%,
-        rgba(255, 255, 255, 0.03) 48%,
-        rgba(255, 255, 255, 0.055) 100%
+        rgba(255, 255, 255, 0.075) 0%,
+        rgba(255, 255, 255, 0.028) 48%,
+        rgba(255, 255, 255, 0.05) 100%
       ),
-      rgba(9, 12, 17, 0.52);
+      rgba(9, 12, 17, 0.58);
     -webkit-backdrop-filter: blur(26px) saturate(180%);
     backdrop-filter: blur(26px) saturate(180%);
+    transition:
+      margin 0.7s var(--ease-out-soft),
+      border-radius 0.7s var(--ease-out-soft),
+      border-color 0.7s var(--ease-out-soft),
+      box-shadow 0.7s var(--ease-out-soft),
+      background-color 0.7s var(--ease-out-soft);
+  }
+
+  /* Ganz oben: durchgehende Leiste von Kante zu Kante */
+  .nav-bar[data-state="top"] {
+    margin: 0;
+    border-radius: 0;
+    border-color: transparent transparent rgba(255, 255, 255, 0.1) transparent;
+    box-shadow: 0 18px 40px -34px rgba(0, 0, 0, 0.9);
+  }
+
+  /* Gescrollt: schwebende Pille */
+  .nav-bar[data-state="sticky"] {
+    margin: 12px max(20px, calc((100% - 1180px) / 2)) 0;
+    border-radius: var(--radius-pill);
     border-color: rgba(255, 255, 255, 0.13);
     box-shadow:
       inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
-      0 22px 54px -26px rgba(0, 0, 0, 0.95);
+      0 24px 56px -26px rgba(0, 0, 0, 0.95);
   }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    max-width: 1200px;
+    margin-inline: auto;
+    transition: padding 0.7s var(--ease-out-soft);
+  }
+
+  .nav-bar[data-state="top"] .nav-inner { padding: 14px 20px; }
+  .nav-bar[data-state="sticky"] .nav-inner { padding: 8px 8px 8px 16px; }
 
   /* Lichtreflex, der dem Mauszeiger folgt */
   .nav-bar::before {
@@ -1039,15 +1041,13 @@ textarea.field-input {
     opacity: 0;
     transition: opacity 0.45s var(--ease-out-soft);
     background: radial-gradient(
-      180px 90px at var(--sheen-x, 50%) var(--sheen-y, 50%),
-      rgba(255, 255, 255, 0.13),
+      200px 100px at var(--sheen-x, 50%) var(--sheen-y, 50%),
+      rgba(255, 255, 255, 0.12),
       transparent 70%
     );
   }
 
-  .nav-bar[data-state="sticky"]:hover::before {
-    opacity: 1;
-  }
+  .nav-bar:hover::before { opacity: 1; }
 
   /* Markenzeichen */
   .nav-mark {
@@ -1064,7 +1064,7 @@ textarea.field-input {
       transform 0.5s var(--ease-out-soft);
   }
 
-  .nav-bar[data-state="top"] .nav-mark { width: 44px; height: 44px; }
+  .nav-bar[data-state="top"] .nav-mark { width: 42px; height: 42px; }
   .nav-bar[data-state="sticky"] .nav-mark { width: 38px; height: 38px; border-radius: 12px; }
 
   .nav-brand:hover .nav-mark { transform: rotate(-8deg) scale(1.04); }

@@ -8,8 +8,7 @@ import Accordion from "@/components/Accordion";
 import MapConsent from "@/components/MapConsent";
 import Hero from "@/components/Hero";
 import Ticker from "@/components/Ticker";
-import Counter from "@/components/Counter";
-import DayStrip from "@/components/DayStrip";
+import QuickAnswers from "@/components/QuickAnswers";
 import StudioShowcase from "@/components/StudioShowcase";
 import AreaScroller from "@/components/AreaScroller";
 import GoalPicker from "@/components/GoalPicker";
@@ -36,20 +35,20 @@ export const metadata: Metadata = {
 
 const faq = [
   {
+    q: "Was kostet die Mitgliedschaft?",
+    a: "Der Tarif hängt von Laufzeit und Trainingshäufigkeit ab. Deshalb nennen wir ihn im Gespräch statt in einer Tabelle, die für die Hälfte der Leute nicht stimmt. Das Probetraining ist in jedem Fall kostenlos.",
+  },
+  {
     q: "Kann ich wirklich rund um die Uhr trainieren?",
-    a: "Ja. Als Mitglied trainierst du an sieben Tagen die Woche zu jeder Uhrzeit, auch nachts, am Wochenende und an Feiertagen. Während der Servicezeiten ist zusätzlich ein Team vor Ort, das dich betreut.",
-  },
-  {
-    q: "Ich habe noch nie in einem Studio trainiert. Ist das ein Problem?",
-    a: "Im Gegenteil. Beim ersten Termin gehen wir gemeinsam durch das Studio, klären dein Ziel und erstellen einen Plan, der zu deinem Alltag passt. Du bekommst jedes Gerät erklärt, bevor du allein loslegst.",
-  },
-  {
-    q: "Was kostet das Probetraining?",
-    a: "Das Probetraining ist kostenlos und unverbindlich. Du zahlst nichts und gehst keinen Vertrag ein.",
+    a: "Ja. Als Mitglied trainierst du an sieben Tagen die Woche zu jeder Uhrzeit, auch nachts, am Wochenende und an Feiertagen. Während der Servicezeiten ist zusätzlich ein Team vor Ort.",
   },
   {
     q: "Wie komme ich außerhalb der Servicezeiten ins Studio?",
     a: "Als Mitglied erhältst du ein persönliches Zutrittsmedium. Damit öffnest du die Tür zu jeder Uhrzeit, auch nachts und an Feiertagen.",
+  },
+  {
+    q: "Ich habe noch nie in einem Studio trainiert. Ist das ein Problem?",
+    a: "Im Gegenteil. Beim ersten Termin gehen wir gemeinsam durch das Studio, klären dein Ziel und erstellen einen Plan, der zu deinem Alltag passt. Du bekommst jedes Gerät erklärt, bevor du allein loslegst.",
   },
 ];
 
@@ -71,57 +70,93 @@ export default function Home() {
         ]}
       />
 
-      {/* Das Studio, als Bildsequenz am Scrollen */}
-      <StudioShowcase />
+      {/* Die häufigsten Fragen sofort beantwortet */}
+      <QuickAnswers />
 
-      {/* Rund um die Uhr, kompakt und zum Durchklicken */}
-      <Section id="rund-um-die-uhr" className="glow glow-left">
-        <SectionHeader
-          eyebrow="24 Stunden geöffnet"
-          title={
-            <>
-              Wann passt es <span className="flame-text">dir</span>?
-            </>
-          }
-          text="Such dir eine Uhrzeit aus, dann siehst du, wie das Studio zu dieser Stunde aussieht."
-          align="center"
-        />
-        <Reveal delay={80} className="mt-11">
-          <DayStrip />
-        </Reveal>
-      </Section>
-
-      {/* Kennzahlen */}
-      <Section className="pt-16">
+      {/* Mitgliedschaft steht bewusst weit oben, weil danach am meisten gefragt wird */}
+      <Section id="mitgliedschaft">
         <Reveal>
-          <div className="glass grid grid-cols-2 gap-px overflow-hidden rounded-[26px] lg:grid-cols-4">
-            {[
-              { value: <Counter to={24} />, label: "Stunden täglich", icon: "clock" as const },
-              { value: <Counter to={7} />, label: "Tage die Woche", icon: "calendar" as const },
-              { value: <Counter to={365} />, label: "Tage im Jahr", icon: "flame" as const },
-              { value: <Counter to={0} suffix=" €" />, label: "Probetraining", icon: "euro" as const },
-            ].map((s) => (
-              <div
-                key={s.label}
-                className="flex flex-col items-center gap-2.5 px-5 py-9 text-center"
-              >
-                <Icon name={s.icon} size={22} className="text-flame-400" />
-                <span className="text-[34px] font-black leading-none tracking-tight sm:text-[46px]">
-                  {s.value}
-                </span>
-                <span className="text-[11.5px] font-semibold uppercase tracking-[0.12em] text-faint sm:text-[13px]">
-                  {s.label}
-                </span>
+          <div className="glass-strong sweep overflow-hidden rounded-[30px]">
+            <div className="grid gap-0 lg:grid-cols-[1.1fr_0.9fr]">
+              <div className="p-8 sm:p-12">
+                <span className="eyebrow">Mitgliedschaft</span>
+                <h2 className="display-huge mt-4">Was drin ist</h2>
+                <p className="lead mt-5 max-w-[52ch]">
+                  Kein Baukasten mit Kleingedrucktem. Diese Leistungen bekommst du in jeder
+                  Mitgliedschaft, unabhängig vom Tarif.
+                </p>
+                <ul className="mt-8 grid gap-3.5 sm:grid-cols-2">
+                  {[
+                    "Zutritt rund um die Uhr, sieben Tage die Woche",
+                    "Alle Trainingsbereiche im Studio",
+                    "Einweisung an den Geräten durch das Team",
+                    "Trainingsplan, abgestimmt auf dein Ziel",
+                    "Sauna und Solarium",
+                    "Wasser und Betreuung in den Servicezeiten",
+                  ].map((t) => (
+                    <li key={t} className="flex items-start gap-3 text-[15.5px]">
+                      <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-flame-500/18 text-flame-400">
+                        <Icon name="check" size={14} strokeWidth={3} />
+                      </span>
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-9 flex flex-wrap gap-3">
+                  <Cta href="/probetraining/">Kostenloses Probetraining</Cta>
+                  <Cta href="/mitgliedschaft/" variant="ghost">
+                    Alle Details
+                  </Cta>
+                </div>
               </div>
-            ))}
+
+              <div className="relative border-t border-white/10 lg:border-l lg:border-t-0">
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0 bg-[radial-gradient(120%_100%_at_80%_0%,rgba(255,138,61,0.28),transparent_62%),radial-gradient(90%_90%_at_10%_100%,rgba(56,120,255,0.22),transparent_60%)]"
+                />
+                <div className="relative flex h-full flex-col justify-center gap-6 p-8 sm:p-12">
+                  <Icon name="euro" size={32} className="text-flame-400" />
+                  <div>
+                    <h3 className="display-md">Und der Preis?</h3>
+                    <p className="mt-3 text-[15.5px] leading-relaxed text-mute">
+                      Der hängt davon ab, wie lange du planst und wie oft du kommst. Ein kurzes
+                      Gespräch reicht, dann weißt du es genau. Ohne Verkaufsdruck, ohne
+                      Aufnahmegebühr im Kleingedruckten.
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2.5">
+                    <a className="btn btn-primary" href={`tel:${site.contact.phone}`}>
+                      <Icon name="phone" size={17} />
+                      {site.contact.phoneDisplay}
+                    </a>
+                    <Link className="btn btn-ghost" href="/kontakt/">
+                      Schreiben
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </Reveal>
       </Section>
 
-      {/* Zielwähler */}
+      {/* Was es im Studio gibt */}
+      <AreaScroller />
+
+      <Section className="pt-0">
+        <Reveal className="flex flex-wrap justify-center gap-3">
+          <Cta href="/training/">Alle Trainingsangebote</Cta>
+          <Cta href="/kurse/" variant="ghost">
+            Kurse und Termine
+          </Cta>
+        </Reveal>
+      </Section>
+
+      {/* Passt das zu meinem Ziel */}
       <Section id="ziel" className="glow glow-right">
         <SectionHeader
-          eyebrow="Interaktiv"
+          eyebrow="Für wen"
           title={
             <>
               Was willst du <span className="flame-text">erreichen</span>?
@@ -135,19 +170,10 @@ export default function Home() {
         </Reveal>
       </Section>
 
-      {/* Bereiche, horizontal am Scrollen */}
-      <AreaScroller />
+      {/* Fortschrittsgeschichte am Scrollen */}
+      <StudioShowcase />
 
-      <Section className="pt-0">
-        <Reveal className="flex flex-wrap justify-center gap-3">
-          <Cta href="/training/">Alle Trainingsangebote</Cta>
-          <Cta href="/kurse/" variant="ghost">
-            Zu den Kursen
-          </Cta>
-        </Reveal>
-      </Section>
-
-      {/* Einstieg in drei Schritten */}
+      {/* Ablauf */}
       <Section className="glow glow-left">
         <SectionHeader
           eyebrow="So startest du"
@@ -181,77 +207,37 @@ export default function Home() {
         </Reveal>
       </Section>
 
-      {/* Mitgliedschaft */}
-      <Section>
+      {/* Beweis */}
+      <Section className="pt-0">
         <Reveal>
-          <div className="glass-strong sweep overflow-hidden rounded-[30px]">
-            <div className="grid gap-0 lg:grid-cols-2">
-              <div className="p-8 sm:p-12">
-                <span className="eyebrow">Mitgliedschaft</span>
-                <h2 className="display-huge mt-4">Alles drin</h2>
-                <p className="lead mt-5">
-                  Kein Baukasten mit Kleingedrucktem. Die Grundlagen bekommst du immer.
+          <div className="glass sweep card flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-4">
+              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-white/12 bg-white/6 text-flame-400">
+                <Icon name="star" size={23} />
+              </span>
+              <div>
+                <h2 className="text-[20px] font-extrabold tracking-tight">Hör nicht nur auf uns</h2>
+                <p className="mt-2 max-w-[62ch] text-[15px] leading-relaxed text-mute">
+                  Was Mitglieder über das Studio schreiben, liest du direkt bei Google. Auf
+                  Instagram siehst du, was gerade im Studio passiert.
                 </p>
-                <ul className="mt-8 flex flex-col gap-3.5">
-                  {[
-                    "Zutritt rund um die Uhr an sieben Tagen die Woche",
-                    "Nutzung aller Trainingsbereiche im Studio",
-                    "Einweisung an den Geräten durch das Team",
-                    "Trainingsplan, abgestimmt auf dein Ziel",
-                    "Sauna, Solarium und Wasser inklusive",
-                  ].map((t) => (
-                    <li key={t} className="flex items-start gap-3 text-[15.5px]">
-                      <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-flame-500/18 text-flame-400">
-                        <Icon name="check" size={14} strokeWidth={3} />
-                      </span>
-                      {t}
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-9 flex flex-wrap gap-3">
-                  <Cta href="/probetraining/">Kostenloses Probetraining</Cta>
-                  <Cta href="/mitgliedschaft/" variant="ghost">
-                    Mitgliedschaft ansehen
-                  </Cta>
-                </div>
               </div>
-              <div className="relative min-h-[320px] border-t border-white/10 lg:border-l lg:border-t-0">
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-0 bg-[radial-gradient(120%_100%_at_80%_0%,rgba(255,138,61,0.3),transparent_62%),radial-gradient(90%_90%_at_10%_100%,rgba(56,120,255,0.24),transparent_60%)]"
-                />
-                <div className="relative flex h-full flex-col justify-center gap-6 p-8 sm:p-12">
-                  <Icon name="star" size={32} className="text-flame-400" />
-                  <div>
-                    <h3 className="display-md">Hör nicht nur auf uns</h3>
-                    <p className="mt-3 text-[15.5px] leading-relaxed text-mute">
-                      Was Mitglieder über das Studio schreiben, liest du direkt bei Google und in
-                      unseren Kanälen. Dort siehst du auch, was gerade im Studio passiert.
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap gap-2.5">
-                    <a
-                      className="btn btn-ghost"
-                      href={site.maps}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Icon name="star" size={17} />
-                      Bewertungen lesen
-                    </a>
-                    <a
-                      className="btn btn-ghost"
-                      href={site.social.instagram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label="Level One Göggingen auf Instagram, öffnet in neuem Tab"
-                    >
-                      <Icon name="instagram" size={17} />
-                      Instagram
-                    </a>
-                  </div>
-                </div>
-              </div>
+            </div>
+            <div className="flex flex-wrap gap-2.5">
+              <a className="btn btn-ghost" href={site.maps} target="_blank" rel="noopener noreferrer">
+                <Icon name="star" size={17} />
+                Bewertungen
+              </a>
+              <a
+                className="btn btn-ghost"
+                href={site.social.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Level One Göggingen auf Instagram, öffnet in neuem Tab"
+              >
+                <Icon name="instagram" size={17} />
+                Instagram
+              </a>
             </div>
           </div>
         </Reveal>
