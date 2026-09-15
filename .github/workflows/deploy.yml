@@ -30,6 +30,9 @@ jobs:
       - name: Pages vorbereiten
         id: pages
         uses: actions/configure-pages@v5
+        with:
+          # Aktiviert GitHub Pages beim ersten Lauf selbst, falls noch nicht geschehen
+          enablement: true
 
       - name: Abhängigkeiten installieren
         run: npm ci
