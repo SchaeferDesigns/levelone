@@ -105,25 +105,26 @@ export default function StudioPage() {
       <Section>
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <SectionHeader
-            eyebrow="Ausstattung"
-            title="Alles unter einem Dach"
-            text="Du brauchst keine zweite Mitgliedschaft für Kurse oder Wellness. Bei uns ist beides Teil des Studios."
+            eyebrow="Auf einen Blick"
+            title="Gut zu wissen vor dem ersten Besuch"
+            text="Die Rahmenbedingungen, nach denen am häufigsten gefragt wird. Die Ausstattung im Detail findest du auf der Trainingsseite."
           />
           <Reveal delay={100}>
             <TileList
               items={[
-                { icon: "dumbbell", label: "Geräte für alle Muskelgruppen" },
-                { icon: "target", label: "Großer Freihantelbereich" },
-                { icon: "bike", label: "Cardiobereich" },
-                { icon: "music", label: "Kursbereich" },
-                { icon: "waves", label: "Vibrationstraining" },
-                { icon: "sauna", label: "Sauna" },
-                { icon: "sun", label: "Solarium" },
-                { icon: "coffee", label: "Bar mit Kaffee und Shakes" },
-                { icon: "car", label: "Parkplätze am Studio" },
+                { icon: "key", label: "Zutritt rund um die Uhr mit eigenem Zutrittsmedium" },
+                { icon: "users", label: "Betreuung vor Ort während der Servicezeiten" },
+                { icon: "car", label: "Parkplätze direkt am Studio" },
                 { icon: "accessibility", label: "Barrierefreier Zugang" },
+                { icon: "pin", label: "Zentral im Ostalbkreis gelegen" },
+                { icon: "shield", label: "Einweisung vor dem ersten eigenen Training" },
               ]}
             />
+            <div className="mt-5">
+              <Cta href="/training/" variant="ghost">
+                Ausstattung im Detail
+              </Cta>
+            </div>
           </Reveal>
         </div>
       </Section>

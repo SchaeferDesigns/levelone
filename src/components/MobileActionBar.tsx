@@ -35,7 +35,7 @@ export default function MobileActionBar() {
             href="#anfrage"
             className="flex flex-1 items-center justify-center gap-2 rounded-[999px] bg-gradient-to-br from-flame-400 to-flame-500 px-4 py-3 text-[15px] font-extrabold text-[#160702]"
           >
-            Zum Formular
+            Formular
             <Icon name="arrowRight" size={17} strokeWidth={2.2} />
           </a>
         ) : (

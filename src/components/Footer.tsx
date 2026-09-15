@@ -102,6 +102,8 @@ export default function Footer() {
                   Training rund um die Uhr, täglich
                   <br />
                   Service Mo bis Fr 9 bis 22&nbsp;Uhr
+                  <br />
+                  Sa und So 10 bis 14&nbsp;Uhr
                 </span>
               </li>
             </ul>

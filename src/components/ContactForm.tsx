@@ -163,6 +163,16 @@ export default function ContactForm({ variant = "kontakt" }: { variant?: Variant
 
   return (
     <form ref={formRef} className="glass card" onSubmit={onSubmit} noValidate>
+      <p
+        aria-live="polite"
+        className={
+          summary || state === "error"
+            ? "mb-6 rounded-2xl border border-[#ff9a9a]/40 bg-[#ff9a9a]/10 px-4 py-3 text-[14.5px] font-semibold text-[#ffb0b0]"
+            : "sr-only"
+        }
+      >
+        {summary || (state === "error" ? "Das Senden hat nicht funktioniert." : "")}
+      </p>
       <div className="grid gap-5 sm:grid-cols-2">
         <div className="sm:col-span-1">
           <label className="field-label" htmlFor="f-name">
@@ -348,10 +358,6 @@ export default function ContactForm({ variant = "kontakt" }: { variant?: Variant
           Antwort in der Regel am selben Werktag. Keine Weitergabe an Dritte.
         </p>
       </div>
-
-      <p aria-live="polite" className={summary ? "field-error mt-4" : "sr-only"}>
-        {summary || (state === "error" ? "Das Senden hat nicht funktioniert." : "")}
-      </p>
 
       {state === "error" ? (
         <div className="mt-5 rounded-2xl border border-[#ff7a7a]/40 bg-[#ff7a7a]/10 p-4 text-[14.5px]">

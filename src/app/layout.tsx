@@ -77,7 +77,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Zum Inhalt springen
         </a>
         <Nav />
-        <main id="inhalt">{children}</main>
+        <main id="inhalt" tabIndex={-1}>
+          {children}
+        </main>
         <Footer />
         <MobileActionBar />
         <JsonLd />
