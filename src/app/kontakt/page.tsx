@@ -33,7 +33,7 @@ export default function KontaktPage() {
         <div className="shell">
           <Reveal className="max-w-[820px]">
             <span className="eyebrow">Kontakt</span>
-            <h1 className="display-lg mt-5">
+            <h1 className="display-huge mt-5">
               Schreib uns oder <span className="flame-text">komm vorbei</span>
             </h1>
             <p className="lead mt-6 max-w-[62ch]">

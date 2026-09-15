@@ -17,7 +17,7 @@ export function SectionHeader({ eyebrow, title, text, align = "left", id }: Head
       id={id}
     >
       {eyebrow ? <span className="eyebrow">{eyebrow}</span> : null}
-      <h2 className="display-lg mt-4">{title}</h2>
+      <h2 className="display-huge mt-4">{title}</h2>
       {text ? <p className="lead mt-5">{text}</p> : null}
     </Reveal>
   );

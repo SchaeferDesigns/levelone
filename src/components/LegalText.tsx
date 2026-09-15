@@ -11,14 +11,16 @@ type Props = {
 };
 
 /**
- * Liest den Rechtstext beim Bauen aus /public/rechtstexte/<file>.txt.
- * Der Text landet dadurch direkt im ausgelieferten HTML, ist ohne JavaScript
- * lesbar und wird von Suchmaschinen gefunden. Solange die Datei leer ist,
- * erscheint ein sachlicher Hinweis statt Platzhaltertext.
+ * Liest den vorformatierten Rechtstext beim Bauen aus
+ * /public/rechtstexte/<file>.html und gibt ihn unverändert aus.
+ * Die Datei enthält fertiges HTML, eine Nachformatierung findet nicht statt.
+ * Der Text steht dadurch im ausgelieferten HTML, ist ohne JavaScript lesbar
+ * und für Suchmaschinen sichtbar. Solange die Datei leer ist, erscheint ein
+ * Hinweis statt Platzhaltertext.
  */
-function readLegalText(file: string) {
+function readLegalHtml(file: string) {
   try {
-    const full = path.join(process.cwd(), "public", "rechtstexte", `${file}.txt`);
+    const full = path.join(process.cwd(), "public", "rechtstexte", `${file}.html`);
     return fs.readFileSync(full, "utf8").trim();
   } catch {
     return "";
@@ -26,9 +28,9 @@ function readLegalText(file: string) {
 }
 
 export default function LegalText({ file, title }: Props) {
-  const text = readLegalText(file);
+  const html = readLegalHtml(file);
 
-  if (!text) {
+  if (!html) {
     return (
       <div className="glass card">
         <span className="grid h-14 w-14 place-items-center rounded-2xl border border-white/14 bg-white/6 text-flame-400">
@@ -55,7 +57,7 @@ export default function LegalText({ file, title }: Props) {
 
   return (
     <div className="glass card">
-      <div className="whitespace-pre-wrap text-[15.5px] leading-relaxed text-mute">{text}</div>
+      <div className="legal-content" dangerouslySetInnerHTML={{ __html: html }} />
     </div>
   );
 }

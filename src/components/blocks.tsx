@@ -40,11 +40,11 @@ export function FeatureCard({
   return (
     <Reveal delay={delay} className="h-full">
       {href ? (
-        <Link href={href} className="glass card card-hover block h-full">
+        <Link href={href} className="glass sweep card card-hover block h-full">
           {inner}
         </Link>
       ) : (
-        <div className="glass card card-hover h-full">{inner}</div>
+        <div className="glass sweep card card-hover h-full">{inner}</div>
       )}
     </Reveal>
   );
@@ -111,7 +111,7 @@ export function PageHero({
       <div className="shell">
         <Reveal immediate className="max-w-[820px]">
           <span className="eyebrow">{eyebrow}</span>
-          <h1 className="display-lg mt-5">{title}</h1>
+          <h1 className="display-huge mt-5">{title}</h1>
           <p className="lead mt-6 max-w-[62ch]">{text}</p>
           {primary || secondary ? (
             <div className="mt-8 flex flex-wrap gap-3">
@@ -141,7 +141,7 @@ export function Steps({
       {items.map((s, i) => (
         <li key={s.title}>
           <Reveal delay={i * 90} className="h-full">
-            <div className="glass card card-hover h-full">
+            <div className="glass sweep card card-hover h-full">
               <div className="flex items-center gap-3">
                 <span className="grid h-11 w-11 place-items-center rounded-full bg-gradient-to-br from-flame-400 to-flame-500 text-[17px] font-black text-ink-950">
                   {i + 1}
@@ -171,7 +171,7 @@ export function CtaBand({
     <section className="section-y">
       <div className="shell">
         <Reveal>
-          <div className="glass-strong relative overflow-hidden rounded-[30px] px-7 py-14 text-center sm:px-14">
+          <div className="glass-strong sweep relative overflow-hidden rounded-[30px] px-7 py-14 text-center sm:px-14">
             <div
               aria-hidden="true"
               className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-flame-500/25 blur-3xl"
@@ -182,7 +182,7 @@ export function CtaBand({
             />
             <div className="relative">
               <span className="eyebrow">Jetzt starten</span>
-              <h2 className="display-lg mx-auto mt-4 max-w-[20ch]">{title}</h2>
+              <h2 className="display-huge mx-auto mt-4 max-w-[18ch]">{title}</h2>
               <p className="lead mx-auto mt-5 max-w-[56ch]">{text}</p>
               <div className="mt-9 flex flex-wrap justify-center gap-3">
                 <Cta href="/probetraining/">Kostenloses Probetraining</Cta>

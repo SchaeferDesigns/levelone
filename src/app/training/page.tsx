@@ -69,7 +69,7 @@ export default function TrainingPage() {
         <div className="shell">
           <Reveal immediate className="max-w-[820px]">
             <span className="eyebrow">Training</span>
-            <h1 className="display-lg mt-5">
+            <h1 className="display-huge mt-5">
               Dein Training. Deine Zeit. <span className="flame-text">Dein Ziel.</span>
             </h1>
             <p className="lead mt-6 max-w-[62ch]">

@@ -6,14 +6,13 @@ import Cta from "@/components/Cta";
 import Section, { SectionHeader } from "@/components/Section";
 import Accordion from "@/components/Accordion";
 import MapConsent from "@/components/MapConsent";
-import {
-  CtaBand,
-  FeatureCard,
-  MediaFrame,
-  StatStrip,
-  Steps,
-  TileList,
-} from "@/components/blocks";
+import Hero from "@/components/Hero";
+import Ticker from "@/components/Ticker";
+import Counter from "@/components/Counter";
+import DayCycle from "@/components/DayCycle";
+import AreaScroller from "@/components/AreaScroller";
+import GoalPicker from "@/components/GoalPicker";
+import { CtaBand, Steps } from "@/components/blocks";
 import { site } from "@/lib/site";
 
 const metaTitle = "Fitnessstudio in Göggingen | 24 Stunden trainieren";
@@ -48,262 +47,89 @@ const faq = [
     a: "Das Probetraining ist kostenlos und unverbindlich. Du zahlst nichts und gehst keinen Vertrag ein.",
   },
   {
-    q: "Gibt es Parkplätze am Studio?",
-    a: "Ja, direkt am Standort Am Brunnenäcker 13 stehen Parkplätze zur Verfügung. Der Zugang zum Studio ist barrierefrei.",
+    q: "Wie komme ich außerhalb der Servicezeiten ins Studio?",
+    a: "Als Mitglied erhältst du ein persönliches Zutrittsmedium. Damit öffnest du die Tür zu jeder Uhrzeit, auch nachts und an Feiertagen.",
   },
 ];
 
 export default function Home() {
   return (
     <>
-      {/* -------------------------------------------------------- Hero */}
-      <section className="relative overflow-hidden pt-[118px] pb-6 sm:pt-[150px]">
-        <div className="shell">
-          <div className="grid items-center gap-12 lg:grid-cols-[1.08fr_0.92fr]">
-            <div>
-              <Reveal immediate>
-                <span className="glass inline-flex items-center gap-2.5 rounded-[999px] px-4 py-2 text-[13px] font-bold">
-                  <span
-                    aria-hidden="true"
-                    className="h-2 w-2 rounded-full bg-flame-500"
-                    style={{ animation: "pulse-ring 2.4s ease-out infinite" }}
-                  />
-                  Jetzt geöffnet. Immer geöffnet.
+      <Hero />
+
+      <Ticker
+        items={[
+          "24 Stunden geöffnet",
+          "Freihantelbereich",
+          "Geräte für jede Muskelgruppe",
+          "Cardio",
+          "Kurse",
+          "Sauna",
+          "Solarium",
+          "Personal Training",
+        ]}
+      />
+
+      {/* Der Tagesverlauf, an das Scrollen gekoppelt */}
+      <DayCycle />
+
+      {/* Kennzahlen */}
+      <Section className="pt-16">
+        <Reveal>
+          <div className="glass grid grid-cols-2 gap-px overflow-hidden rounded-[26px] lg:grid-cols-4">
+            {[
+              { value: <Counter to={24} />, label: "Stunden täglich", icon: "clock" as const },
+              { value: <Counter to={7} />, label: "Tage die Woche", icon: "calendar" as const },
+              { value: <Counter to={365} />, label: "Tage im Jahr", icon: "flame" as const },
+              { value: <Counter to={0} suffix=" €" />, label: "Probetraining", icon: "euro" as const },
+            ].map((s) => (
+              <div
+                key={s.label}
+                className="flex flex-col items-center gap-2.5 px-5 py-9 text-center"
+              >
+                <Icon name={s.icon} size={22} className="text-flame-400" />
+                <span className="text-[34px] font-black leading-none tracking-tight sm:text-[46px]">
+                  {s.value}
                 </span>
-              </Reveal>
-
-              <Reveal immediate delay={80}>
-                <h1 className="display-xl mt-6">
-                  Trainieren,
-                  <br />
-                  wann <span className="flame-text">du</span> willst.
-                </h1>
-              </Reveal>
-
-              <Reveal immediate delay={150}>
-                <p className="lead mt-7 max-w-[54ch]">
-                  Level One Göggingen ist dein Fitnessstudio im Ostalbkreis. 24 Stunden geöffnet, an
-                  sieben Tagen die Woche. Mit moderner Ausstattung, großem Freihantelbereich und
-                  einem Team, das dich wirklich kennt.
-                </p>
-              </Reveal>
-
-              <Reveal immediate delay={220}>
-                <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                  <Cta href="/probetraining/" className="w-full sm:w-auto">
-                    Kostenloses Probetraining
-                  </Cta>
-                  <Cta href="/studio/" variant="ghost" className="w-full sm:w-auto">
-                    Studio ansehen
-                  </Cta>
-                </div>
-              </Reveal>
-
-              <Reveal immediate delay={290}>
-                <ul className="mt-9 flex flex-wrap gap-x-5 gap-y-3.5 text-[14.5px] text-mute">
-                  {[
-                    { icon: "check" as const, text: "Ohne Vertrag testen" },
-                    { icon: "check" as const, text: "Persönliche Einweisung" },
-                    { icon: "check" as const, text: "Parkplätze am Studio" },
-                  ].map((i) => (
-                    <li key={i.text} className="flex items-center gap-2.5">
-                      <span className="grid h-5 w-5 place-items-center rounded-full bg-flame-500/18 text-flame-400">
-                        <Icon name={i.icon} size={13} strokeWidth={3} />
-                      </span>
-                      {i.text}
-                    </li>
-                  ))}
-                </ul>
-              </Reveal>
-            </div>
-
-            {/* Glaskarte mit den wichtigsten Fakten */}
-            <Reveal immediate delay={200}>
-              <div className="relative">
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -right-10 -top-10 h-56 w-56 rounded-full bg-flame-500/30 blur-3xl"
-                />
-                <div className="glass-strong relative rounded-[28px] p-7">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <span className="eyebrow">Dein Studio</span>
-                      <p className="display-md mt-2.5">Am Brunnenäcker 13</p>
-                      <p className="mt-1 text-[15px] text-mute">
-                        {site.contact.zip} {site.contact.city}
-                      </p>
-                    </div>
-                    <span
-                      className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-flame-400 to-flame-500 text-center text-[17px] font-black leading-none text-[#160702]"
-                      aria-hidden="true"
-                      style={{ animation: "float-soft 6s ease-in-out infinite" }}
-                    >
-                      24/7
-                    </span>
-                  </div>
-
-                  <dl className="mt-7 flex flex-col gap-4 border-t border-white/10 pt-6">
-                    <div className="grid grid-cols-[auto_1fr] items-start gap-x-3.5">
-                      <Icon
-                        name="clock"
-                        size={20}
-                        className="row-span-2 mt-0.5 shrink-0 text-flame-400"
-                      />
-                      <dt className="text-[14px] font-bold">Trainingszeiten</dt>
-                      <dd className="col-start-2 text-[14.5px] text-mute">
-                        Täglich 24 Stunden, auch an Feiertagen
-                      </dd>
-                    </div>
-                    <div className="grid grid-cols-[auto_1fr] items-start gap-x-3.5">
-                      <Icon
-                        name="users"
-                        size={20}
-                        className="row-span-2 mt-0.5 shrink-0 text-flame-400"
-                      />
-                      <dt className="text-[14px] font-bold">Servicezeiten</dt>
-                      <dd className="col-start-2 text-[14.5px] text-mute">
-                        Mo bis Fr 9 bis 22&nbsp;Uhr, Sa und So 10 bis 14&nbsp;Uhr
-                      </dd>
-                    </div>
-                    <div className="grid grid-cols-[auto_1fr] items-start gap-x-3.5">
-                      <Icon
-                        name="phone"
-                        size={20}
-                        className="row-span-2 mt-0.5 shrink-0 text-flame-400"
-                      />
-                      <dt className="text-[14px] font-bold">Direkter Draht</dt>
-                      <dd className="col-start-2 text-[14.5px]">
-                        <a
-                          className="font-semibold underline decoration-flame-400/60 underline-offset-4"
-                          href={`tel:${site.contact.phone}`}
-                        >
-                          {site.contact.phoneDisplay}
-                        </a>
-                      </dd>
-                    </div>
-                  </dl>
-
-                  <Link href="/kontakt/" className="btn btn-ghost mt-7 w-full">
-                    Anfahrt und Kontakt
-                    <Icon name="arrowRight" size={18} />
-                  </Link>
-                </div>
+                <span className="text-[11.5px] font-semibold uppercase tracking-[0.12em] text-faint sm:text-[13px]">
+                  {s.label}
+                </span>
               </div>
-            </Reveal>
+            ))}
           </div>
-        </div>
-      </section>
-
-      {/* ------------------------------------------------------ Kennzahlen */}
-      <section className="pt-10">
-        <div className="shell">
-          <Reveal>
-            <StatStrip
-              items={[
-                { value: "24/7", label: "Trainingszeit", icon: "clock" },
-                { value: "365", label: "Tage geöffnet", icon: "calendar" },
-                { value: "0 €", label: "Probetraining", icon: "euro" },
-                { value: "5", label: "Bereiche", icon: "target" },
-              ]}
-            />
-          </Reveal>
-        </div>
-      </section>
-
-      {/* --------------------------------------------------- Nutzen/Problem */}
-      <Section>
-        <div className="grid gap-14 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
-          <div>
-            <SectionHeader
-              eyebrow="Warum Level One"
-              title={
-                <>
-                  Fitness, die sich deinem Alltag <span className="flame-text">anpasst</span>
-                </>
-              }
-              text="Schichtdienst, Familie, lange Arbeitstage: Der häufigste Grund, warum Training nicht stattfindet, ist die Uhrzeit. Bei uns fällt dieser Grund weg."
-            />
-            <div className="mt-8">
-              <TileList
-                items={[
-                  { icon: "clock", label: "Vor der Frühschicht oder nach Feierabend" },
-                  { icon: "users", label: "Keine Wartezeiten an den Geräten" },
-                  { icon: "shield", label: "Einweisung durch geschultes Personal" },
-                  { icon: "car", label: "Parkplätze direkt am Studio" },
-                  { icon: "accessibility", label: "Barrierefreier Zugang" },
-                  { icon: "sauna", label: "Regeneration in Sauna und Solarium" },
-                ]}
-              />
-            </div>
-          </div>
-
-          <Reveal delay={120}>
-            <div className="grid gap-5 sm:grid-cols-2">
-              <MediaFrame label="Trainingsfläche im Level One Göggingen" icon="dumbbell" ratio="3/4" />
-              <div className="flex flex-col gap-5">
-                <MediaFrame label="Freihantelbereich" icon="target" ratio="1/1" />
-                <MediaFrame label="Cardiobereich" icon="bike" ratio="1/1" />
-              </div>
-            </div>
-          </Reveal>
-        </div>
+        </Reveal>
       </Section>
 
-      {/* ----------------------------------------------------------- Angebot */}
-      <Section id="angebot" className="glow glow-right">
+      {/* Zielwähler */}
+      <Section id="ziel" className="glow glow-right">
         <SectionHeader
-          eyebrow="Dein Angebot"
-          title="Alles, was du für dein Ziel brauchst"
-          text="Vom ersten Gerätetraining bis zur persönlichen Betreuung. Such dir aus, was zu dir passt."
+          eyebrow="Interaktiv"
+          title={
+            <>
+              Was willst du <span className="flame-text">erreichen</span>?
+            </>
+          }
+          text="Wähle dein Ziel, dann siehst du, wie der Einstieg bei uns konkret aussieht."
           align="center"
         />
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          <FeatureCard
-            icon="dumbbell"
-            title="Kraft und Geräte"
-            text="Maschinen für jede Muskelgruppe, dazu ein großer Freihantelbereich mit Bänken, Racks und Beinpresse."
-            href="/training/"
-            delay={0}
-          />
-          <FeatureCard
-            icon="bike"
-            title="Cardio und Ausdauer"
-            text="Laufbänder, Stepper und Bikes für Aufwärmen, Fettstoffwechsel und gezieltes Ausdauertraining."
-            href="/training/"
-            delay={70}
-          />
-          <FeatureCard
-            icon="music"
-            title="Kurse in der Gruppe"
-            text="Gemeinsam trainieren motiviert. Von Rückenfit bis Zumba und Pole Dance, angeleitet und mit klarer Struktur."
-            href="/kurse/"
-            delay={140}
-          />
-          <FeatureCard
-            icon="target"
-            title="Personal Training"
-            text="Ein Trainer, der nur auf dich schaut. Ideal für einen schnellen Start oder wenn du auf der Stelle trittst."
-            href="/training/"
-            delay={210}
-          />
-          <FeatureCard
-            icon="apple"
-            title="Ernährungsbegleitung"
-            text="Training ist die halbe Miete. Wir zeigen dir, wie du deine Ernährung ohne Verzicht in den Alltag bekommst."
-            href="/training/"
-            delay={280}
-          />
-          <FeatureCard
-            icon="sauna"
-            title="Sauna und Solarium"
-            text="Runterkommen nach der Einheit. Regeneration gehört zum Training, nicht als Extra obendrauf."
-            href="/wellness/"
-            delay={350}
-          />
-        </div>
+        <Reveal delay={80} className="mt-11">
+          <GoalPicker />
+        </Reveal>
       </Section>
 
-      {/* ----------------------------------------------------------- Ablauf */}
+      {/* Bereiche, horizontal am Scrollen */}
+      <AreaScroller />
+
+      <Section className="pt-0">
+        <Reveal className="flex flex-wrap justify-center gap-3">
+          <Cta href="/training/">Alle Trainingsangebote</Cta>
+          <Cta href="/kurse/" variant="ghost">
+            Zu den Kursen
+          </Cta>
+        </Reveal>
+      </Section>
+
+      {/* Einstieg in drei Schritten */}
       <Section className="glow glow-left">
         <SectionHeader
           eyebrow="So startest du"
@@ -337,89 +163,91 @@ export default function Home() {
         </Reveal>
       </Section>
 
-      {/* ------------------------------------------------------ Mitgliedschaft */}
+      {/* Mitgliedschaft */}
       <Section>
-        <div className="glass-strong overflow-hidden rounded-[30px]">
-          <div className="grid gap-0 lg:grid-cols-2">
-            <div className="p-8 sm:p-12">
-              <span className="eyebrow">Mitgliedschaft</span>
-              <h2 className="display-lg mt-4">In jeder Mitgliedschaft enthalten</h2>
-              <p className="lead mt-5">
-                Kein Baukasten mit Kleingedrucktem. Die Grundlagen bekommst du immer.
-              </p>
-              <ul className="mt-8 flex flex-col gap-3.5">
-                {[
-                  "Zutritt rund um die Uhr an sieben Tagen die Woche",
-                  "Nutzung aller Trainingsbereiche im Studio",
-                  "Einweisung an den Geräten durch das Team",
-                  "Trainingsplan, abgestimmt auf dein Ziel",
-                  "Wasser und Betreuung während der Servicezeiten",
-                ].map((t) => (
-                  <li key={t} className="flex items-start gap-3 text-[15.5px]">
-                    <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-flame-500/18 text-flame-400">
-                      <Icon name="check" size={14} strokeWidth={3} />
-                    </span>
-                    {t}
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-9 flex flex-wrap gap-3">
-                <Cta href="/probetraining/">Kostenloses Probetraining</Cta>
-                <Cta href="/mitgliedschaft/" variant="ghost">
-                  Mitgliedschaft ansehen
-                </Cta>
-              </div>
-            </div>
-            <div className="relative min-h-[320px] border-t border-white/10 lg:border-l lg:border-t-0">
-              <div
-                aria-hidden="true"
-                className="absolute inset-0 bg-[radial-gradient(120%_100%_at_80%_0%,rgba(255,138,61,0.3),transparent_62%),radial-gradient(90%_90%_at_10%_100%,rgba(56,120,255,0.24),transparent_60%)]"
-              />
-              <div className="relative flex h-full flex-col justify-center gap-6 p-8 sm:p-12">
-                <Icon name="star" size={32} className="text-flame-400" />
-                <div>
-                  <h3 className="display-md">Hör nicht nur auf uns</h3>
-                  <p className="mt-3 text-[15.5px] leading-relaxed text-mute">
-                    Was Mitglieder über das Studio schreiben, liest du direkt bei Google und in
-                    unseren Kanälen. Dort siehst du auch, was gerade im Studio passiert.
-                  </p>
+        <Reveal>
+          <div className="glass-strong sweep overflow-hidden rounded-[30px]">
+            <div className="grid gap-0 lg:grid-cols-2">
+              <div className="p-8 sm:p-12">
+                <span className="eyebrow">Mitgliedschaft</span>
+                <h2 className="display-huge mt-4">Alles drin</h2>
+                <p className="lead mt-5">
+                  Kein Baukasten mit Kleingedrucktem. Die Grundlagen bekommst du immer.
+                </p>
+                <ul className="mt-8 flex flex-col gap-3.5">
+                  {[
+                    "Zutritt rund um die Uhr an sieben Tagen die Woche",
+                    "Nutzung aller Trainingsbereiche im Studio",
+                    "Einweisung an den Geräten durch das Team",
+                    "Trainingsplan, abgestimmt auf dein Ziel",
+                    "Sauna, Solarium und Wasser inklusive",
+                  ].map((t) => (
+                    <li key={t} className="flex items-start gap-3 text-[15.5px]">
+                      <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-flame-500/18 text-flame-400">
+                        <Icon name="check" size={14} strokeWidth={3} />
+                      </span>
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-9 flex flex-wrap gap-3">
+                  <Cta href="/probetraining/">Kostenloses Probetraining</Cta>
+                  <Cta href="/mitgliedschaft/" variant="ghost">
+                    Mitgliedschaft ansehen
+                  </Cta>
                 </div>
-                <div className="flex flex-wrap gap-2.5">
-                  <a
-                    className="btn btn-ghost"
-                    href={site.maps}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Icon name="star" size={17} />
-                    Bewertungen lesen
-                  </a>
-                  <a
-                    className="btn btn-ghost"
-                    href={site.social.instagram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Level One Göggingen auf Instagram, öffnet in neuem Tab"
-                  >
-                    <Icon name="instagram" size={17} />
-                    Instagram
-                  </a>
+              </div>
+              <div className="relative min-h-[320px] border-t border-white/10 lg:border-l lg:border-t-0">
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0 bg-[radial-gradient(120%_100%_at_80%_0%,rgba(255,138,61,0.3),transparent_62%),radial-gradient(90%_90%_at_10%_100%,rgba(56,120,255,0.24),transparent_60%)]"
+                />
+                <div className="relative flex h-full flex-col justify-center gap-6 p-8 sm:p-12">
+                  <Icon name="star" size={32} className="text-flame-400" />
+                  <div>
+                    <h3 className="display-md">Hör nicht nur auf uns</h3>
+                    <p className="mt-3 text-[15.5px] leading-relaxed text-mute">
+                      Was Mitglieder über das Studio schreiben, liest du direkt bei Google und in
+                      unseren Kanälen. Dort siehst du auch, was gerade im Studio passiert.
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2.5">
+                    <a
+                      className="btn btn-ghost"
+                      href={site.maps}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Icon name="star" size={17} />
+                      Bewertungen lesen
+                    </a>
+                    <a
+                      className="btn btn-ghost"
+                      href={site.social.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Level One Göggingen auf Instagram, öffnet in neuem Tab"
+                    >
+                      <Icon name="instagram" size={17} />
+                      Instagram
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </Reveal>
       </Section>
 
-      {/* -------------------------------------------------------------- FAQ */}
+      {/* Fragen */}
       <Section>
         <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
           <div className="lg:sticky lg:top-[112px]">
-          <SectionHeader
-            eyebrow="Gut zu wissen"
-            title="Häufige Fragen"
-            text="Die Antworten auf das, was neue Mitglieder am häufigsten fragen."
-          />
+            <SectionHeader
+              eyebrow="Gut zu wissen"
+              title="Häufige Fragen"
+              text="Die Antworten auf das, was neue Mitglieder am häufigsten fragen."
+            />
           </div>
           <div>
             <Accordion items={faq} />
@@ -436,17 +264,17 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* ---------------------------------------------------------- Standort */}
+      {/* Standort */}
       <Section id="standort" className="glow glow-right">
         <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:items-center">
           <div>
             <SectionHeader
               eyebrow="Standort"
-              title="Mitten in Göggingen, schnell erreichbar"
-              text="Zentral im Ostalbkreis, gut angebunden für Schwäbisch Gmünd, Leinzell, Iggingen und die Umgebung."
+              title="Mitten in Göggingen"
+              text="Zentral im Ostalbkreis, gut erreichbar aus Schwäbisch Gmünd, Leinzell, Iggingen und der Umgebung."
             />
             <Reveal delay={100} className="mt-8">
-              <div className="glass card">
+              <div className="glass sweep card">
                 <div className="flex flex-col gap-5 sm:flex-row sm:gap-8">
                   <div className="flex-1">
                     <p className="text-[13px] font-bold uppercase tracking-[0.14em] text-faint">

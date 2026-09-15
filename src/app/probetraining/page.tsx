@@ -53,7 +53,7 @@ export default function ProbetrainingPage() {
             <div className="lg:sticky lg:top-[110px]">
               <Reveal immediate>
                 <span className="eyebrow">Probetraining</span>
-                <h1 className="display-lg mt-5">
+                <h1 className="display-huge mt-5">
                   Kostenlos testen, <span className="flame-text">ohne Haken</span>
                 </h1>
                 <p className="lead mt-6 max-w-[54ch]">
