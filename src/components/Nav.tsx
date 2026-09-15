@@ -9,7 +9,6 @@ import { mainNav, site } from "@/lib/site";
 export default function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const [t, setT] = useState(0);
 
   const toggleRef = useRef<HTMLButtonElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
@@ -65,26 +64,56 @@ export default function Nav() {
     setPill({ x: a.left - b.left, w: a.width, visible: true, hovered: !isActive(mainNav[i].href) });
   }
 
-  /* Form wechselt beim Scrollen. Die Leiste bleibt immer sichtbar. */
+  /*
+   * Die Form folgt der Scrollposition, laeuft dem Ziel aber gedaempft
+   * hinterher. Ein einzelner Radtick bewegt sie damit nur ein Stueck weit,
+   * und Andocken und Loesen sind derselbe Vorgang in beide Richtungen.
+   */
   useEffect(() => {
-    let frame = 0;
+    const ziel = () => Math.min(1, Math.max(0, window.scrollY / 260));
+    const schreibe = (v: number) => barRef.current?.style.setProperty("--nav-t", String(v));
 
-    const measure = () => {
-      frame = 0;
-      const next = Math.min(1, Math.max(0, window.scrollY / 120));
-      setT((prev) => (Math.abs(prev - next) > 0.004 ? next : prev));
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const simple = () => schreibe(ziel());
+      simple();
+      window.addEventListener("scroll", simple, { passive: true });
+      return () => window.removeEventListener("scroll", simple);
+    }
+
+    let frame = 0;
+    let current = ziel();
+    let last = 0;
+    schreibe(current);
+
+    const loop = (now: number) => {
+      const dt = last ? Math.min(64, now - last) : 16;
+      last = now;
+      const target = ziel();
+      // Exponentielle Daempfung, unabhaengig von der Bildrate
+      current += (target - current) * (1 - Math.exp(-dt / 190));
+      if (Math.abs(target - current) < 0.0015) {
+        current = target;
+        schreibe(current);
+        frame = 0;
+        last = 0;
+        return;
+      }
+      schreibe(current);
+      frame = requestAnimationFrame(loop);
     };
 
     const onScroll = () => {
       if (frame) return;
-      frame = requestAnimationFrame(measure);
+      last = 0;
+      frame = requestAnimationFrame(loop);
     };
 
-    measure();
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
     return () => {
       if (frame) cancelAnimationFrame(frame);
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
     };
   }, []);
 
@@ -163,7 +192,6 @@ export default function Nav() {
         <div
           ref={barRef}
           className="nav-bar"
-          style={{ "--nav-t": t } as React.CSSProperties}
           onMouseMove={onMove}
         >
           <div className="nav-inner">

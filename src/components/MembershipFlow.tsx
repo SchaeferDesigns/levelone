@@ -73,6 +73,9 @@ function alter(geburt: string) {
 
 export default function MembershipFlow() {
   const [step, setStep] = useState(0);
+  const [dir, setDir] = useState<1 | -1>(1);
+  const [shaking, setShaking] = useState(false);
+  const [busy, setBusy] = useState(false);
   const [d, setD] = useState<Data>(leer);
   const [errors, setErrors] = useState<Partial<Record<keyof Data, string>>>({});
   const [done, setDone] = useState(false);
@@ -142,18 +145,32 @@ export default function MembershipFlow() {
       if (!d.datenschutz) e.datenschutz = "Bitte bestätige die Datenschutzhinweise.";
     }
     setErrors(e);
-    if (Object.keys(e).length) focusFirst(e);
+    if (Object.keys(e).length) {
+      setShaking(true);
+      window.setTimeout(() => setShaking(false), 480);
+      focusFirst(e);
+    }
     return Object.keys(e).length === 0;
+  }
+
+  function goTo(ziel: number) {
+    setDir(ziel > step ? 1 : -1);
+    setStep(ziel);
   }
 
   function next() {
     if (!validate(step)) return;
-    if (step === schritte.length - 1) {
-      setDone(true);
-      window.scrollTo({ top: Math.max(0, window.scrollY - 200), behavior: "smooth" });
-      return;
-    }
-    setStep((s) => s + 1);
+    setBusy(true);
+    window.setTimeout(() => {
+      setBusy(false);
+      if (step === schritte.length - 1) {
+        setDone(true);
+        window.scrollTo({ top: Math.max(0, window.scrollY - 220), behavior: "smooth" });
+        return;
+      }
+      setDir(1);
+      setStep((s) => s + 1);
+    }, 260);
   }
 
   const feld = (
@@ -191,9 +208,22 @@ export default function MembershipFlow() {
 
   if (done) {
     return (
-      <div className="glass-strong rounded-[28px] p-8 text-center sm:p-12">
-        <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-gradient-to-br from-flame-400 to-flame-500 text-[#160702]">
-          <Icon name="check" size={30} strokeWidth={2.6} />
+      <div className="glass-strong step-stagger rounded-[28px] p-8 text-center sm:p-12">
+        <span className="burst mx-auto grid h-20 w-20 place-items-center rounded-full bg-gradient-to-br from-flame-400 to-flame-500 text-[#160702]">
+          <svg
+            className="draw-check"
+            viewBox="0 0 24 24"
+            width="38"
+            height="38"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="m4.5 12.5 5 5 10-11" />
+          </svg>
         </span>
         <h2 className="display-md mt-6">Das war der komplette Ablauf</h2>
         <p className="lead mx-auto mt-4 max-w-[56ch]">
@@ -236,35 +266,47 @@ export default function MembershipFlow() {
   }
 
   return (
-    <div className="glass-strong rounded-[28px] p-6 sm:p-9">
-      {/* Schrittanzeige, erledigte Schritte sind anklickbar */}
-      <ol className="flex flex-wrap items-center gap-2" aria-label="Fortschritt">
+    <div className={`glass-strong rounded-[28px] p-6 sm:p-9 ${shaking ? "shake" : ""}`}>
+      {/* Fortschritt */}
+      <div className="flex items-center justify-between gap-4">
+        <p className="text-[12.5px] font-bold uppercase tracking-[0.16em] text-faint">
+          Schritt {step + 1} von {schritte.length}
+        </p>
+        <p className="text-[12.5px] font-bold tabular-nums text-flame-400">
+          {Math.round(((step + 1) / schritte.length) * 100)} %
+        </p>
+      </div>
+      <div className="step-track mt-2.5">
+        <span
+          className="step-fill"
+          style={{ width: `${((step + 1) / schritte.length) * 100}%` }}
+        />
+      </div>
+
+      <ol className="mt-4 flex flex-wrap items-center gap-2" aria-label="Fortschritt">
         {schritte.map((s, i) => {
           const erledigt = i < step;
           const inner = (
             <>
-              {erledigt ? <Icon name="check" size={13} strokeWidth={3} /> : <span>{i + 1}</span>}
+              {erledigt ? (
+                <Icon name="check" size={13} strokeWidth={3} />
+              ) : (
+                <span className="tabular-nums">{i + 1}</span>
+              )}
               {s}
             </>
           );
           return (
             <li key={s}>
               {erledigt ? (
-                <button
-                  type="button"
-                  onClick={() => setStep(i)}
-                  className="flex items-center gap-2 rounded-[999px] border border-white/14 bg-white/8 px-3.5 py-1.5 text-[13px] font-bold transition-colors hover:border-flame-400/60"
-                >
+                <button type="button" onClick={() => goTo(i)} className="step-dot" data-state="done">
                   {inner}
                 </button>
               ) : (
                 <span
                   aria-current={i === step ? "step" : undefined}
-                  className={`flex items-center gap-2 rounded-[999px] px-3.5 py-1.5 text-[13px] font-bold ${
-                    i === step
-                      ? "bg-gradient-to-br from-flame-400 to-flame-500 text-[#160702]"
-                      : "border border-white/10 text-faint"
-                  }`}
+                  className="step-dot"
+                  data-state={i === step ? "now" : "next"}
                 >
                   {inner}
                 </span>
@@ -274,10 +316,10 @@ export default function MembershipFlow() {
         })}
       </ol>
 
-      <div className="mt-8 min-h-[360px]">
+      <div key={step} className={`mt-8 min-h-[360px] ${dir === 1 ? "step-fwd" : "step-back"}`}>
         {/* 1 Tarif */}
         {step === 0 ? (
-          <fieldset className="plan-card">
+          <fieldset className="step-stagger">
             <legend className="display-md">Tarif wählen</legend>
             <div className="mt-6 grid gap-4 lg:grid-cols-3">
               {tarife.map((t) => (
@@ -286,19 +328,15 @@ export default function MembershipFlow() {
                   type="button"
                   onClick={() => set("tarif", t.key)}
                   aria-pressed={d.tarif === t.key}
-                  className={`glass rounded-[20px] p-5 text-left transition-all duration-300 hover:-translate-y-1 ${
-                    d.tarif === t.key ? "ring-2 ring-flame-500" : ""
-                  }`}
+                  className="pick glass rounded-[20px] p-5 text-left hover:-translate-y-1"
                 >
                   <span className="flex items-center justify-between gap-2">
                     <span className="text-[13px] font-bold uppercase tracking-[0.16em] text-faint">
                       {t.name}
                     </span>
-                    {d.tarif === t.key ? (
-                      <span className="grid h-6 w-6 place-items-center rounded-full bg-gradient-to-br from-flame-400 to-flame-500 text-[#160702]">
-                        <Icon name="check" size={13} strokeWidth={3} />
-                      </span>
-                    ) : null}
+                    <span className="pick-check grid h-6 w-6 place-items-center rounded-full bg-gradient-to-br from-flame-400 to-flame-500 text-[#160702]">
+                      <Icon name="check" size={13} strokeWidth={3} />
+                    </span>
                   </span>
                   <span className="mt-2 flex items-baseline gap-1">
                     <span className="text-[32px] font-black leading-none tabular-nums">
@@ -319,7 +357,7 @@ export default function MembershipFlow() {
 
         {/* 2 Start */}
         {step === 1 ? (
-          <div className="plan-card">
+          <div className="step-stagger">
             <h2 className="display-md">Wann geht es los?</h2>
             <p className="mt-3 max-w-[54ch] text-[15px] text-mute">
               Ab diesem Tag ist dein Zutritt rund um die Uhr freigeschaltet.
@@ -368,7 +406,7 @@ export default function MembershipFlow() {
 
         {/* 3 Daten */}
         {step === 2 ? (
-          <div className="plan-card">
+          <div className="step-stagger">
             <h2 className="display-md">Deine Daten</h2>
             <div className="mt-6 grid gap-5 sm:grid-cols-2">
               <div>
@@ -432,7 +470,7 @@ export default function MembershipFlow() {
 
         {/* 4 Zahlung */}
         {step === 3 ? (
-          <div className="plan-card">
+          <div className="step-stagger">
             <h2 className="display-md">Zahlung</h2>
             <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_0.85fr]">
               <fieldset>
@@ -451,9 +489,7 @@ export default function MembershipFlow() {
                       type="button"
                       onClick={() => set("zahlung", k)}
                       aria-pressed={d.zahlung === k}
-                      className={`glass flex items-center gap-4 rounded-[18px] p-5 text-left transition-all duration-300 ${
-                        d.zahlung === k ? "ring-2 ring-flame-500" : ""
-                      }`}
+                      className="pick glass flex items-center gap-4 rounded-[18px] p-5 text-left"
                     >
                       <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-white/12 bg-white/6 text-flame-400">
                         <Icon name={k === "sepa" ? "euro" : "document"} size={21} />
@@ -501,7 +537,7 @@ export default function MembershipFlow() {
 
         {/* 5 Übersicht */}
         {step === 4 ? (
-          <div className="plan-card">
+          <div className="step-stagger">
             <h2 className="display-md">Alles richtig?</h2>
 
             <div className="mt-6 grid gap-4 lg:grid-cols-2">
@@ -551,7 +587,7 @@ export default function MembershipFlow() {
                     </p>
                     <button
                       type="button"
-                      onClick={() => setStep(b.schritt)}
+                      onClick={() => goTo(b.schritt)}
                       className="text-[13.5px] font-bold text-flame-400 underline underline-offset-4"
                     >
                       Ändern
@@ -635,7 +671,7 @@ export default function MembershipFlow() {
         <button
           type="button"
           className="btn btn-ghost"
-          onClick={() => setStep((s) => Math.max(0, s - 1))}
+          onClick={() => goTo(Math.max(0, step - 1))}
           disabled={step === 0}
         >
           Zurück
@@ -644,9 +680,14 @@ export default function MembershipFlow() {
           <span className="text-[14.5px] text-mute">
             {tarif.name}, {preis(tarif.monat)} € pro Monat
           </span>
-          <button type="button" className="btn btn-primary" onClick={next}>
-            {step === schritte.length - 1 ? "Abschluss ansehen" : "Weiter"}
-            <Icon name="arrowRight" size={18} strokeWidth={2.1} />
+          <button type="button" className="btn btn-primary" onClick={next} disabled={busy}>
+            {busy ? "Einen Moment" : step === schritte.length - 1 ? "Abschluss ansehen" : "Weiter"}
+            <Icon
+              name="arrowRight"
+              size={18}
+              strokeWidth={2.1}
+              className={busy ? "animate-pulse" : ""}
+            />
           </button>
         </div>
       </div>

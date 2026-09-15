@@ -1481,3 +1481,170 @@ textarea.field-input {
     white-space: nowrap;
   }
 }
+
+@layer components {
+  /* ============================================================
+     Anmeldestrecke
+     ============================================================ */
+
+  /* Schritt faehrt je nach Richtung von rechts oder links ein */
+  .step-fwd { animation: step-fwd 0.48s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .step-back { animation: step-back 0.48s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+  @keyframes step-fwd {
+    from { opacity: 0; transform: translate3d(42px, 0, 0); }
+    to { opacity: 1; transform: none; }
+  }
+
+  @keyframes step-back {
+    from { opacity: 0; transform: translate3d(-42px, 0, 0); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /* Inhalte im Schritt laufen versetzt nach */
+  .step-stagger > * {
+    animation: step-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .step-stagger > *:nth-child(1) { animation-delay: 60ms; }
+  .step-stagger > *:nth-child(2) { animation-delay: 120ms; }
+  .step-stagger > *:nth-child(3) { animation-delay: 180ms; }
+  .step-stagger > *:nth-child(4) { animation-delay: 240ms; }
+  .step-stagger > *:nth-child(5) { animation-delay: 300ms; }
+  .step-stagger > *:nth-child(6) { animation-delay: 360ms; }
+
+  @keyframes step-rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /* Fortschrittsband ueber den Schritten */
+  .step-track {
+    position: relative;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.09);
+    overflow: hidden;
+  }
+
+  .step-fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--color-flame-400), var(--color-flame-500));
+    transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .step-fill::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+    animation: step-shine 2.4s linear infinite;
+  }
+
+  @keyframes step-shine {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(100%); }
+  }
+
+  /* Schrittmarke */
+  .step-dot {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--color-faint);
+    transition:
+      background-color 0.4s var(--ease-out-soft),
+      color 0.4s var(--ease-out-soft),
+      border-color 0.4s var(--ease-out-soft),
+      transform 0.4s var(--ease-out-soft);
+  }
+
+  .step-dot[data-state="done"] {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.16);
+    color: var(--color-chalk);
+    cursor: pointer;
+  }
+
+  .step-dot[data-state="done"]:hover { border-color: rgba(255, 138, 61, 0.6); }
+
+  .step-dot[data-state="now"] {
+    background: linear-gradient(135deg, var(--color-flame-400), var(--color-flame-500));
+    border-color: transparent;
+    color: #160702;
+    animation: step-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes step-pop {
+    0% { transform: scale(0.88); }
+    60% { transform: scale(1.06); }
+    100% { transform: scale(1); }
+  }
+
+  /* Rütteln bei fehlerhafter Eingabe */
+  .shake { animation: shake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+
+  @keyframes shake {
+    10%, 90% { transform: translateX(-2px); }
+    20%, 80% { transform: translateX(4px); }
+    30%, 50%, 70% { transform: translateX(-7px); }
+    40%, 60% { transform: translateX(7px); }
+  }
+
+  /* Haken, der sich selbst zeichnet */
+  .draw-check path {
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation: draw 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
+  }
+
+  @keyframes draw {
+    to { stroke-dashoffset: 0; }
+  }
+
+  .burst {
+    animation: burst 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  @keyframes burst {
+    0% { transform: scale(0.4); opacity: 0; }
+    60% { transform: scale(1.08); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* Ausgewaehlte Karte */
+  .pick {
+    position: relative;
+    transition:
+      transform 0.35s var(--ease-out-soft),
+      box-shadow 0.35s var(--ease-out-soft),
+      border-color 0.35s var(--ease-out-soft);
+  }
+
+  .pick[aria-pressed="true"] {
+    box-shadow:
+      0 0 0 2px var(--color-flame-500),
+      0 18px 40px -22px rgba(255, 90, 31, 0.9);
+    transform: translateY(-3px);
+  }
+
+  .pick-check {
+    transform: scale(0);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .pick[aria-pressed="true"] .pick-check { transform: scale(1); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .step-fwd, .step-back, .step-stagger > *, .shake, .burst { animation: none; }
+    .draw-check path { animation: none; stroke-dashoffset: 0; }
+    .step-fill::after { animation: none; }
+    .step-dot[data-state="now"] { animation: none; }
+  }
+}
