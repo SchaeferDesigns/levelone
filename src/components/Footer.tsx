@@ -52,7 +52,7 @@ export default function Footer() {
             <ul className="mt-5 flex flex-col gap-3">
               {footerNav.angebot.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="text-[15px] text-mute transition-colors hover:text-chalk">
+                  <Link href={l.href} className="inline-block py-1 text-[15px] text-mute transition-colors hover:text-chalk">
                     {l.label}
                   </Link>
                 </li>
@@ -65,7 +65,7 @@ export default function Footer() {
             <ul className="mt-5 flex flex-col gap-3">
               {footerNav.studio.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="text-[15px] text-mute transition-colors hover:text-chalk">
+                  <Link href={l.href} className="inline-block py-1 text-[15px] text-mute transition-colors hover:text-chalk">
                     {l.label}
                   </Link>
                 </li>
@@ -115,13 +115,13 @@ export default function Footer() {
           <ul className="flex flex-wrap gap-x-6 gap-y-2">
             {footerNav.recht.map((l) => (
               <li key={l.href}>
-                <Link href={l.href} className="transition-colors hover:text-chalk">
+                <Link href={l.href} className="inline-block py-1 transition-colors hover:text-chalk">
                   {l.label}
                 </Link>
               </li>
             ))}
             <li>
-              <Link href="/datenschutz/#externe-inhalte" className="transition-colors hover:text-chalk">
+              <Link href="/datenschutz/#externe-inhalte" className="inline-block py-1 transition-colors hover:text-chalk">
                 Einwilligung verwalten
               </Link>
             </li>

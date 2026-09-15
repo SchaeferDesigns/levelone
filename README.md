@@ -59,8 +59,12 @@ public/rechtstexte/widerruf.txt
 ```
 
 Solange eine Datei leer ist, zeigt die zugehörige Seite den Hinweis, dass der Text in Kürze
-folgt. Sobald Text in der Datei steht, wird genau dieser Text ausgegeben. Die Dateien können
-auch direkt auf dem Webspace bearbeitet werden, ein neuer Build ist dafür nicht nötig.
+folgt. Sobald Text in der Datei steht, wird genau dieser Text ausgegeben.
+
+Die Texte werden beim Bauen eingelesen und stehen dadurch direkt im ausgelieferten HTML. Das
+ist für Pflichtangaben wichtig, weil der Text so auch ohne JavaScript lesbar und für
+Suchmaschinen sichtbar ist. Nach einer Änderung an einer Textdatei muss deshalb einmal
+`npm run build` laufen und der Ordner `out` neu hochgeladen werden.
 
 ## Formulare
 

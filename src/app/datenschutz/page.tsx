@@ -8,6 +8,13 @@ export const metadata: Metadata = {
   title: "Datenschutzerklärung",
   description: "Informationen zum Datenschutz auf der Website von Level One Göggingen.",
   alternates: { canonical: "/datenschutz/" },
+  openGraph: {
+    type: "website",
+    locale: "de_DE",
+    url: "/datenschutz/",
+    title: "Datenschutzerklärung | Level One Göggingen",
+    images: ["/og.png"],
+  },
   robots: { index: true, follow: false },
 };
 

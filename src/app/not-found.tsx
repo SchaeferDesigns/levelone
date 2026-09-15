@@ -7,6 +7,12 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Seite nicht gefunden",
   robots: { index: false, follow: false },
+  openGraph: {
+    type: "website",
+    locale: "de_DE",
+    title: "Seite nicht gefunden | Level One Göggingen",
+    description: "Diese Seite gibt es nicht. Hier geht es zurück zum Studio.",
+  },
 };
 
 export default function NotFound() {

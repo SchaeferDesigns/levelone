@@ -8,6 +8,13 @@ export const metadata: Metadata = {
   title: "Impressum",
   description: "Impressum der Level One Göggingen GmbH.",
   alternates: { canonical: "/impressum/" },
+  openGraph: {
+    type: "website",
+    locale: "de_DE",
+    url: "/impressum/",
+    title: "Impressum | Level One Göggingen",
+    images: ["/og.png"],
+  },
   robots: { index: true, follow: false },
 };
 

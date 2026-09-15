@@ -1,6 +1,5 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import fs from "node:fs";
+import path from "node:path";
 import Link from "next/link";
 import Icon from "./Icon";
 import { site } from "@/lib/site";
@@ -12,46 +11,28 @@ type Props = {
 };
 
 /**
- * Laedt den Rechtstext aus /public/rechtstexte/<file>.txt.
- * Solange die Datei leer ist, erscheint ein sachlicher Hinweis statt Platzhaltertext.
- * Die Texte koennen jederzeit direkt in der .txt Datei gepflegt werden, ohne neuen Build.
+ * Liest den Rechtstext beim Bauen aus /public/rechtstexte/<file>.txt.
+ * Der Text landet dadurch direkt im ausgelieferten HTML, ist ohne JavaScript
+ * lesbar und wird von Suchmaschinen gefunden. Solange die Datei leer ist,
+ * erscheint ein sachlicher Hinweis statt Platzhaltertext.
  */
-export default function LegalText({ file, title }: Props) {
-  const [text, setText] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let active = true;
-    fetch(`/rechtstexte/${file}.txt`, { cache: "no-store" })
-      .then((r) => (r.ok ? r.text() : ""))
-      .then((t) => {
-        if (!active) return;
-        setText(t.trim());
-        setLoading(false);
-      })
-      .catch(() => {
-        if (!active) return;
-        setText("");
-        setLoading(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [file]);
-
-  if (loading) {
-    return (
-      <div className="glass card" aria-busy="true">
-        <p className="text-mute">{title} wird geladen.</p>
-      </div>
-    );
+function readLegalText(file: string) {
+  try {
+    const full = path.join(process.cwd(), "public", "rechtstexte", `${file}.txt`);
+    return fs.readFileSync(full, "utf8").trim();
+  } catch {
+    return "";
   }
+}
+
+export default function LegalText({ file, title }: Props) {
+  const text = readLegalText(file);
 
   if (!text) {
     return (
       <div className="glass card">
-        <span className="grid h-14 w-14 place-items-center rounded-2xl border border-white/14 bg-white/5">
-          <Icon name="document" size={24} className="text-flame-400" />
+        <span className="grid h-14 w-14 place-items-center rounded-2xl border border-white/14 bg-white/6 text-flame-400">
+          <Icon name="document" size={24} />
         </span>
         <h2 className="display-md mt-6">{title} folgt in Kürze</h2>
         <p className="lead mt-4 max-w-[60ch]">

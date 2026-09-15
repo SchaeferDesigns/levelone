@@ -8,6 +8,13 @@ export const metadata: Metadata = {
   title: "Widerrufsbelehrung",
   description: "Widerrufsbelehrung der Level One Göggingen GmbH.",
   alternates: { canonical: "/widerruf/" },
+  openGraph: {
+    type: "website",
+    locale: "de_DE",
+    url: "/widerruf/",
+    title: "Widerrufsbelehrung | Level One Göggingen",
+    images: ["/og.png"],
+  },
   robots: { index: true, follow: false },
 };
 

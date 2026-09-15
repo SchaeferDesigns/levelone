@@ -70,15 +70,16 @@ export default function Nav() {
   useEffect(() => {
     const main = document.getElementById("inhalt");
     const footer = document.querySelector("footer");
+    const quick = document.querySelector<HTMLElement>('nav[aria-label="Schnellzugriff"]');
     document.body.style.overflow = open ? "hidden" : "";
-    [main, footer].forEach((el) => {
+    [main, footer, quick].forEach((el) => {
       if (!el) return;
       if (open) el.setAttribute("inert", "");
       else el.removeAttribute("inert");
     });
     return () => {
       document.body.style.overflow = "";
-      [main, footer].forEach((el) => el?.removeAttribute("inert"));
+      [main, footer, quick].forEach((el) => el?.removeAttribute("inert"));
     };
   }, [open]);
 

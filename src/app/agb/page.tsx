@@ -8,6 +8,13 @@ export const metadata: Metadata = {
   title: "Allgemeine Geschäftsbedingungen",
   description: "Allgemeine Geschäftsbedingungen der Level One Göggingen GmbH.",
   alternates: { canonical: "/agb/" },
+  openGraph: {
+    type: "website",
+    locale: "de_DE",
+    url: "/agb/",
+    title: "Allgemeine Geschäftsbedingungen | Level One Göggingen",
+    images: ["/og.png"],
+  },
   robots: { index: true, follow: false },
 };
 
