@@ -137,7 +137,7 @@ export function Steps({
   items: { title: string; text: string; icon: IconName }[];
 }) {
   return (
-    <ol className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <ol className="grid gap-5 sm:grid-cols-2 sm:[&>li:last-child]:col-span-2 lg:grid-cols-3 lg:[&>li:last-child]:col-span-1">
       {items.map((s, i) => (
         <li key={s.title}>
           <Reveal delay={i * 90} className="h-full">

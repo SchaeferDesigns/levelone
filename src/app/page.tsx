@@ -89,16 +89,18 @@ export default function Home() {
               </Reveal>
 
               <Reveal immediate delay={220}>
-                <div className="mt-9 flex flex-wrap gap-3">
-                  <Cta href="/probetraining/">Kostenloses Probetraining</Cta>
-                  <Cta href="/studio/" variant="ghost">
+                <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                  <Cta href="/probetraining/" className="w-full sm:w-auto">
+                    Kostenloses Probetraining
+                  </Cta>
+                  <Cta href="/studio/" variant="ghost" className="w-full sm:w-auto">
                     Studio ansehen
                   </Cta>
                 </div>
               </Reveal>
 
               <Reveal immediate delay={290}>
-                <ul className="mt-9 flex flex-wrap gap-x-7 gap-y-3.5 text-[14.5px] text-mute">
+                <ul className="mt-9 flex flex-wrap gap-x-5 gap-y-3.5 text-[14.5px] text-mute">
                   {[
                     { icon: "check" as const, text: "Ohne Vertrag testen" },
                     { icon: "check" as const, text: "Persönliche Einweisung" },

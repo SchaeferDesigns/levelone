@@ -92,7 +92,7 @@ export default function Nav() {
       <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
         <div className="shell relative z-50">
           <div
-            className={`glass pointer-events-auto mx-auto mt-3 flex items-center gap-3 rounded-[999px] pl-4 pr-3 transition-all duration-500 ${
+            className={`glass nav-glass pointer-events-auto mx-auto mt-3 flex items-center gap-3 rounded-[999px] pl-4 pr-3 transition-all duration-500 ${
               compact ? "py-2 shadow-2xl" : "py-2.5"
             }`}
           >
@@ -178,7 +178,7 @@ export default function Nav() {
             role="dialog"
             aria-modal="true"
             aria-label="Menü"
-            className="glass-strong absolute inset-x-3 top-[84px] rounded-[26px] p-5"
+            className="glass-strong absolute inset-x-5 top-[84px] rounded-[26px] p-5"
           >
             <nav aria-label="Mobile Navigation">
               <ul className="flex flex-col gap-1">

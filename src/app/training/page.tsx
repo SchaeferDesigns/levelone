@@ -164,10 +164,10 @@ export default function TrainingPage() {
           />
         </div>
         <Reveal delay={420} className="mt-9 flex flex-wrap justify-center gap-3">
+          <Cta href="/probetraining/">Kostenloses Probetraining</Cta>
           <Cta href="/kurse/" variant="ghost">
             Zu den Kursen
           </Cta>
-          <Cta href="/probetraining/">Kostenloses Probetraining</Cta>
         </Reveal>
       </Section>
 

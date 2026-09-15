@@ -295,8 +295,9 @@
 /* Kleine Bildschirme: Buttons duerfen umbrechen statt zu ueberlaufen */
 @media (max-width: 400px) {
   .btn {
-    white-space: normal;
-    text-align: center;
+    padding-inline: 20px;
+    font-size: 0.92rem;
+    gap: 8px;
   }
 }
 
@@ -414,6 +415,18 @@
   bottom: -10%;
   left: -8%;
   background: radial-gradient(circle, rgba(56, 120, 255, 0.26), transparent 66%);
+}
+
+/* Navigationspille: dunkle Basis unter dem Glas haelt die Labels ruhig */
+.nav-glass {
+  background:
+    linear-gradient(
+      150deg,
+      rgba(255, 255, 255, 0.085) 0%,
+      rgba(255, 255, 255, 0.032) 45%,
+      rgba(255, 255, 255, 0.055) 100%
+    ),
+    rgba(9, 12, 17, 0.5);
 }
 
 /* Schutzverlauf hinter der Navigation, haelt den Text der Pille lesbar */

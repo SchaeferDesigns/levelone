@@ -245,7 +245,7 @@ export default function ContactForm({ variant = "kontakt" }: { variant?: Variant
               <select
                 id="f-goal"
                 name="goal"
-                className="field-input"
+                className={`field-input ${values.goal ? "" : "text-faint"}`}
                 value={values.goal}
                 onChange={(e) => update("goal", e.target.value)}
               >
@@ -339,8 +339,8 @@ export default function ContactForm({ variant = "kontakt" }: { variant?: Variant
         </div>
       </div>
 
-      <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:items-center">
-        <button type="submit" className="btn btn-primary w-full sm:w-auto" disabled={state === "sending"}>
+      <div className="mt-7 flex flex-col gap-3.5">
+        <button type="submit" className="btn btn-primary w-full sm:w-auto sm:self-start" disabled={state === "sending"}>
           {state === "sending" ? "Wird gesendet" : isTrial ? "Probetraining anfragen" : "Nachricht senden"}
           <Icon name="arrowRight" size={18} strokeWidth={2.1} />
         </button>
