@@ -107,37 +107,56 @@ export default function Nav() {
   }, [pathname]);
 
   /*
-   * Zwei Zustaende fuer den Ein und Ausgang: sichtbar haengt das Menue ein,
-   * gefahren schaltet die Bewegung. Beim Oeffnen muss zuerst eingehaengt und
-   * erst im naechsten Bild gestartet werden, sonst gibt es keinen Anfangswert,
-   * von dem aus ueberblendet werden kann.
+   * Vier Zustaende, damit Ein- und Ausgang eigene Bewegungen bekommen:
+   * aus ist nicht eingehaengt, auf faehrt aus, offen ist der Ruhezustand
+   * ohne jede Beschneidung, zu faehrt ein. Beim Oeffnen muss zuerst
+   * eingehaengt und erst im naechsten Bild gestartet werden, sonst fehlt
+   * der Anfangswert und es gibt keine Bewegung.
    */
   const [sichtbar, setSichtbar] = useState(false);
-  const [gefahren, setGefahren] = useState(false);
+  const [lauf, setLauf] = useState<"aus" | "auf" | "offen" | "zu">("aus");
+  const AUF_MS = 560;
+  const ZU_MS = 360;
+
   useEffect(() => {
     const ruhig = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const uhren: number[] = [];
+    const bilder: number[] = [];
+
     if (open) {
       setSichtbar(true);
       if (ruhig) {
-        setGefahren(true);
-        return;
+        setLauf("offen");
+      } else {
+        bilder.push(
+          window.requestAnimationFrame(() => {
+            bilder.push(
+              window.requestAnimationFrame(() => {
+                setLauf("auf");
+                uhren.push(window.setTimeout(() => setLauf("offen"), AUF_MS));
+              }),
+            );
+          }),
+        );
       }
-      let zweites = 0;
-      const erstes = window.requestAnimationFrame(() => {
-        zweites = window.requestAnimationFrame(() => setGefahren(true));
-      });
-      return () => {
-        window.cancelAnimationFrame(erstes);
-        if (zweites) window.cancelAnimationFrame(zweites);
-      };
+    } else {
+      setLauf((vorher) => (vorher === "aus" ? "aus" : ruhig ? "aus" : "zu"));
+      if (ruhig) {
+        setSichtbar(false);
+      } else {
+        uhren.push(
+          window.setTimeout(() => {
+            setSichtbar(false);
+            setLauf("aus");
+          }, ZU_MS),
+        );
+      }
     }
-    setGefahren(false);
-    if (ruhig) {
-      setSichtbar(false);
-      return;
-    }
-    const id = window.setTimeout(() => setSichtbar(false), 280);
-    return () => window.clearTimeout(id);
+
+    return () => {
+      uhren.forEach((u) => window.clearTimeout(u));
+      bilder.forEach((b) => window.cancelAnimationFrame(b));
+    };
   }, [open]);
 
   const close = useCallback(() => {
@@ -294,7 +313,7 @@ export default function Nav() {
         <div
           id="mobile-menu"
           hidden={!sichtbar}
-          data-open={gefahren}
+          data-lauf={lauf}
           className="menu-layer pointer-events-auto fixed inset-0 z-40 lg:hidden"
         >
           <button
@@ -309,7 +328,7 @@ export default function Nav() {
             role="dialog"
             aria-modal="true"
             aria-label="Menü"
-            data-open={gefahren}
+            data-lauf={lauf}
             className="menu-sheet glass-strong absolute inset-x-5 top-[92px] rounded-[26px] p-5"
           >
             <nav aria-label="Mobile Navigation">
