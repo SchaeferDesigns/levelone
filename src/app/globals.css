@@ -446,44 +446,6 @@
 }
 
 /* Navigationspille: dunkle Basis unter dem Glas haelt die Labels ruhig */
-.nav-glass {
-  background:
-    linear-gradient(
-      150deg,
-      rgba(255, 255, 255, 0.085) 0%,
-      rgba(255, 255, 255, 0.032) 45%,
-      rgba(255, 255, 255, 0.055) 100%
-    ),
-    rgba(9, 12, 17, 0.5);
-}
-
-/* Schutzverlauf hinter der Navigation, haelt den Text der Pille lesbar */
-.nav-scrim {
-  opacity: 0;
-  transition: opacity 0.5s var(--ease-out-soft);
-  position: fixed;
-  inset-inline: 0;
-  top: 0;
-  height: 190px;
-  z-index: 40;
-  pointer-events: none;
-  background: linear-gradient(
-    to bottom,
-    rgba(5, 7, 10, 0.62) 0%,
-    rgba(5, 7, 10, 0.34) 38%,
-    rgba(5, 7, 10, 0.12) 68%,
-    rgba(5, 7, 10, 0) 100%
-  );
-}
-
-.nav-scrim[data-sticky="true"] {
-  opacity: 1;
-}
-
-.nav-scrim[data-sticky="false"] {
-  opacity: 0;
-}
-
 /* ============================================================
    Formulare
    ============================================================ */
@@ -946,13 +908,20 @@ textarea.field-input {
       background-color 0.3s var(--ease-out-soft),
       color 0.3s var(--ease-out-soft),
       border-color 0.3s var(--ease-out-soft),
+      box-shadow 0.3s var(--ease-out-soft),
       transform 0.3s var(--ease-out-soft);
   }
 
   .goal-tab:hover {
     color: var(--color-chalk);
-    border-color: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 138, 61, 0.45);
+    background: rgba(255, 138, 61, 0.09);
     transform: translateY(-2px);
+    box-shadow: 0 16px 30px -18px rgba(255, 90, 31, 0.8);
+  }
+
+  .goal-tab:active {
+    transform: translateY(-1px) scale(0.97);
   }
 
   .goal-tab[aria-selected="true"] {
@@ -983,6 +952,37 @@ textarea.field-input {
   }
 
   /*
+   * Hinter der schwebenden Pille bleibt oben und seitlich ein Spalt frei.
+   * Ohne Abdeckung schiebt sich der Seiteninhalt dort durch und wirkt
+   * zerschnitten. Der Streifen verwischt und verdunkelt, was darunter
+   * durchlaeuft, und laeuft nach unten weich aus.
+   */
+  .nav-scrim {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: calc(var(--nav-h) + 30px);
+    pointer-events: none;
+    opacity: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(5, 7, 11, 0.99) 0%,
+      rgba(5, 7, 11, 0.96) 38%,
+      rgba(5, 7, 11, 0.7) 72%,
+      rgba(5, 7, 11, 0) 100%
+    );
+    -webkit-backdrop-filter: blur(22px) saturate(125%);
+    backdrop-filter: blur(22px) saturate(125%);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 62%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 62%, transparent 100%);
+    transition: opacity var(--nav-move, 0.68s) cubic-bezier(0.45, 0, 0.25, 1);
+  }
+
+  .nav-scrim[data-on="true"] {
+    opacity: 1;
+  }
+
+  /*
    * Zwei Zustaende: oben eine durchgehende Leiste, nach dem ersten
    * Runterscrollen eine schwebende Pille. Der Wechsel laeuft als eine
    * zusammenhaengende Bewegung, in beide Richtungen gleich lang.
@@ -991,6 +991,8 @@ textarea.field-input {
     --nav-move: 0.68s cubic-bezier(0.45, 0, 0.25, 1);
     pointer-events: auto;
     position: relative;
+    /* Ueber dem offenen Menue, sonst faengt dessen Flaeche das X ab */
+    z-index: 45;
     margin: 0;
     border-radius: 0;
     border: 1px solid transparent;
@@ -1297,6 +1299,7 @@ textarea.field-input {
   @media (prefers-reduced-motion: reduce) {
     .nav-wrap[data-hidden="true"] { transform: none; opacity: 1; }
     .menu-item, .menu-sheet { opacity: 1; transform: none; }
+    .nav-scrim { transition: none; }
   }
 
   /* ============================================================
@@ -1509,6 +1512,22 @@ textarea.field-input {
     background: linear-gradient(135deg, var(--color-flame-400), var(--color-flame-500));
     border-color: transparent;
     color: #160702;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      0 16px 32px -14px rgba(255, 90, 31, 0.9);
+  }
+
+  .goal-tab[aria-pressed="true"]:hover {
+    background: linear-gradient(135deg, var(--color-flame-400), var(--color-flame-500));
+    color: #160702;
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      0 22px 42px -14px rgba(255, 90, 31, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .goal-tab, .goal-tab:hover, .goal-tab:active { transform: none; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -1568,33 +1587,31 @@ textarea.field-input {
   }
 
   /* Fortschrittsband ueber den Schritten */
-  .step-track {
+  /* Ein Segment je Schritt, dadurch ist der Stand sofort ablesbar */
+  .seg {
     position: relative;
-    height: 4px;
+    height: 5px;
+    flex: 1;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.09);
     overflow: hidden;
   }
 
-  .step-fill {
-    position: absolute;
-    inset: 0 auto 0 0;
-    border-radius: 999px;
-    background: linear-gradient(90deg, var(--color-flame-400), var(--color-flame-500));
-    transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .step-fill::after {
+  .seg::after {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
-    animation: step-shine 2.4s linear infinite;
+    border-radius: 999px;
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    background: linear-gradient(90deg, var(--color-flame-400), var(--color-flame-500));
+    transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  @keyframes step-shine {
-    from { transform: translateX(-100%); }
-    to { transform: translateX(100%); }
+  .seg[data-on="true"]::after { transform: scaleX(1); }
+
+  .seg[data-now="true"] {
+    box-shadow: 0 0 0 1px rgba(255, 138, 61, 0.45), 0 0 16px -4px rgba(255, 90, 31, 0.85);
   }
 
   /* Schrittmarke */
@@ -1668,33 +1685,204 @@ textarea.field-input {
     100% { transform: scale(1); opacity: 1; }
   }
 
-  /* Ausgewaehlte Karte */
+  /* Auswahlkarte, gleiche Bildsprache wie die Karten auf der ganzen Seite */
   .pick {
     position: relative;
+    overflow: hidden;
     transition:
-      transform 0.35s var(--ease-out-soft),
-      box-shadow 0.35s var(--ease-out-soft),
-      border-color 0.35s var(--ease-out-soft);
+      transform 0.4s var(--ease-out-soft),
+      box-shadow 0.4s var(--ease-out-soft),
+      border-color 0.4s var(--ease-out-soft),
+      background-color 0.4s var(--ease-out-soft);
+  }
+
+  .pick::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      105deg,
+      transparent 38%,
+      rgba(255, 255, 255, 0.12) 48%,
+      transparent 58%
+    );
+    transform: translateX(-120%);
+    transition: transform 1s var(--ease-out-soft);
+  }
+
+  .pick:hover::after { transform: translateX(120%); }
+
+  .pick:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 138, 61, 0.45);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
+      0 32px 64px -30px rgba(255, 90, 31, 0.55);
   }
 
   .pick[aria-pressed="true"] {
+    border-color: rgba(255, 90, 31, 0.9);
+    background-color: rgba(255, 90, 31, 0.07);
     box-shadow:
-      0 0 0 2px var(--color-flame-500),
-      0 18px 40px -22px rgba(255, 90, 31, 0.9);
-    transform: translateY(-3px);
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+      0 0 0 1px rgba(255, 90, 31, 0.6),
+      0 26px 54px -26px rgba(255, 90, 31, 0.75);
   }
+
+  .pick[aria-pressed="true"]:hover { transform: translateY(-5px); }
 
   .pick-check {
-    transform: scale(0);
-    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform: scale(0) rotate(-25deg);
+    transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
-  .pick[aria-pressed="true"] .pick-check { transform: scale(1); }
+  .pick[aria-pressed="true"] .pick-check { transform: scale(1) rotate(0deg); }
+
+  /* Markierung "Ausgewaehlt" */
+  .pick-tag {
+    opacity: 0;
+    transform: translateY(-6px);
+    transition:
+      opacity 0.35s var(--ease-out-soft),
+      transform 0.35s var(--ease-out-soft);
+  }
+
+  .pick[aria-pressed="true"] .pick-tag {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pick, .pick::after, .pick-check, .pick-tag { transition: none; }
+  }
 
   @media (prefers-reduced-motion: reduce) {
     .step-fwd, .step-back, .step-stagger > *, .shake, .burst { animation: none; }
     .draw-check path { animation: none; stroke-dashoffset: 0; }
     .step-fill::after { animation: none; }
     .step-dot[data-state="now"] { animation: none; }
+  }
+}
+
+@layer components {
+  /* ============================================================
+     Datumswähler
+     ============================================================ */
+  /* Der Waehler legt sich ueber Formularfelder, er braucht einen
+     deckenden Grund, sonst liest man die Felder dahinter mit */
+  .cal {
+    animation: cal-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+    transform-origin: top left;
+    background:
+      linear-gradient(
+        150deg,
+        rgba(255, 255, 255, 0.07) 0%,
+        rgba(255, 255, 255, 0.03) 50%,
+        rgba(255, 255, 255, 0.05) 100%
+      ),
+      #0b0e15;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.18),
+      0 34px 70px -24px rgba(0, 0, 0, 0.95);
+  }
+
+  @keyframes cal-in {
+    from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .cal-nav {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-chalk);
+    transition: background-color 0.25s var(--ease-out-soft), border-color 0.25s var(--ease-out-soft);
+  }
+
+  .cal-nav:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 138, 61, 0.55);
+  }
+
+  .cal-select {
+    appearance: none;
+    -webkit-appearance: none;
+    flex: 1;
+    height: 34px;
+    padding: 0 26px 0 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background-color: rgba(255, 255, 255, 0.05);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff8a3d' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9.5 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 7px center;
+    background-size: 15px 15px;
+    color: var(--color-chalk);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .cal-select option {
+    background: #0d1117;
+    color: var(--color-chalk);
+  }
+
+  .cal-day {
+    height: 36px;
+    border-radius: 11px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-mute);
+    transition:
+      background-color 0.2s var(--ease-out-soft),
+      color 0.2s var(--ease-out-soft),
+      transform 0.2s var(--ease-out-soft);
+  }
+
+  .cal-day:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.11);
+    color: var(--color-chalk);
+    transform: scale(1.08);
+  }
+
+  .cal-day:disabled {
+    opacity: 0.28;
+    cursor: not-allowed;
+  }
+
+  .cal-day-heute {
+    box-shadow: inset 0 0 0 1px rgba(255, 138, 61, 0.55);
+    color: var(--color-flame-400);
+  }
+
+  .cal-day-on {
+    background: linear-gradient(135deg, var(--color-flame-400), var(--color-flame-500));
+    color: #160702;
+    box-shadow: 0 8px 20px -10px rgba(255, 90, 31, 0.95);
+  }
+
+  .cal-day-on:hover { background: linear-gradient(135deg, var(--color-flame-400), var(--color-flame-500)); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cal { animation: none; }
+    .cal-day:hover:not(:disabled) { transform: none; }
+  }
+}
+
+@layer components {
+  /*
+   * Das Umrisswort ist breiter als ein Telefondisplay. Angeschnitten legt es
+   * sich als Schlieren hinter Fliesstext und Schaltflaechen, deshalb bleibt es
+   * erst ab Tabletbreite sichtbar.
+   */
+  @media (max-width: 767px) {
+    .outline-text { display: none; }
   }
 }

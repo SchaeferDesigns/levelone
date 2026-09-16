@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { inSicht, zumAnfang } from "@/lib/scroll";
 import Icon from "./Icon";
+import DateField from "./DateField";
 import { preis, tarife } from "@/lib/tarife";
 import { site } from "@/lib/site";
 
@@ -79,6 +81,8 @@ export default function MembershipFlow() {
   const [d, setD] = useState<Data>(leer);
   const [errors, setErrors] = useState<Partial<Record<keyof Data, string>>>({});
   const [done, setDone] = useState(false);
+  const karte = useRef<HTMLDivElement | null>(null);
+  const erster = useRef(true);
 
   const heute = useMemo(() => new Date(), []);
   const morgen = useMemo(() => new Date(heute.getFullYear(), heute.getMonth(), heute.getDate() + 1), [heute]);
@@ -100,6 +104,19 @@ export default function MembershipFlow() {
     }));
   }, [ersterNaechster]);
 
+  // Beim Schrittwechsel muss der Fortschritt sichtbar sein, sonst weiss niemand, wo er steht.
+  function zumKopf() {
+    zumAnfang(karte.current);
+  }
+
+  useEffect(() => {
+    if (erster.current) {
+      erster.current = false;
+      return;
+    }
+    zumKopf();
+  }, [step, done]);
+
   const tarif = tarife.find((t) => t.key === d.tarif) ?? tarife[1];
   const istDuo = tarif.key === "duo";
   const monate = tarif.laufzeit.startsWith("12") ? 12 : 0;
@@ -114,8 +131,8 @@ export default function MembershipFlow() {
     const first = Object.keys(e)[0];
     if (!first) return;
     const el = document.getElementById(`m-${first}`);
-    el?.focus();
-    el?.scrollIntoView({ block: "center", behavior: "smooth" });
+    el?.focus({ preventScroll: true });
+    inSicht(el);
   }
 
   function validate(s: number) {
@@ -165,7 +182,6 @@ export default function MembershipFlow() {
       setBusy(false);
       if (step === schritte.length - 1) {
         setDone(true);
-        window.scrollTo({ top: Math.max(0, window.scrollY - 220), behavior: "smooth" });
         return;
       }
       setDir(1);
@@ -208,7 +224,7 @@ export default function MembershipFlow() {
 
   if (done) {
     return (
-      <div className="glass-strong step-stagger rounded-[28px] p-8 text-center sm:p-12">
+      <div ref={karte} className="glass-strong step-stagger rounded-[28px] p-8 text-center sm:p-12">
         <span className="burst mx-auto grid h-20 w-20 place-items-center rounded-full bg-gradient-to-br from-flame-400 to-flame-500 text-[#160702]">
           <svg
             className="draw-check"
@@ -266,7 +282,7 @@ export default function MembershipFlow() {
   }
 
   return (
-    <div className={`glass-strong rounded-[28px] p-6 sm:p-9 ${shaking ? "shake" : ""}`}>
+    <div ref={karte} className={`glass-strong rounded-[28px] p-6 sm:p-9 ${shaking ? "shake" : ""}`}>
       {/* Fortschritt */}
       <div className="flex items-center justify-between gap-4">
         <p className="text-[12.5px] font-bold uppercase tracking-[0.16em] text-faint">
@@ -276,11 +292,10 @@ export default function MembershipFlow() {
           {Math.round(((step + 1) / schritte.length) * 100)} %
         </p>
       </div>
-      <div className="step-track mt-2.5">
-        <span
-          className="step-fill"
-          style={{ width: `${((step + 1) / schritte.length) * 100}%` }}
-        />
+      <div className="mt-2.5 flex gap-1.5" aria-hidden="true">
+        {schritte.map((s2, i) => (
+          <span key={s2} className="seg" data-on={i <= step} data-now={i === step} />
+        ))}
       </div>
 
       <ol className="mt-4 flex flex-wrap items-center gap-2" aria-label="Fortschritt">
@@ -328,14 +343,14 @@ export default function MembershipFlow() {
                   type="button"
                   onClick={() => set("tarif", t.key)}
                   aria-pressed={d.tarif === t.key}
-                  className="pick glass rounded-[20px] p-5 text-left hover:-translate-y-1"
+                  className="pick glass rounded-[20px] p-5 text-left"
                 >
                   <span className="flex items-center justify-between gap-2">
                     <span className="text-[13px] font-bold uppercase tracking-[0.16em] text-faint">
                       {t.name}
                     </span>
-                    <span className="pick-check grid h-6 w-6 place-items-center rounded-full bg-gradient-to-br from-flame-400 to-flame-500 text-[#160702]">
-                      <Icon name="check" size={13} strokeWidth={3} />
+                    <span className="pick-check grid h-7 w-7 place-items-center rounded-full bg-gradient-to-br from-flame-400 to-flame-500 text-[#160702]">
+                      <Icon name="check" size={14} strokeWidth={3} />
                     </span>
                   </span>
                   <span className="mt-2 flex items-baseline gap-1">
@@ -348,6 +363,10 @@ export default function MembershipFlow() {
                   <span className="block text-[14px] text-mute">{t.kuendigung}</span>
                   <span className="mt-2 block text-[14px] text-flame-400">
                     {t.aufnahme === 0 ? "Keine Aufnahmegebühr" : `Aufnahme ${preis(t.aufnahme)} €`}
+                  </span>
+                  <span className="pick-tag mt-4 inline-flex items-center gap-1.5 rounded-[999px] bg-flame-500/16 px-3 py-1 text-[12px] font-black uppercase tracking-[0.1em] text-flame-400">
+                    <Icon name="check" size={11} strokeWidth={3} />
+                    Ausgewählt
                   </span>
                 </button>
               ))}
@@ -382,19 +401,14 @@ export default function MembershipFlow() {
             </div>
 
             <div className="mt-6 max-w-[320px]">
-              <label className="field-label" htmlFor="m-start">
-                Oder ein eigenes Datum
-              </label>
-              <input
+              <DateField
                 id="m-start"
-                type="date"
-                min={iso(morgen)}
-                className="field-input"
+                label="Oder ein eigenes Datum"
                 value={d.start}
-                onChange={(e) => set("start", e.target.value)}
-                aria-invalid={errors.start ? "true" : undefined}
+                onChange={(v) => set("start", v)}
+                min={iso(morgen)}
+                error={errors.start}
               />
-              {errors.start ? <span className="field-error">{errors.start}</span> : null}
             </div>
 
             <p className="mt-6 rounded-[16px] border border-white/10 bg-white/4 p-4 text-[14.5px] text-mute">
@@ -428,7 +442,16 @@ export default function MembershipFlow() {
               <div />
               {feld("vorname", "Vorname", { autoComplete: "given-name" })}
               {feld("nachname", "Nachname", { autoComplete: "family-name" })}
-              {feld("geburt", "Geburtsdatum", { type: "date", autoComplete: "bday", max: iso(heute), hint: "Ab 15 Jahren, unter 18 mit Einwilligung der Eltern" })}
+              <DateField
+                id="m-geburt"
+                label="Geburtsdatum"
+                mode="geburt"
+                value={d.geburt}
+                onChange={(v) => set("geburt", v)}
+                max={iso(heute)}
+                error={errors.geburt}
+                hint="Ab 15 Jahren, unter 18 mit Einwilligung der Eltern"
+              />
               {feld("telefon", "Telefon", { type: "tel", inputMode: "tel", autoComplete: "tel" })}
               {feld("email", "E-Mail", { type: "email", inputMode: "email", autoComplete: "email", span: true, hint: "Hierhin geht die Bestätigung" })}
               {feld("strasse", "Straße und Hausnummer", { autoComplete: "street-address", span: true })}
@@ -494,9 +517,12 @@ export default function MembershipFlow() {
                       <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-white/12 bg-white/6 text-flame-400">
                         <Icon name={k === "sepa" ? "euro" : "document"} size={21} />
                       </span>
-                      <span>
+                      <span className="flex-1">
                         <span className="block text-[16px] font-bold">{t}</span>
                         <span className="block text-[14px] text-mute">{sub}</span>
+                      </span>
+                      <span className="pick-check grid h-7 w-7 shrink-0 place-items-center rounded-full bg-gradient-to-br from-flame-400 to-flame-500 text-[#160702]">
+                        <Icon name="check" size={14} strokeWidth={3} />
                       </span>
                     </button>
                   ))}
@@ -667,17 +693,16 @@ export default function MembershipFlow() {
       </div>
 
       {/* Steuerung */}
-      <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6">
-        <button
-          type="button"
-          className="btn btn-ghost"
-          onClick={() => goTo(Math.max(0, step - 1))}
-          disabled={step === 0}
-        >
-          Zurück
-        </button>
-        <div className="flex flex-wrap items-center gap-4">
-          <span className="text-[14.5px] text-mute">
+      <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-white/10 pt-6">
+        {step > 0 ? (
+          <button type="button" className="btn btn-ghost" onClick={() => goTo(step - 1)}>
+            <Icon name="arrowRight" size={18} className="rotate-180" />
+            Zurück
+          </button>
+        ) : null}
+        <div className="ml-auto flex flex-wrap items-center gap-4">
+          <span className="inline-flex items-center gap-2 rounded-[999px] border border-white/12 bg-white/5 px-3.5 py-2 text-[14px] font-semibold">
+            <Icon name="check" size={14} strokeWidth={3} className="text-flame-400" />
             {tarif.name}, {preis(tarif.monat)} € pro Monat
           </span>
           <button type="button" className="btn btn-primary" onClick={next} disabled={busy}>

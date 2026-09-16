@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Icon from "./Icon";
 import { formEndpoint, site } from "@/lib/site";
+import { inSicht, zumAnfang } from "@/lib/scroll";
 
 type Variant = "probetraining" | "kontakt";
 
@@ -56,7 +57,14 @@ export default function ContactForm({ variant = "kontakt" }: { variant?: Variant
   }
 
   const formRef = useRef<HTMLFormElement | null>(null);
+  const dank = useRef<HTMLDivElement | null>(null);
   const [summary, setSummary] = useState("");
+
+  // Nach dem Absenden ist die Bestaetigung kuerzer als das Formular. Ohne Sprung
+  // steht der Besucher unterhalb des Inhalts und sieht die Rueckmeldung nicht.
+  useEffect(() => {
+    if (state === "sent") zumAnfang(dank.current);
+  }, [state]);
 
   function focusFirstError(next: Partial<Record<keyof Values, string>>) {
     const order: (keyof Values)[] = ["name", "email", "phone", "message", "consent"];
@@ -64,8 +72,8 @@ export default function ContactForm({ variant = "kontakt" }: { variant?: Variant
     if (!first) return;
     const selector = first === "consent" ? 'input[type="checkbox"]' : `#f-${first}`;
     const el = formRef.current?.querySelector<HTMLElement>(selector);
-    el?.focus();
-    el?.scrollIntoView({ block: "center", behavior: "smooth" });
+    el?.focus({ preventScroll: true });
+    inSicht(el);
   }
 
   function validate() {
@@ -135,7 +143,7 @@ export default function ContactForm({ variant = "kontakt" }: { variant?: Variant
 
   if (state === "sent") {
     return (
-      <div className="glass card text-center" role="status">
+      <div ref={dank} className="glass card text-center" role="status">
         <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-gradient-to-br from-flame-400 to-flame-500 text-ink-950">
           <Icon name="check" size={30} strokeWidth={2.6} />
         </span>

@@ -164,6 +164,7 @@ export default function Nav() {
   return (
     <>
       <header className="nav-wrap">
+        <div className="nav-scrim" data-on={float} aria-hidden="true" />
         <div
           ref={barRef}
           className="nav-bar"
