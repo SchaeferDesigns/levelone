@@ -19,9 +19,18 @@ export default function Hero() {
   const [pointer, setPointer] = useState({ x: 0, y: 0 });
   const [now, setNow] = useState<string | null>(null);
   const [magnet, setMagnet] = useState({ x: 0, y: 0 });
+  const [phone, setPhone] = useState(false);
   const reduced = useRef(false);
   const ctaRef = useRef<HTMLAnchorElement | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const frage = window.matchMedia("(max-width: 767px)");
+    const merken = () => setPhone(frage.matches);
+    merken();
+    frage.addEventListener("change", merken);
+    return () => frage.removeEventListener("change", merken);
+  }, []);
 
   useEffect(() => {
     reduced.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -80,6 +89,27 @@ export default function Hero() {
   }, [magnet.x, magnet.y]);
 
   const fade = Math.max(0, 1 - scroll / 620);
+  /*
+   * Auf dem Telefon stehen Textblock und Faktenkarte untereinander. Zwei
+   * verschiedene Geschwindigkeiten schieben sie dort ineinander, statt Tiefe
+   * zu erzeugen. Deshalb bewegt sich der Inhalt auf schmalen Displays als ein
+   * Stueck und tritt beim Weiterscrollen zurueck, waehrend nur das Licht
+   * dahinter noch eigenstaendig wandert.
+   */
+  // Die ersten Pixel bleiben unberuehrt, sonst verblasst das Startbild schon,
+  // waehrend es noch die ganze Anzeige fuellt.
+  const weg = Math.min(1, Math.max(0, (scroll - 130) / 520));
+  const inhalt = phone
+    ? {
+        transform: `translate3d(0, ${weg * -22}px, 0) scale(${1 - weg * 0.045})`,
+        transformOrigin: "50% 0%",
+        opacity: 1 - weg * 0.5,
+        willChange: "transform, opacity" as const,
+      }
+    : {
+        transform: `translate3d(0, ${scroll * -0.06}px, 0)`,
+        opacity: fade * 0.4 + 0.6,
+      };
 
   return (
     <section
@@ -99,7 +129,9 @@ export default function Hero() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 -z-10"
         style={{
-          transform: `translate3d(${pointer.x * 34}px, ${scroll * 0.3 + pointer.y * 24}px, 0)`,
+          transform: phone
+            ? `translate3d(0, ${scroll * 0.16}px, 0) scale(${1 + weg * 0.22})`
+            : `translate3d(${pointer.x * 34}px, ${scroll * 0.3 + pointer.y * 24}px, 0)`,
           transition: "transform 0.5s cubic-bezier(0.22,1,0.36,1)",
         }}
       >
@@ -136,10 +168,7 @@ export default function Hero() {
         }}
       />
 
-      <div
-        className="shell relative w-full"
-        style={{ opacity: fade * 0.4 + 0.6, transform: `translate3d(0, ${scroll * -0.06}px, 0)` }}
-      >
+      <div className="shell relative w-full" style={inhalt}>
         <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.24fr)_minmax(0,0.76fr)]">
           <div className="min-w-0">
             <span className="glass hero-in inline-flex items-center gap-2.5 rounded-[999px] px-4 py-2 text-[13px] font-bold">
@@ -210,10 +239,14 @@ export default function Hero() {
           {/* Faktenkarte, kippt leicht mit dem Zeiger */}
           <div
             className="min-w-0"
-            style={{
-              transform: `perspective(1100px) rotateX(${pointer.y * -4}deg) rotateY(${pointer.x * 6}deg) translate3d(0, ${scroll * -0.16}px, 0)`,
-              transition: "transform 0.5s cubic-bezier(0.22,1,0.36,1)",
-            }}
+            style={
+              phone
+                ? undefined
+                : {
+                    transform: `perspective(1100px) rotateX(${pointer.y * -4}deg) rotateY(${pointer.x * 6}deg) translate3d(0, ${scroll * -0.16}px, 0)`,
+                    transition: "transform 0.5s cubic-bezier(0.22,1,0.36,1)",
+                  }
+            }
           >
             <div className="glass-strong sweep hero-in relative rounded-[28px] p-7" style={{ animationDelay: "300ms" }}>
               <div className="flex items-start justify-between gap-4">

@@ -38,6 +38,7 @@ export default function BusyChart() {
   const [shown, setShown] = useState(false);
   const [settled, setSettled] = useState(false);
   const boxRef = useRef<HTMLDivElement | null>(null);
+  const zeiger = useRef<string>("mouse");
 
   useEffect(() => {
     const d = new Date();
@@ -107,7 +108,10 @@ export default function BusyChart() {
 
       <div
         className="mt-7"
-        onPointerLeave={() => setHover(null)}
+        onPointerLeave={(e) => {
+          if (e.pointerType !== "mouse") return;
+          setHover(null);
+        }}
         role="img"
         aria-label="Typische Auslastung nach Wochentag und Uhrzeit. Nachts zwischen 23 und 5 Uhr fast leer, werktags zwischen 9 und 12 Uhr entspannt, werktags zwischen 17 und 20 Uhr am vollsten."
       >
@@ -140,6 +144,18 @@ export default function BusyChart() {
                     onPointerEnter={(e) => {
                       if (e.pointerType !== "mouse") return;
                       setHover({ day: di, hour: colHour(c) });
+                    }}
+                    onPointerDown={(e) => {
+                      zeiger.current = e.pointerType;
+                    }}
+                    // Mit dem Finger wird gewaehlt statt geschwebt: ein Tippen
+                    // setzt die Marke, ein zweites nimmt sie wieder weg. Ueber
+                    // click statt pointerdown, sonst waehlt schon das Anscrollen
+                    // eine Zelle aus.
+                    onClick={() => {
+                      if (zeiger.current === "mouse") return;
+                      const h = colHour(c);
+                      setHover((v) => (v && v.day === di && v.hour === h ? null : { day: di, hour: h }));
                     }}
                     className={`busy-cell h-6 rounded-[5px] sm:h-7 ${isNow ? "busy-now" : ""} ${
                       exact ? "busy-exact" : ""
