@@ -1972,6 +1972,7 @@ textarea.field-input {
   .cal {
     animation: cal-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
     transform-origin: top left;
+    /* Klappt es nach oben, waechst es auch von unten heraus */
     background:
       linear-gradient(
         150deg,
@@ -1989,6 +1990,10 @@ textarea.field-input {
   @keyframes cal-in {
     from { opacity: 0; transform: translateY(-8px) scale(0.97); }
     to { opacity: 1; transform: none; }
+  }
+
+  .cal[data-hoch="true"] {
+    transform-origin: bottom left;
   }
 
   .cal-nav {

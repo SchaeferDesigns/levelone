@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Icon from "./Icon";
-import { inSicht, navHoehe } from "@/lib/scroll";
+import { navHoehe } from "@/lib/scroll";
 
 const monate = [
   "Januar", "Februar", "März", "April", "Mai", "Juni",
@@ -61,7 +62,11 @@ export default function DateField({
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const popRef = useRef<HTMLDivElement | null>(null);
-  const [oben, setOben] = useState(false);
+  const [platz, setPlatz] = useState<{ top: number; left: number } | null>(null);
+  const [hoch, setHoch] = useState(false);
+  const [imBaum, setImBaum] = useState(false);
+
+  useEffect(() => setImBaum(true), []);
 
   const gewaehlt = fromIso(value);
   const heute = useMemo(() => new Date(), []);
@@ -72,37 +77,110 @@ export default function DateField({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
-  // Nach unten ist nicht immer Platz. Auf dem Telefon landete der Kalender
-  // sonst komplett unterhalb des Bildschirms.
-  function richtung(hoehe: number) {
+  /*
+   * Das Aufklappfeld haengt am Seitenkoerper, nicht im Formular. Die
+   * Schrittanimation setzt eine Transformation auf einen Vorfahren, und die
+   * erzeugt einen Stapelkontext, aus dem ein z-index nicht herauskommt. Im
+   * Formular malten Zusammenfassung und Fusszeile deshalb ueber den Kalender.
+   * Am Koerper haengend wird er fest zum Fenster gesetzt und jedes Mal neu
+   * ausgerichtet, wenn sich etwas bewegt.
+   */
+  const AUSSEN = 12;
+
+  function ausrichten() {
     const t = triggerRef.current?.getBoundingClientRect();
-    if (!t) return false;
-    const platzUnten = window.innerHeight - t.bottom - 16;
-    const platzOben = t.top - navHoehe() - 16;
-    return platzUnten < hoehe && platzOben > platzUnten;
+    if (!t) return;
+    const pop = popRef.current;
+    const breite = pop?.offsetWidth ?? 310;
+    const hoehe = pop?.offsetHeight ?? (mode === "geburt" ? 400 : 372);
+
+    const platzUnten = window.innerHeight - t.bottom - AUSSEN;
+    const platzOben = t.top - navHoehe() - AUSSEN;
+    const nachOben = platzUnten < hoehe && platzOben > platzUnten;
+    setHoch(nachOben);
+
+    let top = nachOben ? t.top - hoehe - 8 : t.bottom + 8;
+    // Passt es in keine Richtung ganz, wird es in das Fenster geschoben
+    const untersteKante = window.innerHeight - hoehe - AUSSEN;
+    top = Math.min(Math.max(top, navHoehe() + AUSSEN), Math.max(navHoehe() + AUSSEN, untersteKante));
+
+    let left = t.left;
+    left = Math.min(left, window.innerWidth - breite - AUSSEN);
+    left = Math.max(AUSSEN, left);
+
+    setPlatz({ top: Math.round(top), left: Math.round(left) });
   }
 
   function umschalten() {
-    setOpen((v) => {
-      if (!v) setOben(richtung(mode === "geburt" ? 400 : 372));
-      return !v;
-    });
+    if (!open) ausrichten();
+    setOpen((v) => !v);
   }
 
+  useEffect(() => {
+    if (!open) return;
+    ausrichten();
+    let frame = 0;
+    const neu = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        ausrichten();
+      });
+    };
+    window.addEventListener("scroll", neu, { passive: true, capture: true });
+    window.addEventListener("resize", neu);
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", neu, { capture: true } as EventListenerOptions);
+      window.removeEventListener("resize", neu);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  /*
+   * Am Koerper haengend folgt das Feld nicht mehr der Tabreihenfolge des
+   * Formulars. Deshalb wandert der Fokus beim Oeffnen hinein und bleibt dort,
+   * bis geschlossen wird.
+   */
   useEffect(() => {
     if (!open) return;
     const pop = popRef.current;
     if (!pop) return;
-    setOben(richtung(pop.offsetHeight));
-    const id = window.setTimeout(() => inSicht(popRef.current), 30);
-    return () => window.clearTimeout(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+    const erreichbare = () =>
+      Array.from(pop.querySelectorAll<HTMLElement>("button:not([disabled]), select")).filter(
+        (el) => el.offsetParent !== null,
+      );
+    const gewaehlteTaste =
+      pop.querySelector<HTMLElement>(".cal-day-on") ??
+      pop.querySelector<HTMLElement>(".cal-day-heute") ??
+      erreichbare()[0];
+    gewaehlteTaste?.focus({ preventScroll: true });
+
+    const fangen = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      const liste = erreichbare();
+      if (!liste.length) return;
+      const erster = liste[0];
+      const letzter = liste[liste.length - 1];
+      const aktiv = document.activeElement as HTMLElement | null;
+      if (e.shiftKey && (aktiv === erster || !pop.contains(aktiv))) {
+        e.preventDefault();
+        letzter.focus();
+      } else if (!e.shiftKey && aktiv === letzter) {
+        e.preventDefault();
+        erster.focus();
+      }
+    };
+    document.addEventListener("keydown", fangen);
+    return () => document.removeEventListener("keydown", fangen);
+  }, [open, blick]);
 
   useEffect(() => {
     if (!open) return;
     const aus = (e: MouseEvent) => {
-      if (!wrapRef.current?.contains(e.target as Node)) setOpen(false);
+      const ziel = e.target as Node;
+      if (wrapRef.current?.contains(ziel) || popRef.current?.contains(ziel)) return;
+      setOpen(false);
     };
     const taste = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -179,14 +257,15 @@ export default function DateField({
         </span>
       ) : null}
 
-      {open ? (
+      {open && imBaum
+        ? createPortal(
         <div
           ref={popRef}
           role="dialog"
           aria-label={`${label} wählen`}
-          className={`cal absolute left-0 z-40 w-[310px] max-w-[min(310px,calc(100vw-40px))] rounded-[20px] p-4 ${
-            oben ? "bottom-full mb-2" : "mt-2"
-          }`}
+          data-hoch={hoch}
+          style={{ top: platz?.top ?? -9999, left: platz?.left ?? -9999 }}
+          className="cal fixed z-[120] w-[310px] max-w-[calc(100vw-24px)] rounded-[20px] p-4"
         >
           <div className="flex items-center gap-2">
             <button
@@ -299,8 +378,10 @@ export default function DateField({
               Schließen
             </button>
           </div>
-        </div>
-      ) : null}
+        </div>,
+            document.body,
+          )
+        : null}
     </div>
   );
 }
