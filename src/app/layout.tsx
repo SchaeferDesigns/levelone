@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import MobileActionBar from "@/components/MobileActionBar";
 import JsonLd from "@/components/JsonLd";
 import ScrollProgress from "@/components/ScrollProgress";
+import ScrollTop from "@/components/ScrollTop";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -77,6 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a className="skip-link" href="#inhalt">
           Zum Inhalt springen
         </a>
+        <ScrollTop />
         <ScrollProgress />
         <Nav />
         <main id="inhalt" tabIndex={-1}>

@@ -92,8 +92,9 @@ export default function Nav() {
     };
   }, []);
 
-  /* Lichtreflex folgt dem Zeiger */
-  function onMove(e: React.MouseEvent<HTMLDivElement>) {
+  /* Lichtreflex folgt dem Zeiger, aber nur einer echten Maus */
+  function onMove(e: React.PointerEvent<HTMLDivElement>) {
+    if (e.pointerType !== "mouse") return;
     const bar = barRef.current;
     if (!bar) return;
     const r = bar.getBoundingClientRect();
@@ -104,6 +105,40 @@ export default function Nav() {
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
+
+  /*
+   * Zwei Zustaende fuer den Ein und Ausgang: sichtbar haengt das Menue ein,
+   * gefahren schaltet die Bewegung. Beim Oeffnen muss zuerst eingehaengt und
+   * erst im naechsten Bild gestartet werden, sonst gibt es keinen Anfangswert,
+   * von dem aus ueberblendet werden kann.
+   */
+  const [sichtbar, setSichtbar] = useState(false);
+  const [gefahren, setGefahren] = useState(false);
+  useEffect(() => {
+    const ruhig = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (open) {
+      setSichtbar(true);
+      if (ruhig) {
+        setGefahren(true);
+        return;
+      }
+      let zweites = 0;
+      const erstes = window.requestAnimationFrame(() => {
+        zweites = window.requestAnimationFrame(() => setGefahren(true));
+      });
+      return () => {
+        window.cancelAnimationFrame(erstes);
+        if (zweites) window.cancelAnimationFrame(zweites);
+      };
+    }
+    setGefahren(false);
+    if (ruhig) {
+      setSichtbar(false);
+      return;
+    }
+    const id = window.setTimeout(() => setSichtbar(false), 280);
+    return () => window.clearTimeout(id);
+  }, [open]);
 
   const close = useCallback(() => {
     setOpen(false);
@@ -169,7 +204,7 @@ export default function Nav() {
           ref={barRef}
           className="nav-bar"
           data-float={float}
-          onMouseMove={onMove}
+          onPointerMove={onMove}
         >
           <div className="nav-inner">
             <Link
@@ -190,7 +225,7 @@ export default function Nav() {
               <ul
                 ref={listRef}
                 className="nav-list"
-                onMouseLeave={moveToActive}
+                onPointerLeave={moveToActive}
                 onBlur={(e) => {
                   if (!e.currentTarget.contains(e.relatedTarget as Node)) moveToActive();
                 }}
@@ -211,7 +246,10 @@ export default function Nav() {
                       }}
                       aria-current={isActive(item.href) ? "page" : undefined}
                       className="nav-link"
-                      onMouseEnter={() => hoverItem(i)}
+                      onPointerEnter={(e) => {
+                        if (e.pointerType !== "mouse") return;
+                        hoverItem(i);
+                      }}
                       onFocus={() => hoverItem(i)}
                     >
                       {item.label}
@@ -253,19 +291,25 @@ export default function Nav() {
         </div>
 
         {/* Mobiles Menü */}
-        <div id="mobile-menu" hidden={!open} className="pointer-events-auto fixed inset-0 z-40 lg:hidden">
+        <div
+          id="mobile-menu"
+          hidden={!sichtbar}
+          data-open={gefahren}
+          className="menu-layer pointer-events-auto fixed inset-0 z-40 lg:hidden"
+        >
           <button
             type="button"
             aria-label="Menü schließen"
             onClick={close}
-            className="absolute inset-0 h-full w-full bg-ink-950/72 backdrop-blur-2xl"
+            tabIndex={open ? 0 : -1}
+            className="menu-backdrop absolute inset-0 h-full w-full"
           />
           <div
             ref={panelRef}
             role="dialog"
             aria-modal="true"
             aria-label="Menü"
-            data-open={open}
+            data-open={gefahren}
             className="menu-sheet glass-strong absolute inset-x-5 top-[92px] rounded-[26px] p-5"
           >
             <nav aria-label="Mobile Navigation">
@@ -274,7 +318,7 @@ export default function Nav() {
                   <li
                     key={item.href}
                     className="menu-item"
-                    style={{ "--menu-delay": `${60 + i * 45}ms` } as React.CSSProperties}
+                    style={{ "--menu-delay": `${70 + i * 28}ms` } as React.CSSProperties}
                   >
                     <Link
                       href={item.href}
@@ -292,7 +336,7 @@ export default function Nav() {
             </nav>
             <div
               className="menu-item mt-4 grid gap-2.5"
-              style={{ "--menu-delay": "420ms" } as React.CSSProperties}
+              style={{ "--menu-delay": "280ms" } as React.CSSProperties}
             >
               <Link href="/mitglied-werden/" className="btn btn-primary w-full">
                 Mitglied werden

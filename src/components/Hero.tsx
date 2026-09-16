@@ -84,8 +84,11 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      onMouseMove={onMove}
-      onMouseLeave={() => {
+      onPointerMove={(e) => {
+        if (e.pointerType !== "mouse") return;
+        onMove(e);
+      }}
+      onPointerLeave={() => {
         setPointer({ x: 0, y: 0 });
         setMagnet({ x: 0, y: 0 });
       }}

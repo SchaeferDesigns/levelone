@@ -107,7 +107,7 @@ export default function BusyChart() {
 
       <div
         className="mt-7"
-        onMouseLeave={() => setHover(null)}
+        onPointerLeave={() => setHover(null)}
         role="img"
         aria-label="Typische Auslastung nach Wochentag und Uhrzeit. Nachts zwischen 23 und 5 Uhr fast leer, werktags zwischen 9 und 12 Uhr entspannt, werktags zwischen 17 und 20 Uhr am vollsten."
       >
@@ -131,13 +131,16 @@ export default function BusyChart() {
             >
               {Array.from({ length: cols }).map((_, c) => {
                 const lv = cell(di, c);
-                const isNow = now?.day === di && activeCol(now.hour) === c;
+                const isNow = !hover && now?.day === di && activeCol(now.hour) === c;
                 const inLine = hover ? hover.day === di || hoverCol === c : false;
                 const exact = hover ? hover.day === di && hoverCol === c : false;
                 return (
                   <span
                     key={c}
-                    onMouseEnter={() => setHover({ day: di, hour: colHour(c) })}
+                    onPointerEnter={(e) => {
+                      if (e.pointerType !== "mouse") return;
+                      setHover({ day: di, hour: colHour(c) });
+                    }}
                     className={`busy-cell h-6 rounded-[5px] sm:h-7 ${isNow ? "busy-now" : ""} ${
                       exact ? "busy-exact" : ""
                     }`}
