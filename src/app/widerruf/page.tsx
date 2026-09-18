@@ -1,3 +1,4 @@
+import { isPreview, metadataUrl } from "@/lib/deployment";
 import type { Metadata } from "next";
 import LegalText from "@/components/LegalText";
 import Reveal from "@/components/Reveal";
@@ -7,15 +8,15 @@ import Section from "@/components/Section";
 export const metadata: Metadata = {
   title: "Widerrufsbelehrung",
   description: "Widerrufsbelehrung der Level One Göggingen GmbH. Informationen zum vierzehntägigen Widerrufsrecht bei einem online abgeschlossenen Mitgliedsvertrag.",
-  alternates: { canonical: "/widerruf/" },
+  alternates: isPreview ? undefined : { canonical: "/widerruf/" },
   openGraph: {
     type: "website",
     locale: "de_DE",
-    url: "/widerruf/",
+    url: metadataUrl("/widerruf/"),
     title: "Widerrufsbelehrung | Level One Göggingen",
-    images: ["/og.png"],
+    images: [metadataUrl("/og.png")],
   },
-  robots: { index: true, follow: false },
+  robots: { index: !isPreview, follow: false },
 };
 
 export default function Page() {

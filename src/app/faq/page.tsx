@@ -1,3 +1,4 @@
+import { isPreview, metadataUrl } from "@/lib/deployment";
 import type { Metadata } from "next";
 import Accordion from "@/components/Accordion";
 import Reveal from "@/components/Reveal";
@@ -11,14 +12,14 @@ const metaDescription =
 export const metadata: Metadata = {
   title: metaTitle,
   description: metaDescription,
-  alternates: { canonical: "/faq/" },
+  alternates: isPreview ? undefined : { canonical: "/faq/" },
   openGraph: {
     type: "website",
     locale: "de_DE",
-    url: "/faq/",
+    url: metadataUrl("/faq/"),
     title: `${metaTitle} | Level One Göggingen`,
     description: metaDescription,
-    images: ["/og.png"],
+    images: [metadataUrl("/og.png")],
   },
 };
 

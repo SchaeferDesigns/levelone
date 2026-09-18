@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { assetPath } from "@/lib/deployment";
 import Icon from "./Icon";
 import { useScrollProgress } from "@/lib/useScrollProgress";
 
@@ -22,7 +23,7 @@ export type Caption = { title: string; text: string };
 
 function framePath(m: SequenceManifest, i: number) {
   const n = String(i + 1).padStart(m.pad, "0");
-  return `/sequenz/${m.pattern.replace("{i}", n)}`;
+  return assetPath(`/sequenz/${m.pattern.replace("{i}", n)}`);
 }
 
 /**
@@ -131,7 +132,7 @@ export default function ScrollSequence({
         <div className="seq-stage">
           {simple ? (
             <img
-              src={poster}
+              src={assetPath(poster)}
               alt="Blick in das Level One Göggingen"
               width={manifest.width}
               height={manifest.height}

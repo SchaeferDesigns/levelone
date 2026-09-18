@@ -132,7 +132,7 @@ export default function Nav() {
 
   const close = useCallback(() => {
     setOpen(false);
-    toggleRef.current?.focus();
+    toggleRef.current?.focus({ preventScroll: true });
   }, []);
 
   /* Fokus im Menü halten */
@@ -143,7 +143,7 @@ export default function Nav() {
       Array.from(panel?.querySelectorAll<HTMLElement>("a[href], button:not([disabled])") ?? []).filter(
         (el) => el.offsetParent !== null,
       );
-    focusables()[0]?.focus();
+    focusables()[0]?.focus({ preventScroll: true });
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -170,19 +170,44 @@ export default function Nav() {
   }, [open, close]);
 
   /* Hintergrund sperren und ausblenden */
-  useEffect(() => {
+  useLayoutEffect(() => {
+    if (!open) return;
+    const body = document.body;
+    const root = document.documentElement;
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+    const pathnameAtOpen = window.location.pathname;
+    const previous = {
+      position: body.style.position,
+      top: body.style.top,
+      left: body.style.left,
+      width: body.style.width,
+      overflow: body.style.overflow,
+      rootOverflow: root.style.overflow,
+      overscrollBehavior: root.style.overscrollBehavior,
+    };
     const main = document.getElementById("inhalt");
     const footer = document.querySelector("footer");
     const quick = document.querySelector<HTMLElement>('nav[aria-label="Schnellzugriff"]');
-    document.body.style.overflow = open ? "hidden" : "";
-    [main, footer, quick].forEach((el) => {
-      if (!el) return;
-      if (open) el.setAttribute("inert", "");
-      else el.removeAttribute("inert");
-    });
+    const background = [main, footer, quick].filter((el): el is HTMLElement => el !== null);
+    const wasInert = background.map((el) => el.inert);
+    // overflow:hidden alone still lets the document move on mobile Safari.
+    Object.assign(body.style, { position: "fixed", top: `-${scrollY}px`, left: `-${scrollX}px`, width: "100%", overflow: "hidden" });
+    root.style.overflow = "hidden";
+    root.style.overscrollBehavior = "none";
+    background.forEach((el) => { el.inert = true; });
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    const onDesktop = () => { if (desktop.matches) setOpen(false); };
+    desktop.addEventListener("change", onDesktop);
     return () => {
-      document.body.style.overflow = "";
-      [main, footer, quick].forEach((el) => el?.removeAttribute("inert"));
+      desktop.removeEventListener("change", onDesktop);
+      const { rootOverflow, overscrollBehavior, ...bodyStyles } = previous;
+      Object.assign(body.style, bodyStyles);
+      root.style.overflow = rootOverflow;
+      root.style.overscrollBehavior = overscrollBehavior;
+      background.forEach((el, i) => { el.inert = wasInert[i]; });
+      const samePage = window.location.pathname === pathnameAtOpen;
+      window.scrollTo({ left: samePage ? scrollX : 0, top: samePage ? scrollY : 0, behavior: "instant" });
     };
   }, [open]);
 
@@ -281,7 +306,7 @@ export default function Nav() {
             type="button"
             aria-label="Menü schließen"
             onClick={close}
-            className="absolute inset-0 h-full w-full bg-ink-950/72 backdrop-blur-2xl"
+            className="absolute inset-0 h-full w-full touch-none bg-ink-950/72 backdrop-blur-2xl"
           />
           <div
             ref={panelRef}
@@ -289,7 +314,7 @@ export default function Nav() {
             aria-modal="true"
             aria-label="Menü"
             data-open={open}
-            className="menu-sheet glass-strong absolute inset-x-5 top-[92px] rounded-[26px] p-5"
+            className="menu-sheet glass-strong absolute inset-x-5 top-[92px] max-h-[calc(100dvh-112px)] overflow-y-auto overscroll-contain rounded-[26px] p-5"
           >
             <nav aria-label="Mobile Navigation">
               <ul className="flex flex-col gap-1">
@@ -301,6 +326,7 @@ export default function Nav() {
                   >
                     <Link
                       href={item.href}
+                      onClick={() => setOpen(false)}
                       aria-current={isActive(item.href) ? "page" : undefined}
                       className={`flex items-center justify-between rounded-2xl px-4 py-3.5 text-[17px] font-bold transition-colors ${
                         isActive(item.href) ? "bg-white/12 text-chalk" : "text-mute"
@@ -317,11 +343,11 @@ export default function Nav() {
               className="menu-item mt-4 grid gap-2.5"
               style={{ "--menu-delay": "420ms" } as React.CSSProperties}
             >
-              <Link href="/mitglied-werden/" className="btn btn-primary w-full">
+              <Link href="/mitglied-werden/" onClick={() => setOpen(false)} className="btn btn-primary w-full">
                 Mitglied werden
                 <Icon name="arrowRight" size={18} strokeWidth={2.1} />
               </Link>
-              <Link href="/probetraining/" className="btn btn-ghost w-full">
+              <Link href="/probetraining/" onClick={() => setOpen(false)} className="btn btn-ghost w-full">
                 Kostenloses Probetraining
               </Link>
               <a href={`tel:${site.contact.phone}`} className="btn btn-ghost w-full">

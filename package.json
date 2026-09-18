@@ -8,7 +8,11 @@
     "build": "next build",
     "start": "next start -H 0.0.0.0 -p 3000",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build:vorschau": "node scripts/build-vorschau.mjs",
+    "verify:vorschau": "node scripts/verify-export.mjs",
+    "postbuild": "node scripts/finish-export.mjs",
+    "probe:vorschau": "node scripts/serve-probe.mjs"
   },
   "dependencies": {
     "next": "16.3.5",

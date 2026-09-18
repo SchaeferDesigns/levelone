@@ -1,3 +1,4 @@
+import { isPreview, metadataUrl } from "@/lib/deployment";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Icon from "@/components/Icon";
@@ -23,14 +24,14 @@ const metaDescription =
 export const metadata: Metadata = {
   title: metaTitle,
   description: metaDescription,
-  alternates: { canonical: "/" },
+  alternates: isPreview ? undefined : { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "de_DE",
-    url: "/",
+    url: metadataUrl("/"),
     title: "Level One Göggingen | Fitnessstudio mit 24 Stunden Training",
     description: metaDescription,
-    images: ["/og.png"],
+    images: [metadataUrl("/og.png")],
   },
 };
 

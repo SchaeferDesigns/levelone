@@ -1,18 +1,18 @@
-import { site } from "@/lib/site";
+import { absoluteUrl, site } from "@/lib/site";
 
 /** Strukturierte Daten für Suchmaschinen und lokale Suchergebnisse. */
 export default function JsonLd() {
   const data = {
     "@context": "https://schema.org",
     "@type": "HealthClub",
-    "@id": `${site.url}/#studio`,
+    "@id": absoluteUrl("/#studio"),
     name: site.name,
     legalName: site.legalName,
     description: site.description,
-    url: site.url,
+    url: absoluteUrl(),
     telephone: site.contact.phone,
     email: site.contact.email,
-    image: `${site.url}/og.png`,
+    image: absoluteUrl("/og.png"),
     priceRange: "€€",
     currenciesAccepted: "EUR",
     address: {

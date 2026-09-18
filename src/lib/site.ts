@@ -1,3 +1,4 @@
+import { metadataUrl, siteOrigin } from "./deployment";
 /**
  * Zentrale Stammdaten der Website.
  * Alle Angaben hier einmal pflegen, sie werden auf allen Seiten,
@@ -8,7 +9,7 @@ export const site = {
   name: "Level One Göggingen",
   legalName: "Level One Göggingen GmbH",
   shortName: "Level One",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.levelonegoeggingen.de",
+  url: siteOrigin,
   claim: "Dein Fitnessstudio in Göggingen. 24 Stunden geöffnet.",
   description:
     "Fitnessstudio in Göggingen im Ostalbkreis. Trainiere rund um die Uhr an sieben Tagen die Woche. Geräte, Freihantelbereich, Cardio, Kurse, Personal Training, Sauna und Solarium.",
@@ -75,5 +76,5 @@ export const footerNav = {
 export const formEndpoint = process.env.NEXT_PUBLIC_FORM_ENDPOINT ?? "";
 
 export function absoluteUrl(path = "/") {
-  return new URL(path, site.url).toString();
+  return metadataUrl(path);
 }

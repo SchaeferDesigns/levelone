@@ -1,3 +1,4 @@
+import { isPreview, metadataUrl } from "@/lib/deployment";
 import type { Metadata } from "next";
 import Icon from "@/components/Icon";
 import Reveal from "@/components/Reveal";
@@ -11,14 +12,14 @@ const metaDescription =
 export const metadata: Metadata = {
   title: metaTitle,
   description: metaDescription,
-  alternates: { canonical: "/kurse/" },
+  alternates: isPreview ? undefined : { canonical: "/kurse/" },
   openGraph: {
     type: "website",
     locale: "de_DE",
-    url: "/kurse/",
+    url: metadataUrl("/kurse/"),
     title: `${metaTitle} | Level One Göggingen`,
     description: metaDescription,
-    images: ["/og.png"],
+    images: [metadataUrl("/og.png")],
   },
 };
 

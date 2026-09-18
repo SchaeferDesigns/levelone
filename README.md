@@ -20,11 +20,65 @@ Level One Göggingen.
 npm install        # Abhängigkeiten installieren
 npm run dev        # Entwicklungsserver auf http://localhost:3000
 npm run build      # statische Website nach ./out bauen
+npm run build:vorschau # Vorschau für /demo/levelone/ nach ./out bauen und prüfen
+npm run verify:vorschau # vorhandenen Vorschau-Export erneut prüfen
+npm run probe:vorschau # nach probe/demo/levelone kopieren und lokal auf Port 4173 testen
 npm run typecheck  # Typen prüfen
 ```
 
 Nach `npm run build` liegt die fertige Website im Ordner `out`. Dieser Ordner wird
 unverändert auf den Webspace geladen.
+
+## Vorschau unter schaeferdesigns.de/demo/levelone/
+
+`npm run build:vorschau` setzt Basispfad und Vorschaumodus intern in Node.
+Keine Umgebungsvariablen vor den Befehl schreiben: So kann Git Bash den
+Basispfad unter Windows nicht in einen Dateisystempfad umwandeln.
+
+Der fertige Export liegt in `out/index.html` und `out/<route>/index.html`.
+Alle 14 bestehenden Routen, einschließlich der älteren Angebotsseiten, bleiben
+als echte Dateien erhalten. Es gibt keine zusätzlichen Router-Aliase im Quellbestand.
+Der statische Host braucht nur Verzeichnisindizes, keinen SPA-Fallback.
+`/kontakt` darf nach `/kontakt/` weiterleiten; dort liegt die eigene `index.html`.
+
+Die Vorschau enthält `noindex` auf allen HTML-Seiten, keine Canonicals und keine
+`sitemap.xml`, `robots.txt` oder `.htaccess`. Öffentliche Rechtstext-Quelldateien
+werden aus diesem Export entfernt; ihre Inhalte sind bereits in den Rechtsseiten
+eingebettet. OG-Bilder, strukturierte Daten und öffentliche Assets nutzen denselben
+Basispfad wie Links und Next.js-Dateien.
+
+Der Build prüft HTML-Attribute, Metadaten, CSS-URLs, Ressourcenliterale in JavaScript,
+referenzierte Dateien, alle Seitenrouten, die Dateigrößen (maximal 24.000.000 Byte)
+und verbotene Exportdateien. Bei Abweichungen listet er die Fundstellen und beendet
+sich mit Exitcode 1. Interne Routen-Props von `next/link` sind keine ausgelieferten
+URLs: Next.js ergänzt ihren Basispfad beim Rendern; geprüft werden die tatsächlichen
+HTML-Links. Neue dynamische Routen erfordern eine explizite Ergänzung der Routenprüfung.
+Der Abschluss ergänzt außerdem die flachen Prefetch-Dateinamen, die Next.js 16.3
+unter Windows irrtümlich als Unterordner exportiert. Dadurch funktionieren auch
+Client-Navigation und Prefetching auf einem gewöhnlichen statischen Host ohne 404.
+
+`npm run build` bleibt `next build`, `npm run dev` bleibt unverändert. Der ergänzte
+`postbuild`-Schritt prüft den Export und nennt den Bautyp in der letzten Ausgabezeile.
+Ohne Umgebungswerte entsteht weiterhin der Wurzelbau mit Sitemap und Live-Metadaten.
+Die Vorschauwerte werden nicht in die Shell oder in eine `.env`-Datei zurückgeschrieben.
+
+Zum Übertragen in das Cloudflare-Pages-Projekt (PowerShell, Zielpfad anpassen):
+
+```powershell
+npm run build:vorschau
+robocopy .\out C:\Pfad\zur\Pages-Seite\public\demo\levelone /MIR
+```
+
+`/MIR` gleicht ausschließlich diesen Ziel-Unterordner ab, einschließlich veralteter
+Dateien. Robocopy-Exitcodes 0–7 bedeuten Erfolg, ab 8 liegt ein Fehler vor.
+Danach das übergeordnete Pages-Projekt wie gewohnt veröffentlichen. Nur `out/`
+übertragen, nicht `.next/`; `.next/` enthält die internen Build-Dateien.
+
+Lokaler Test: `npm run probe:vorschau`, dann
+`http://127.0.0.1:4173/demo/levelone/` und
+`http://127.0.0.1:4173/demo/levelone/kontakt` direkt öffnen und neu laden.
+Der Testserver protokolliert jede Anfrage und hat ausdrücklich keinen SPA-Fallback.
+Die ausgeführten Prüfungen stehen in [docs/vorschau-nachweis.md](docs/vorschau-nachweis.md).
 
 ## Seitenstruktur
 

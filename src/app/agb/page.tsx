@@ -1,3 +1,4 @@
+import { isPreview, metadataUrl } from "@/lib/deployment";
 import type { Metadata } from "next";
 import LegalText from "@/components/LegalText";
 import Reveal from "@/components/Reveal";
@@ -7,15 +8,15 @@ import Section from "@/components/Section";
 export const metadata: Metadata = {
   title: "Allgemeine Geschäftsbedingungen",
   description: "Allgemeine Geschäftsbedingungen der Level One Göggingen GmbH für die Mitgliedschaft im Fitnessstudio in Göggingen, inklusive Laufzeit und Kündigung.",
-  alternates: { canonical: "/agb/" },
+  alternates: isPreview ? undefined : { canonical: "/agb/" },
   openGraph: {
     type: "website",
     locale: "de_DE",
-    url: "/agb/",
+    url: metadataUrl("/agb/"),
     title: "Allgemeine Geschäftsbedingungen | Level One Göggingen",
-    images: ["/og.png"],
+    images: [metadataUrl("/og.png")],
   },
-  robots: { index: true, follow: false },
+  robots: { index: !isPreview, follow: false },
 };
 
 export default function Page() {

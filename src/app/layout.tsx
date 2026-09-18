@@ -1,3 +1,4 @@
+import { isPreview, metadataUrl } from "@/lib/deployment";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Nav from "@/components/Nav";
@@ -30,13 +31,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "de_DE",
-    url: site.url,
+    url: metadataUrl("/"),
     siteName: site.name,
     title: `${site.name} | Fitnessstudio mit 24 Stunden Training`,
     description: site.description,
     images: [
       {
-        url: "/og.png",
+        url: metadataUrl("/og.png"),
         width: 1200,
         height: 630,
         alt: "Level One Göggingen, Fitnessstudio mit 24 Stunden Training",
@@ -47,12 +48,12 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${site.name} | Fitnessstudio mit 24 Stunden Training`,
     description: site.description,
-    images: ["/og.png"],
+    images: [metadataUrl("/og.png")],
   },
   robots: {
-    index: true,
+    index: !isPreview,
     follow: true,
-    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+    googleBot: { index: !isPreview, follow: true, "max-image-preview": "large" },
   },
   category: "fitness",
 };

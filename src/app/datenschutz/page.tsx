@@ -1,3 +1,4 @@
+import { isPreview, metadataUrl } from "@/lib/deployment";
 import type { Metadata } from "next";
 import LegalText from "@/components/LegalText";
 import Reveal from "@/components/Reveal";
@@ -6,15 +7,15 @@ import Section from "@/components/Section";
 export const metadata: Metadata = {
   title: "Datenschutzerklärung",
   description: "Informationen zum Datenschutz auf der Website von Level One Göggingen. Welche Daten erhoben werden, wozu sie dienen und welche Rechte du hast.",
-  alternates: { canonical: "/datenschutz/" },
+  alternates: isPreview ? undefined : { canonical: "/datenschutz/" },
   openGraph: {
     type: "website",
     locale: "de_DE",
-    url: "/datenschutz/",
+    url: metadataUrl("/datenschutz/"),
     title: "Datenschutzerklärung | Level One Göggingen",
-    images: ["/og.png"],
+    images: [metadataUrl("/og.png")],
   },
-  robots: { index: true, follow: false },
+  robots: { index: !isPreview, follow: false },
 };
 
 export default function Page() {

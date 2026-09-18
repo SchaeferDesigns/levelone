@@ -1,3 +1,4 @@
+import { isPreview, metadataUrl } from "@/lib/deployment";
 import type { Metadata } from "next";
 import LegalText from "@/components/LegalText";
 import Reveal from "@/components/Reveal";
@@ -7,15 +8,15 @@ import Section from "@/components/Section";
 export const metadata: Metadata = {
   title: "Impressum",
   description: "Impressum der Level One Göggingen GmbH, Am Brunnenäcker 13 in 73571 Göggingen. Anbieterkennzeichnung, Kontaktdaten und Verantwortliche des Fitnessstudios.",
-  alternates: { canonical: "/impressum/" },
+  alternates: isPreview ? undefined : { canonical: "/impressum/" },
   openGraph: {
     type: "website",
     locale: "de_DE",
-    url: "/impressum/",
+    url: metadataUrl("/impressum/"),
     title: "Impressum | Level One Göggingen",
-    images: ["/og.png"],
+    images: [metadataUrl("/og.png")],
   },
-  robots: { index: true, follow: false },
+  robots: { index: !isPreview, follow: false },
 };
 
 export default function Page() {
