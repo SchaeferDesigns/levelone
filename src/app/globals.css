@@ -886,6 +886,31 @@ textarea.field-input {
     width: min(78vw, 720px);
   }
 
+  .hscroll-hint { display: none; }
+
+  @media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
+    .hscroll-stage {
+      height: auto;
+      min-height: 100svh;
+      padding-top: 96px;
+      padding-bottom: 100px;
+    }
+    .hscroll-hint { display: block; }
+    .hscroll-viewport {
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scrollbar-width: none;
+      /* Both native gestures remain available: swipe cards or scroll the page. */
+      touch-action: pan-x pan-y pinch-zoom;
+    }
+    .hscroll-viewport::-webkit-scrollbar { display: none; }
+    .hscroll-viewport:focus-visible {
+      outline: 2px solid var(--color-flame-400);
+      outline-offset: -2px;
+    }
+    .hscroll-row { width: max-content; transform: none !important; will-change: auto; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .hscroll-stage {
       position: static;
@@ -1469,7 +1494,6 @@ textarea.field-input {
 @layer components {
   /* Auf kleinen Displays bleibt Platz fuer die Aktionsleiste */
   @media (max-width: 767px) {
-    .hscroll-stage,
     .seq-stage {
       padding-bottom: 92px;
     }
@@ -1647,4 +1671,16 @@ textarea.field-input {
     .step-fill::after { animation: none; }
     .step-dot[data-state="now"] { animation: none; }
   }
+}
+
+/* Compact mobile cards override the shared Tailwind spacing utilities here. */
+@media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
+  .hscroll-stage h2 { font-size: clamp(1.5rem, 6.5vw, 2rem); }
+  .hscroll-card { padding: 20px; }
+  .hscroll-card h3 { font-size: 1.8rem; margin-top: 16px; }
+  .hscroll-card p { font-size: 15px; margin-top: 12px; }
+  .hscroll-card ul { margin-top: 18px; gap: 8px; }
+  .hscroll-card li { font-size: 12px; padding: 6px 10px; }
+  .hscroll-viewport, .hscroll-stage .shell.mt-10 { margin-top: 20px; }
+  .hscroll-stage .btn { padding: 10px 14px; font-size: 13px; }
 }

@@ -198,3 +198,33 @@ Größte Datei: _next/static/chunks/27t_qfc-3_lzs.js, 229156 Byte
 Dateien >24 MB: []
 OG: https://schaeferdesigns.de/demo/levelone/og.png
 ```
+
+## Ergänzung: Trainingsflächen auf dem Handy
+
+Der Kartenbereich nutzt bis 767 px einen nativen horizontalen Scrollbereich.
+Vertikales Scrollen addiert nur die seitliche Bewegung seit der letzten Messung;
+manuelles Wischen wird dadurch nicht auf den alten Animationsstand zurückgesetzt.
+Die nächste Karte bleibt angeschnitten, und ein kurzer Hinweis erklärt beide Gesten.
+Bei geringer Bildschirmhöhe wächst der Bereich mit seinem Inhalt und kann nach
+oben auslaufen, statt Überschrift, Karten oder Links abzuschneiden.
+
+Geprüft im Browser bei 390 × 844 und 390 × 667 sowie auf dem Desktop bei 1280 × 900.
+Native horizontale Scrollaktionen wurden automatisiert; kein physisches Handy getestet.
+Messwerte aus dem finalen Export:
+
+```text
+Mobil vor horizontalem Scrollen: scrollLeft=35, scrollY=4330
+Mobil nach horizontalem Scrollen: scrollLeft=335, scrollY=4330
+Mobil nach vertikalem Weitergehen: scrollLeft=519, scrollY=4499
+Desktop vorher: translateX=-37.6215px, scrollY=2591, scrollLeft=0
+Desktop nach vertikalem Scrollen: translateX=-440.955px, scrollY=2951, scrollLeft=0
+Browserkonsole: []
+```
+
+Auch Vorwärts- und Rückwärtsbewegung sowie der Wechsel zwischen den Bildschirmbreiten
+wurden geprüft. Der Vorschau-Build einschließlich TypeScript- und Exportprüfung lief durch:
+
+```text
+Exportprüfung OK: 129 Dateien, 14 Routen, Basispfad /demo/levelone/
+Gebaut: Vorschau mit Basispfad /demo/levelone/ -> out/
+```
